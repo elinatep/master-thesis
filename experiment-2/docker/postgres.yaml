@@ -1,0 +1,38 @@
+# Local development Postgres for Experiment 2 (AI-to-Human Handover).
+#
+# Its own database and its own compose project, deliberately: levels-of-ai-help runs the same
+# portal library with its own `behavioural` schema, and the two must not share a database.
+# Both stacks can be up at once, but not on the same port - change the mapping if you need both.
+# Not used in Azure — there the app connects to Azure Database for PostgreSQL.
+#
+#   docker compose -f docker/postgres.yaml up -d      # start
+#   docker compose -f docker/postgres.yaml down       # stop (keeps data)
+#   docker compose -f docker/postgres.yaml down -v     # stop AND wipe data
+#
+# Connect from the app (local):
+#   url:  jdbc:postgresql://localhost:5432/exp2_ai_human_handover
+#   user: portal   password: portal   (dev-only — safe to commit, local-only)
+# Schemas (insurance_portal / behavioural) are created by Flyway, not here.
+
+name: exp2-handover-db
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: exp2-handover-db
+    environment:
+      POSTGRES_USER: portal
+      POSTGRES_PASSWORD: portal
+      POSTGRES_DB: exp2_ai_human_handover
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portal -d exp2_ai_human_handover"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

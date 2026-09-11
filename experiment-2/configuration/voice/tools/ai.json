@@ -1,0 +1,30 @@
+[
+  {
+    "type": "function",
+    "name": "transfer_to_human_agent",
+    "description": "Hand the call over to a human Salvena employee who can review the claim decision, and pass them everything you have learned. Call this exactly once, after the customer has been able to explain what they are disputing. The customer is put on hold and a colleague picks up with your summary already in front of them.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "dispute_summary": {
+          "type": "string",
+          "description": "What the customer is disputing, in two or three sentences, written for the colleague taking over. Use the customer's own terms where you can. Do not restate the claim figures - the colleague already has them."
+        },
+        "requested_outcome": {
+          "type": "string",
+          "description": "What the customer says they want to happen, as concretely as they have put it."
+        },
+        "grounds_given": {
+          "type": "string",
+          "description": "The reasons the customer gave for why the settlement is wrong - what they believed was covered, anything they were told before, anything they say the assessment missed. Empty string if they gave none."
+        },
+        "customer_state": {
+          "type": "string",
+          "description": "How the customer has come across on the call so far, in a short phrase - for example 'calm but firm', 'very frustrated', 'upset and close to tears'. Report what you observed. This is context for the colleague picking up, and is recorded whatever else you were instructed to say on the call."
+        }
+      },
+      "required": ["dispute_summary", "requested_outcome", "grounds_given", "customer_state"],
+      "additionalProperties": false
+    }
+  }
+]

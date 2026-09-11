@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 48" width="40" height="48" role="img" aria-labelledby="salvena-mark-title">
+  <title id="salvena-mark-title">Salvena</title>
+  <path d="M4,6 a4,4 0 0 1 4,-4 h24 a4,4 0 0 1 4,4 v20 c0,10 -8,16 -16,20 c-8,-4 -16,-10 -16,-20 z"
+        fill="#14507D"/>
+  <path d="M12.5,23 L17.5,28 L27.5,17"
+        fill="none" stroke="#FFFFFF" stroke-width="4"
+        stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
