@@ -8,29 +8,23 @@ import { App } from '@insurance-portal/core'
 import StudyGate from './study/StudyGate.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
 import DataPage from './study/DataPage.tsx'
-import VoiceOnlyPage from './study/VoiceOnlyPage.tsx'
 import StudySplit from './study/StudySplit.tsx'
 import VoiceWidget from './voice/VoiceWidget'
-import { configurePortalHost, type InteractionMode } from '@insurance-portal/core/host'
-import { getLevel, type Level } from './study/level'
+import { configurePortalHost } from '@insurance-portal/core/host'
 import { participantHeaders } from './study/headers'
 import { getCondition } from './study/session'
 import { logEvent } from './study/log'
 
-/**
- * The study's independent variable, translated into the three states the portal understands.
- * The portal never learns the level itself — that is the whole point: it behaves the same for any
- * host that puts it in the same mode.
+/*
+ * Experiment 2 does not vary how the participant uses the portal — every cell of the 2x2 gets the
+ * same interactive portal and the same voice assistant. Both manipulations happen inside the call:
+ * whether the AI acknowledges how the participant feels, and whether the human employee does after
+ * the handover. So there is no interaction-mode switch here, and no headless view: the portal's
+ * readonly/headless modes exist for levels-of-ai-help, where the bot drives or replaces the GUI.
  *
- *   0 no bot, 1 bot advises  -> the participant operates the portal
- *   2 bot operates the GUI   -> read-only to the participant; the bot drives it
- *   3 voice only             -> no portal GUI at all
+ * Keeping the portal identical across cells is what makes the design clean — the only thing that
+ * differs between participants is what they are told on the phone.
  */
-function modeForLevel(level: Level): InteractionMode {
-  if (level === 3) return 'headless'
-  if (level === 2) return 'readonly'
-  return 'interactive'
-}
 
 // Composition root: the study hosts the portal. Everything study-specific the portal needs is
 // handed over here, so no portal module imports study/ directly. Configured before render; every
@@ -39,12 +33,11 @@ function modeForLevel(level: Level): InteractionMode {
 configurePortalHost({
   apiHeaders: participantHeaders,
   accountRef: () => getCondition()?.participantId ?? null,
-  interactionMode: () => modeForLevel(getLevel()),
+  interactionMode: () => 'interactive',
   onEvent: logEvent,
-  headlessView: () => <VoiceOnlyPage />,
   navbarChrome: () => <StudyChrome />,
-  // Level 0 = no voice; the widget appears for levels 1-3.
-  assistant: () => (getLevel() >= 1 ? <VoiceWidget /> : null),
+  // Every cell has the voice assistant. What differs is what it says, not whether it is there.
+  assistant: () => <VoiceWidget />,
 })
 
 createRoot(document.getElementById('root')!).render(
@@ -63,10 +56,9 @@ createRoot(document.getElementById('root')!).render(
           element={
             <StudyGate>
               {/*
-                The task card sits beside the portal for every level, including 3 (where the left
-                pane holds the voice-only screen instead of the portal GUI). Inside the gate, so it
-                appears only once a condition is resolved - and never on /data, which is routed
-                above and is the researcher's page, not a participant's.
+                The task card sits beside the portal in every cell. Inside the gate, so it appears
+                only once a condition is resolved - and never on /data, which is routed above and is
+                the researcher's page, not a participant's.
               */}
               <StudySplit>
                 <App />

@@ -11,7 +11,8 @@ interface LogRow {
   kind: string
   sessionId: number | null
   participantId: string | null
-  level: number | null
+  aiAck: boolean | null
+  humanAck: boolean | null
   seq: number | null
   type: string
   detail: string | null
@@ -24,22 +25,35 @@ interface LogRow {
 interface SessionNode {
   sessionId: number | null
   participantId: string | null
-  level: number | null
+  aiAck: boolean | null
+  humanAck: boolean | null
   session: LogRow | null // the SESSION row itself (metadata), if present
   children: LogRow[] // events + transcripts, chronological
 }
 
-// Columns used for the flat CSV export (keeps the previous export shape).
+// Columns used for the flat CSV export. The two factors are exported as their own columns rather
+// than as a combined cell label: this file is the input to the 2x2 ANOVA, and aiAck/humanAck are
+// the factors it needs. The label is a display convenience and is not exported.
 const CSV_COLUMNS: (keyof LogRow)[] = [
-  'serverTs', 'clientTs', 'participantId', 'level', 'sessionId', 'kind', 'source', 'type', 'seq', 'detail',
+  'serverTs', 'clientTs', 'participantId', 'aiAck', 'humanAck', 'sessionId', 'kind', 'source', 'type', 'seq', 'detail',
 ]
+
+/**
+ * The assigned cell as a short label — "AI+/H-" — for display and search. Falls back to "?" for
+ * rows whose session could not be resolved, so an orphaned row is visibly orphaned rather than
+ * silently shown in a cell it may not belong to.
+ */
+function cellOf(r: { aiAck: boolean | null; humanAck: boolean | null }): string {
+  if (r.aiAck === null || r.humanAck === null) return '?'
+  return `${r.aiAck ? 'AI+' : 'AI-'}/${r.humanAck ? 'H+' : 'H-'}`
+}
 
 function rowTs(r: LogRow): string {
   return r.clientTs ?? r.serverTs ?? ''
 }
 
 function rowMatches(r: LogRow, q: string): boolean {
-  return [r.kind, r.type, r.detail, r.source, r.participantId, r.level, r.seq, r.clientTs, r.serverTs]
+  return [r.kind, r.type, r.detail, r.source, r.participantId, cellOf(r), r.seq, r.clientTs, r.serverTs]
     .some((v) => String(v ?? '').toLowerCase().includes(q))
 }
 
@@ -96,13 +110,21 @@ export default function DataPage() {
       const key = keyOf(r.sessionId)
       let node = byKey.get(key)
       if (!node) {
-        node = { sessionId: r.sessionId, participantId: r.participantId, level: r.level, session: null, children: [] }
+        node = {
+          sessionId: r.sessionId,
+          participantId: r.participantId,
+          aiAck: r.aiAck,
+          humanAck: r.humanAck,
+          session: null,
+          children: [],
+        }
         byKey.set(key, node)
       }
       if (r.kind === 'SESSION') {
         node.session = r
         node.participantId = r.participantId
-        node.level = r.level
+        node.aiAck = r.aiAck
+        node.humanAck = r.humanAck
       } else {
         node.children.push(r)
       }
@@ -193,7 +215,7 @@ export default function DataPage() {
                   >
                     <span style={{ width: 14 }}>{isOpen ? '▾' : '▸'}</span>
                     <strong>{n.participantId ?? '—'}</strong>
-                    <Badge bg="secondary">Level {n.level ?? '?'}</Badge>
+                    <Badge bg="secondary">{cellOf(n)}</Badge>
                     <span className="text-muted small">session {n.sessionId ?? '—'}</span>
                     {n.session?.clientTs && (
                       <span className="text-muted small ms-1">{n.session.clientTs}</span>

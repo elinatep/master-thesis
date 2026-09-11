@@ -4,7 +4,7 @@
 // closes or we redirect back to Qualtrics. A single monotonic `seq` orders everything within
 // the session, even if requests arrive out of order server-side.
 
-import type { Condition } from './session'
+import { cellLabel, type Condition } from './session'
 
 const FLUSH_DELAY_MS = 1000
 
@@ -38,7 +38,8 @@ export async function createSession(cond: Condition): Promise<void> {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       participantId: cond.participantId,
-      level: cond.level,
+      aiAck: cond.aiAck,
+      humanAck: cond.humanAck,
       userAgent: navigator.userAgent,
     }),
   })
@@ -47,7 +48,7 @@ export async function createSession(cond: Condition): Promise<void> {
   sessionId = data.sessionId
   hookUnload()
   hookGlobalErrors()
-  console.debug('[study] session', sessionId, 'opened for', cond.participantId, 'level', cond.level)
+  console.debug('[study] session', sessionId, 'opened for', cond.participantId, 'cell', cellLabel(cond))
 }
 
 /** Capture uncaught errors and promise rejections as ERROR events. */

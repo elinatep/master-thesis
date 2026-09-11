@@ -21,7 +21,7 @@ import org.hibernate.type.SqlTypes;
  * <p>{@code source} says who emitted it. {@link #CLIENT} events come from the browser and carry a
  * {@code clientSeq}; {@link #SERVER} events are emitted by the portal's own domain services (via
  * {@code PortalEventSink}), have no client sequence, and order by {@code serverTs}. The server
- * stream is the parity-clean one — identical across all four integration levels.
+ * stream is the parity-clean one — identical across all four cells of the design.
  */
 @Entity
 @Table(name = "event", schema = "behavioural")

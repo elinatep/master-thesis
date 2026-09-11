@@ -93,3 +93,30 @@ CREATE TABLE handover (
     created_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
     expires_at      TIMESTAMPTZ  NOT NULL
 );
+
+-- The AI-to-human handover: one row per transfer the voice assistant makes, and the queue the
+-- human agents work from.
+--
+-- The assistant calls transfer_to_human_agent when the dispute is clear enough to hand over; its
+-- arguments land in `summary` and are what the agent reads before picking up. The same content is
+-- also in the behavioural event stream as a VOICE_TOOL_CALL - deliberately, and not as an
+-- accident of logging. This table is operational state that the console mutates as agents pick
+-- calls up; the event row is the immutable record of what was handed over and when. Reconstructing
+-- the handover from mutable state after the fact would be a poor second best.
+--
+-- Note what is NOT here: the human-acknowledgement factor. It lives on study_session, and the
+-- console joins to it. Denormalising the assigned condition onto the thing an agent edits during a
+-- call is exactly how a condition gets silently overwritten mid-study.
+CREATE TABLE agent_handover (
+    id              BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    session_id      BIGINT       NOT NULL REFERENCES study_session(id) ON DELETE CASCADE,
+    participant_id  VARCHAR(64)  NOT NULL,
+    summary         JSONB,
+    requested_at    TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    picked_up_at    TIMESTAMPTZ,
+    agent_id        VARCHAR(64),
+    ended_at        TIMESTAMPTZ
+);
+
+-- The queue read is "who is still waiting, oldest first", run repeatedly by every open console.
+CREATE INDEX idx_agent_handover_waiting ON agent_handover(requested_at) WHERE picked_up_at IS NULL;
