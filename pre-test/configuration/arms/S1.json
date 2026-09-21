@@ -1,0 +1,24 @@
+{
+  "id": "S1",
+  "label": "Anger (unfair outcome)",
+  "attempts": [
+    {
+      "result": "SUBMITTED",
+      "banner": { "kind": "success", "text": "Claim submitted successfully." },
+      "bannerDetail": "Reference: SLV-2026-48117. Your claim has been forwarded for assessment.",
+      "panel": {
+        "heading": "Claim assessment",
+        "rows": [
+          { "label": "Damage claimed", "value": "1,200" },
+          { "label": "Expected reimbursement", "value": "1,080 (GBP 1.08)" },
+          { "label": "Current reimbursement", "value": "60 (GBP 0.06)", "emphasis": true }
+        ],
+        "body": [
+          "Based on the assessment, only 5% of the claimed damage is eligible for reimbursement. Your documentation was complete and the damage itself is not disputed. No further explanation is provided.",
+          "Your current provisional task bonus is therefore GBP 0.06 rather than GBP 1.08.",
+          "You may contact customer service if you would like the decision reviewed."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "S0",
+  "label": "Control",
+  "attempts": [
+    {
+      "result": "SUBMITTED",
+      "banner": { "kind": "success", "text": "Claim submitted successfully." },
+      "bannerDetail": "Reference: SLV-2026-48117. Your claim has been forwarded for assessment.",
+      "panel": {
+        "heading": "Claim assessment",
+        "rows": [
+          { "label": "Damage claimed", "value": "1,200" },
+          { "label": "Expected reimbursement", "value": "1,080 (GBP 1.08)" },
+          { "label": "Current reimbursement", "value": "1,080 (GBP 1.08)", "emphasis": true }
+        ],
+        "body": [
+          "Your claim has been approved as expected under the policy information provided.",
+          "Your current provisional task bonus is GBP 1.08."
+        ]
+      }
+    }
+  ]
+}

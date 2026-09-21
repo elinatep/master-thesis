@@ -1,0 +1,31 @@
+{
+  "id": "S4",
+  "label": "Irritation (website failure)",
+  "attempts": [
+    {
+      "result": "ERROR",
+      "banner": { "kind": "error", "text": "Error: your claim could not be submitted." },
+      "bannerDetail": "An unexpected error occurred while processing your request (code E-4092). The information you entered was not saved.",
+      "retry": {
+        "instruction": "Please re-enter your claim details and try again.",
+        "heading": "File a new claim",
+        "notice": "Attempt 2 of 2"
+      }
+    },
+    {
+      "result": "ERROR",
+      "banner": { "kind": "error", "text": "Error: your claim could not be submitted." },
+      "bannerDetail": "The error occurred again (code E-4092). The information you entered was not saved.",
+      "panel": {
+        "heading": "Claim submission",
+        "rows": [],
+        "body": [
+          "We were unable to complete your claim online.",
+          "After two submission attempts, the portal still could not save the claim. Please contact Salvena customer service to continue.",
+          "No reimbursement has yet been determined.",
+          "Your current provisional task bonus is therefore GBP 0.00 rather than GBP 1.08."
+        ]
+      }
+    }
+  ]
+}

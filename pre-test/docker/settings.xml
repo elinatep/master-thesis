@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Maven settings for the image build only (copied to /root/.m2/settings.xml in the Dockerfile).
+
+  levels-of-ai-help-app/pom.xml declares the same repository at http://localhost:8082 - correct on
+  the host,
+  wrong inside a container, where localhost is the container. This profile re-declares it
+  at host.docker.internal, which Docker Desktop resolves to the host.
+
+  Consequence worth knowing: the image can only be built on a machine where the portal
+  repository's Reposilite (and Verdaccio, for the frontend stage) is running. If that becomes
+  awkward, publish the portal to a hosted registry rather than going back to a source build.
+-->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+    <!--
+      Maven 3.8+ ships a built-in mirror, maven-default-http-blocker, whose mirrorOf is
+      `external:http:*` - every plain-HTTP repository EXCEPT localhost/127.0.0.1. On the host that
+      exemption covers the pom's localhost:8082 URL, which is why a native build works. In here the
+      URL is host.docker.internal, which is external by that rule, so the blocker swallows it and
+      Maven fails with "Blocked mirror for repositories".
+
+      Redefining the blocker's id with a mirrorOf that matches nothing disables it. Only this
+      settings.xml is affected, so it stays scoped to the image build; the host's ~/.m2 is untouched.
+    -->
+    <mirrors>
+        <mirror>
+            <id>maven-default-http-blocker</id>
+            <mirrorOf>dummy-matches-nothing</mirrorOf>
+            <name>Disabled: the registry below is plain HTTP on host.docker.internal</name>
+            <url>http://0.0.0.0/</url>
+        </mirror>
+    </mirrors>
+
+    <profiles>
+        <profile>
+            <id>local-maven-registry</id>
+            <repositories>
+                <repository>
+                    <id>local-maven-registry</id>
+                    <url>http://host.docker.internal:8082/snapshots</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>local-maven-registry</activeProfile>
+    </activeProfiles>
+
+</settings>

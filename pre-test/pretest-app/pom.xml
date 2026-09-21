@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.1.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>solutions.andreas</groupId>
+    <artifactId>pretest-feeling-heard</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <name>pretest-feeling-heard</name>
+    <description>Feeling-heard pre-test. The study application that hosts the portal: Qualtrics
+        handover, variant intake, the claim scenario, and behavioural logging. No voice - the
+        pre-test validates the scenario before the voice interaction is built. This is the
+        deployable application.</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <!--
+      Where the portal comes from now. It used to be a sibling module resolved by the reactor; it is
+      an ordinary remote dependency since it moved to its own repository, published to the same
+      local Reposilite that repository deploys to. Docker cannot reach `localhost`, so the image
+      build passes a settings.xml with host.docker.internal instead - see docker/settings.xml.
+    -->
+    <repositories>
+        <repository>
+            <id>local-maven-registry</id>
+            <url>http://localhost:8082/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--
+          The portal being studied. Version pinned explicitly, not ${project.version}: the two
+          version series are independent now, which is the point of the split. Bump deliberately,
+          and prefer a released version over a SNAPSHOT once the study freezes for a run.
+        -->
+        <dependency>
+            <groupId>solutions.andreas</groupId>
+            <artifactId>insurance-portal-core</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--
+          Declared directly, not inherited through the portal: this application has its own
+          @RestControllers, @Entities and @Valid payloads, so it depends on these in its own right.
+          Relying on a transitive path would also mean the app silently loses Spring Boot if the
+          portal ever trims a dependency.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!--
+          The study's own migrations, for the behavioural schema (see db/migration/behavioural).
+          The portal brings its own Flyway for its own schema; these two never share a history
+          table, so the version series are independent.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

@@ -1,0 +1,23 @@
+{
+  "id": "S2",
+  "label": "Worry (uncertain outcome)",
+  "attempts": [
+    {
+      "result": "SUBMITTED",
+      "banner": { "kind": "success", "text": "Claim submitted successfully." },
+      "bannerDetail": "Reference: SLV-2026-48117. Your claim has been forwarded for assessment.",
+      "panel": {
+        "heading": "Provisional claim assessment",
+        "rows": [
+          { "label": "Damage claimed", "value": "1,200" },
+          { "label": "Expected reimbursement", "value": "1,080 (GBP 1.08)" },
+          { "label": "Currently reimbursable", "value": "60 (GBP 0.06), provisional", "emphasis": true }
+        ],
+        "body": [
+          "Part of the damage may fall under a policy limitation. It is not yet known whether that limitation applies. Your claim has been passed to a specialist team for review, and no timeline for the final decision is currently available.",
+          "Your current provisional task bonus is GBP 0.06 rather than GBP 1.08."
+        ]
+      }
+    }
+  ]
+}
