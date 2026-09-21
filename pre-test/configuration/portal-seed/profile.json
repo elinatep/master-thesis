@@ -1,0 +1,10 @@
+{
+  "name": "Joe Smith",
+  "customerNumber": "20481",
+  "dateOfBirth": "1990-02-03",
+  "email": "joe.smith@example.com",
+  "phone": "+44 7700 900482",
+  "street": "14 Hartley Road",
+  "postcode": "M14 5QR",
+  "city": "Manchester"
+}

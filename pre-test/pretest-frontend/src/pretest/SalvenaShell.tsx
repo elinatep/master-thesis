@@ -1,13 +1,12 @@
 import type { ReactNode } from 'react'
-import AdminMenu from '../study/AdminMenu'
 
 /**
- * The Salvena portal chrome: a single header bar over a centred column.
+ * Chrome for the study's own screens: a single Salvena header over a centred column.
  *
- * <p>Deliberately not the full portal layout. The pre-test's mockups show one header and one
- * panel - no dashboard, no policy list, no claims table - because the pre-test is not asking
- * whether people can navigate a portal. It is asking whether a claim outcome lands emotionally.
- * Extra surface to explore would be extra variance between participants and nothing else.
+ * <p>Not the portal's layout, on purpose. The outcome screen is where Salvena delivers its
+ * decision, and stripping the navigation away puts the decision on its own and gives the
+ * participant nothing to click past it with. The portal's full layout is what they used to get
+ * here, and it is what they return to if the arm sends them back to try again.
  */
 export default function SalvenaShell({ children }: { children: ReactNode }) {
   return (
@@ -34,8 +33,6 @@ export default function SalvenaShell({ children }: { children: ReactNode }) {
             Salvena <span className="text-muted fw-normal">|</span>{' '}
             <span className="fw-normal">Customer Portal</span>
           </span>
-          {/* Hidden unless a researcher types showAdmin() in the console - see adminVisibility. */}
-          <AdminMenu />
         </div>
       </header>
       <main style={{ maxWidth: 760, margin: '0 auto', padding: '24px 20px 56px' }}>{children}</main>

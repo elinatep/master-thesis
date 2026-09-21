@@ -31,8 +31,16 @@ let errorsHooked = false
 const eventQueue: QueuedEvent[] = []
 const transcriptQueue: QueuedTranscript[] = []
 
-/** Open the session at the backend and start logging. Throws if the session can't be created. */
+/**
+ * Open the session at the backend and start logging. Throws if the session can't be created.
+ *
+ * Idempotent for the life of the page: calling it again returns the session already open rather
+ * than starting a second one. One participant run is one session, and a second row would split
+ * that run's events in two - and, because the study counts a participant's claim attempts within
+ * their latest session, would hand an S4 participant a fresh pair of failures.
+ */
 export async function createSession(cond: Condition): Promise<void> {
+  if (sessionId !== null) return
   const res = await fetch('/api/study/session', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

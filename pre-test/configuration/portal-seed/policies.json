@@ -1,0 +1,74 @@
+[
+  {
+    "policyNumber": "POL-2024-0001",
+    "type": "HOUSEHOLD",
+    "premium": 312.0,
+    "netPremium": 297.14,
+    "currency": "GBP",
+    "startDate": "2024-04-01",
+    "endDate": "2027-04-01",
+    "insuredValue": 90000.0,
+    "coverageSummary": "Household contents cover up to 90,000 scenario pounds against fire, water, theft and glass breakage.",
+    "coverage": [
+      {
+        "coverage": "Contents",
+        "sumInsured": 90000.0,
+        "deductible": 200.0,
+        "notes": "New-value basis"
+      },
+      {
+        "coverage": "Water damage",
+        "sumInsured": null,
+        "deductible": null,
+        "notes": "Covered at 90% of the assessed damage"
+      },
+      {
+        "coverage": "Fire",
+        "sumInsured": 90000.0,
+        "deductible": 200.0,
+        "notes": null
+      },
+      {
+        "coverage": "Glass breakage",
+        "sumInsured": 3000.0,
+        "deductible": 200.0,
+        "notes": null
+      },
+      {
+        "coverage": "Temporary accommodation",
+        "sumInsured": 12000.0,
+        "deductible": null,
+        "notes": null
+      }
+    ],
+    "claims": [],
+    "changeRequests": []
+  },
+  {
+    "policyNumber": "POL-2024-0002",
+    "type": "LIABILITY",
+    "premium": 121.0,
+    "netPremium": 115.24,
+    "currency": "GBP",
+    "startDate": "2024-04-01",
+    "endDate": "2027-04-01",
+    "insuredValue": 5000000.0,
+    "coverageSummary": "Private liability cover up to 5,000,000 scenario pounds per event for a single household.",
+    "coverage": [
+      {
+        "coverage": "Personal liability",
+        "sumInsured": 5000000.0,
+        "deductible": 200.0,
+        "notes": null
+      },
+      {
+        "coverage": "Tenant's liability",
+        "sumInsured": 5000000.0,
+        "deductible": 200.0,
+        "notes": null
+      }
+    ],
+    "claims": [],
+    "changeRequests": []
+  }
+]

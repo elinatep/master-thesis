@@ -23,32 +23,51 @@ choice rather than a gap in the code — but if an S3 was intended, it is missin
 Qualtrics keeps consent, the bonus explanation, the scenario briefing, both emotion measures, the
 filler task, the appraisals, the funnel checks, demographics and the debrief.
 
-The platform owns everything the participant does *on the website*: the claim form, the submission,
-the outcome, and — in S4 — the failure and the forced retry.
+The platform owns everything the participant does *on the website*. They land on the **real Salvena
+portal** — dashboard, policies, claims, navigation — find their way to the claim form, choose a
+policy and file the claim there. It is the portal's own form, writing a real claim to the portal's
+own claims engine.
 
 ```
 Qualtrics  consent → bonus → briefing
                 ↓  POST /api/handover  {participantId, arm, name, callbackUrl} → token
                 ↓  redirect to  /?t=<token>
-Platform   claim form → submit → [S4: error → form again → submit] → outcome → Continue
-                ↓  redirect to callbackUrl?participantId=…
+Portal     dashboard → navigate → file a claim (the portal's own form) → submit
+                ↓  the portal reports what happened; the study takes over
+Study      outcome screen  →  [S4: retry → back into the portal's form → submit → dead end]
+                ↓  Continue: redirect to callbackUrl?participantId=…
 Qualtrics  Emotion T1 → filler → Emotion T2 → appraisals → checks → demographics → debrief
 ```
 
-## Two decisions worth knowing about
+## Three decisions worth knowing about
 
 **The outcome is scripted, not produced by the portal's claim engine.** The portal models claims
 properly — policies, coverage tables, SUBMITTED → IN_REVIEW → SETTLED. It would never approve 5%
 without explanation, and it would certainly never fail twice with the same error code. Those
-outcomes are apparatus, so they live here and are read from `configuration/arms/`. The portal
-supplies the look and the event sink; it is not taught to lie about its own claims.
+outcomes are apparatus, so they live here and are read from `configuration/arms/`. The portal files
+the claim; what Salvena then *says* about it is the study's.
+
+**The failure is injected in front of the portal, not inside it.** `ClaimAttemptFilter` sits ahead
+of the portal's own claim endpoint and, in S4, refuses the request before it arrives. The portal's
+claim service is untouched and still behaves correctly — which matters, because Experiment 3 uses
+the same library and must not inherit a portal that has been taught to fail. A refused submission
+saves no claim, exactly as the arm's own words promise ("the information you entered was not
+saved"); there is a test for that.
 
 **The attempt count lives on the server.** In S4 the portal must fail exactly twice, and the number
 of failures *is* the irritation manipulation. Counting in the browser would let a reload, a back
 button or a second tab hand the participant a different number of failures than the arm specifies.
-The count is derived from the logged attempts, so it survives anything done to the page.
+The count is derived from the logged attempts, so it survives anything done to the page. For the
+same reason the behavioural session is opened once per run and not once per page: a second session
+would reset that count mid-arm.
 
 ## Configuration
+
+`configuration/portal-seed/` is the participant's account. Two active policies and **no claims** —
+someone about to report their first burst pipe should not find the portal already handling two
+others — and the household policy's coverage table states the 90% the briefing tells them to
+expect, so a participant who checks finds it. The persona is British; the portal's shipped fixtures
+are Swiss.
 
 `configuration/arms/*.json` holds every word each arm shows — banner, detail, retry notice,
 assessment rows, body paragraphs. Rewording an arm is a file edit and a restart. Tuning that
@@ -106,15 +125,25 @@ to catch an edit to the arms as much as a regression in the code. The test that 
 
 ## Open questions
 
-- **Is the bare flow right?** The survey mockups show one header and one panel — no dashboard, no
-  policy list, no navigation. That is what is built. If participants should instead land in the
-  full Salvena portal and find the claim form themselves, that is a different build.
-- **The portal is Swiss.** `format.ts` and the two PDF services render CHF. Nothing in the
-  pre-test's own screens uses them, because the arm files carry their own strings — but the moment
-  a real portal page is shown, the participant sees CHF in a study briefed in scenario pounds.
+- **The Qualtrics briefing describes a different form.** It lists *Type of damage, Cause, Date of
+  incident, Estimated damage*. The portal's real form is *Policy, Type, Incident date, Amount
+  claimed, Description* — there is no Cause field, and choosing the right policy is a step the
+  briefing does not mention. The briefing needs rewording to match what the participant will
+  actually see, or people will hunt for a field that is not there.
+- **The portal is visibly Swiss.** The logo reads "Salvena Versicherungen AG", the footer gives a
+  Zürich address and a +41 number, and a news item announces a service centre in Zürich. The
+  policies are now seeded in GBP, but claim amounts still render with the CHF default
+  (`money(claim.amount)` in three portal pages passes no currency) and the thousands separator is
+  the Swiss apostrophe. Branding and news are overridable via `CONTENT_LOCATION`; the currency
+  defaults are a small change in the portal library, which Experiment 3 shares.
 - **GBP 1.00 vs GBP 1.08.** The Qualtrics bonus block calls it "a provisional GBP £1.00 task
   balance", but the expected reimbursement is 1,080 scenario pounds = GBP 1.08, and the debrief
   pays GBP 1.08.
 - **The incident date.** The briefing says "yesterday" and the survey's form shows `09/20/2026`.
-  A fixed date will stop meaning "yesterday" the day after the pre-test runs; the form's reminder
-  box here says "Yesterday" instead.
+  A fixed date stops meaning "yesterday" the day after the pre-test runs. The portal uses a native
+  date input, so its display format follows the participant's own browser locale.
+- **The portal discards server error messages.** Its API client throws
+  `new Error(status + " " + statusText)` without reading the body, so the arm's E-4092 wording
+  cannot reach the portal's own inline alert. The participant reads it on the study's screen a
+  moment later instead. Worth knowing for Experiment 2, where a portal-rendered error may matter
+  more.
