@@ -17,20 +17,55 @@ gets created with. Pick one, save it in your password manager, done.
 
 ## Before you start (one-off)
 
-Open **Terminal** (Cmd+Space, type "Terminal"). If you do not have Homebrew, get it from
-https://brew.sh, then:
+Open **Terminal**: Cmd+Space, type `Terminal`, Enter.
+
+### a. Homebrew
+
+macOS does not ship with it. Run:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+It asks for your Mac login password (the prompt shows nothing as you type — that is normal), and
+may install Apple's Command Line Tools first, which can take ten minutes.
+
+**Then read the last few lines it prints.** On an Apple Silicon Mac it finishes with a "Next steps"
+section telling you to run two commands. You must run them, or `brew` still will not be found:
+
+```bash
+echo >> ~/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+Check it took:
+
+```bash
+brew --version
+```
+
+### b. Azure CLI and Docker
 
 ```bash
 brew install azure-cli
-brew install --cask docker     # then open Docker Desktop once, so it is running
+brew install --cask docker
 ```
 
-Check both work:
+Then **open Docker Desktop from Applications** and let it finish starting — the whale icon in the
+menu bar stops animating. Installing it is not enough; it has to be running.
+
+Check both:
 
 ```bash
 az version
 docker version
 ```
+
+> **Prefer not to install Homebrew?** Docker Desktop has a direct download at
+> https://docker.com/products/docker-desktop — pick the Apple Silicon or Intel build to match your
+> Mac (Apple menu → About This Mac). The Azure CLI has no supported standalone macOS installer,
+> though, so Homebrew is the practical route for that one.
 
 Sign in and pick the subscription your resource group is in:
 
