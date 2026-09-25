@@ -25,7 +25,8 @@ RUN mvn -q -B -U clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=backend /app/target/*.jar app.jar
-# No seed files to copy: the portal's fixtures and deployment content travel inside its own jar.
+# configuration/ carries the arm definitions, the task text AND the pre-test's portal seed. The
+# portal's own fixtures travel inside its jar; this seed overrides them (app.seed.location).
 COPY configuration ./configuration
 ENV VOICE_CONFIG_DIR=/app/configuration
 EXPOSE 8080

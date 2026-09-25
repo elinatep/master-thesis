@@ -113,6 +113,31 @@ then open `http://localhost:5173/?t=<token>`.
 Researcher tools: `/data` for the behavioural log and CSV export; `showAdmin()` in the browser
 console reveals the reset menu.
 
+## Deploying
+
+`QUALTRICS.md` covers the survey side. For Azure:
+
+```
+# infra\.env MUST exist (copy infra/.env.example)
+.\scripts\release.ps1
+```
+
+It builds the current commit into a git-SHA-tagged image, pushes to the shared ACR, and deploys.
+`containerImage` is a required Bicep parameter with no default, so a deploy cannot silently ship a
+stale image — `release.ps1` is the only supported path.
+
+**This deployment owns almost nothing.** The registry, managed identity, Log Analytics workspace,
+Container Apps environment and Postgres server are `levels-of-ai-help`'s, referenced here as
+`existing`. This study creates its own database on that server and its own container app, and
+nothing else — so the two studies cannot overwrite each other's platform. `infra/main.bicep` is
+resource-group scoped for the same reason.
+
+There is no OpenAI key anywhere in this deployment. The pre-test has no voice interaction; that is
+the only thing the bot's absence changes about hosting.
+
+`scripts/azure_db_reset.ps1` drops both schemas in *this* study's database between pilot rounds, so
+an analysis never mixes runs from two different versions of the arms.
+
 ## Tests
 
 ```
