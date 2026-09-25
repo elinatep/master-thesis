@@ -5,13 +5,17 @@ names, same behaviour.
 
 ## The short version
 
-There is almost nothing to click. You already did the only portal step — creating the resource
-group. The rest is three commands in Terminal. The Azure portal is then just somewhere to *look
-at* what got made.
+There is almost nothing to click in Azure. You already did the only portal step — creating the
+resource group. Deploying is one command; the Azure portal is then just somewhere to *look at* what
+got made.
+
+The setup before that first deploy is the long part, and it is all one-off: install a few tools,
+clone two repositories, and publish the insurance portal into two local registries so the build can
+find it. Budget an hour for the first time and ten minutes for every time after.
 
 **About the database password: you invent it.** There is nothing to look up. This deployment
-creates its own PostgreSQL server, and the password you put in the file below is the password it
-gets created with. Pick one, save it in your password manager, done.
+creates its own PostgreSQL server, and the password you put in the file in Step 1 is the password
+it gets created with. Pick one, save it in your password manager, done.
 
 ---
 
@@ -84,6 +88,98 @@ az provider register --namespace Microsoft.DBforPostgreSQL
 az provider register --namespace Microsoft.OperationalInsights
 ```
 
+### c. JDK 21 and Node
+
+Needed to publish the portal library in Step 0 (the deployment itself builds inside Docker, but
+populating the registries happens on your machine):
+
+```bash
+brew install openjdk@21 node
+sudo ln -sfn /opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk \
+             /Library/Java/JavaVirtualMachines/openjdk-21.jdk
+```
+
+Check: `java -version` shows 21, `node -v` shows 22 or higher.
+
+---
+
+## Step 0 — get the code, and publish the portal library
+
+You need **two** repositories. This study is a consumer of the insurance portal, which is a
+separate library — the build fetches it from two small registries running on your own machine
+rather than from your working tree.
+
+### a. Clone both
+
+```bash
+mkdir -p ~/eth && cd ~/eth
+
+git clone https://github.com/elinatep/master-thesis.git
+git clone https://github.com/elinatep/insurance-portal-core.git
+
+cd master-thesis
+git checkout claude/platform-experiment-2-integration-cplg9e
+```
+
+Everything from here happens in `~/eth/master-thesis/pre-test`, except Step 0b–d, which is in
+`~/eth/insurance-portal-core`.
+
+### b. Start the two registries
+
+```bash
+cd ~/eth/insurance-portal-core
+docker compose -f docker/maven-registry.yaml up -d   # Reposilite, :8082
+docker compose -f docker/npm-registry.yaml   up -d   # Verdaccio,  :4873
+```
+
+Leave them running. They hold the published portal; the Docker build reaches them at
+`host.docker.internal`.
+
+### c. Registry credentials (one-off per machine)
+
+Maven — create or edit `~/.m2/settings.xml` so it contains:
+
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>local-maven-registry</id>
+      <username>publisher</username>
+      <password>publisher</password>
+    </server>
+  </servers>
+</settings>
+```
+
+(`mkdir -p ~/.m2 && open -e ~/.m2/settings.xml` — if the file already exists, add the `<server>`
+block inside its existing `<servers>`.)
+
+npm — one signup, which writes a token to `~/.npmrc`:
+
+```bash
+npm adduser --registry http://host.docker.internal:4873
+```
+
+Any username, password and email will do; it is a local registry.
+
+### d. Publish the portal into them
+
+```bash
+cd ~/eth/insurance-portal-core/insurance-portal-core
+./mvnw clean deploy -DskipTests
+
+cd ../frontend-core
+npm install
+npm run build
+npm publish
+```
+
+`-DskipTests` because you are publishing a dependency, not developing it; the portal's own tests
+want a database that you do not otherwise need.
+
+**Redo this step whenever the portal changes.** The registries hold a published copy, not your
+working tree, so a portal fix that has not been re-published is invisible to this study's build.
+
 ---
 
 ## Step 1 — make the `.env` file
@@ -129,30 +225,15 @@ front of the study, which blocks Prolific participants and breaks the Qualtrics 
 
 ---
 
-## Step 2 — start the portal's two registries
-
-The insurance portal is a library this study depends on, served from two small local servers. They
-must be running before the build, because the build fetches the portal from them.
-
-In the **portal repository** (`mtec-insurance-portal-core`, not this one):
-
-```bash
-docker compose -f docker/maven-registry.yaml up -d
-docker compose -f docker/npm-registry.yaml   up -d
-```
-
-Leave them running. If you have never published the portal into them, do that first — that is the
-portal repo's own README.
-
----
-
-## Step 3 — deploy
+## Step 2 — deploy
 
 Back in `pre-test`:
 
 ```bash
 ./scripts/release.sh
 ```
+
+Make sure the two registries from Step 0b are still running — this is where a stopped one bites.
 
 The first run takes **10–15 minutes** and, in order:
 
@@ -173,7 +254,7 @@ It prints a table at the end. The line you want is **`appUrl`** — that is your
 
 ---
 
-## Step 4 — check it worked
+## Step 3 — check it worked
 
 Open `<appUrl>` in a browser. You should get a **fail-loud error page**, not the portal:
 
@@ -227,8 +308,11 @@ the pre-test is finished, delete the whole resource group — that is the clean 
 
 ## When something goes wrong
 
-**`release.sh` fails while building** — the registries from Step 2 are not running, or the portal
-has never been published into them. This is by far the most common failure.
+**`release.sh` fails while building**, with Maven or npm unable to find `insurance-portal-core` or
+`@insurance-portal/core` — the registries from Step 0b are not running, or the portal has not been
+published into them (Step 0d). This is by far the most common failure, and it is also what happens
+after a Docker restart, which stops the registry containers. Bring them back up with the same
+`docker compose … up -d` commands; the published copies survive in their volumes.
 
 **`permission denied: ./scripts/release.sh`** — `chmod +x scripts/*.sh`.
 
