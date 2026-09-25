@@ -60,8 +60,10 @@ $image = "$Acr.azurecr.io/${Repo}:$sha"
 
 # The build resolves the portal from the local registries (docker/settings.xml and the frontend's
 # .npmrc both name host.docker.internal), so those have to be running in the portal repository.
+# --platform linux/amd64 is load-bearing on an ARM machine: Azure Container Apps cannot run an
+# arm64 image, and the symptom is a container that starts and immediately dies.
 Write-Host "==> Building $image"
-docker build -f "$root/docker/Dockerfile" -t $image $root
+docker build --platform linux/amd64 -f "$root/docker/Dockerfile" -t $image $root
 
 Write-Host '==> Logging in + pushing to ACR'
 az acr login --name $Acr

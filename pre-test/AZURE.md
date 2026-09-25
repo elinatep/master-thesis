@@ -1,38 +1,48 @@
 # Deploying to Azure
 
+Written for **macOS**. There are PowerShell copies of every script (`.ps1`) for Windows — same
+names, same behaviour.
+
 ## The short version
 
 There is almost nothing to click. You already did the only portal step — creating the resource
-group. Everything else is three commands in a terminal. The Azure portal is then just somewhere to
-*look at* what got made.
+group. The rest is three commands in Terminal. The Azure portal is then just somewhere to *look
+at* what got made.
 
-**About the password: you invent it.** Nothing to look up. This deployment creates its own
-PostgreSQL server, and the password you put in the file below is the password it gets created
-with. Pick one, save it in your password manager, and you will not need to think about it again.
+**About the database password: you invent it.** There is nothing to look up. This deployment
+creates its own PostgreSQL server, and the password you put in the file below is the password it
+gets created with. Pick one, save it in your password manager, done.
 
 ---
 
 ## Before you start (one-off)
 
-Install these on your own machine:
+Open **Terminal** (Cmd+Space, type "Terminal"). If you do not have Homebrew, get it from
+https://brew.sh, then:
 
-| What | Where | Check it worked |
-| --- | --- | --- |
-| **Azure CLI** | https://aka.ms/installazurecliwindows | `az version` |
-| **Docker Desktop** | https://docker.com/products/docker-desktop | `docker version` |
-| **Git** | you already have it | `git --version` |
+```bash
+brew install azure-cli
+brew install --cask docker     # then open Docker Desktop once, so it is running
+```
 
-Then sign in and point the CLI at the right subscription:
+Check both work:
 
-```powershell
+```bash
+az version
+docker version
+```
+
+Sign in and pick the subscription your resource group is in:
+
+```bash
 az login
-az account list --output table          # find the subscription your resource group is in
+az account list --output table
 az account set --subscription "<the SubscriptionId from that table>"
 ```
 
-One-off, and only if the deploy later complains about a provider not being registered:
+Only if a deploy later complains that a provider is not registered:
 
-```powershell
+```bash
 az provider register --namespace Microsoft.App
 az provider register --namespace Microsoft.ContainerRegistry
 az provider register --namespace Microsoft.DBforPostgreSQL
@@ -43,17 +53,17 @@ az provider register --namespace Microsoft.OperationalInsights
 
 ## Step 1 — make the `.env` file
 
-Yes, a separate file, and it is **not** committed (it holds secrets — `.gitignore` already excludes
-it). It lives at `pre-test/infra/.env`.
+Yes, a separate file, and it is **not** committed — it holds secrets, and git already ignores it.
+It lives at `pre-test/infra/.env`.
 
-In the `pre-test` folder:
+From the `pre-test` folder:
 
-```powershell
-Copy-Item infra\.env.example infra\.env
-notepad infra\.env
+```bash
+cp infra/.env.example infra/.env
+open -e infra/.env          # opens it in TextEdit
 ```
 
-Fill in exactly three lines and leave everything else as it is:
+Fill in three lines and leave the rest as they are:
 
 ```
 RESOURCE_GROUP=rg-e2-feeling-heard
@@ -64,39 +74,39 @@ HANDOVER_SECRET=<invent one - see below>
 ```
 
 **`DB_ADMIN_PASSWORD`** — you choose it. 8–128 characters, with at least three of: upper case,
-lower case, digit, special character. Avoid `$`, backtick, `"` and `\`, which the shell mangles.
-Something like `Salvena-Pretest-2026!` is fine. Save it — after the first deploy the server keeps
-this password, and changing it later is a separate chore.
+lower case, digit, special character. Avoid `$`, backtick, `"` and `\`. Something like
+`Salvena-Pretest-2026!` is fine. **Save it** — after the first deploy the server keeps this
+password, and changing it afterwards is a separate chore.
 
-**`HANDOVER_SECRET`** — any random string. Generate one with:
+**`HANDOVER_SECRET`** — any random string:
 
-```powershell
-[guid]::NewGuid().ToString()
+```bash
+uuidgen
 ```
 
 This is the password Qualtrics sends when it tells the platform which arm a participant is in.
-Without it, anyone who finds the study URL could enter in whichever arm they liked, and those
-responses would be indistinguishable from real ones in your data. You will paste this same value
-into Qualtrics later (see `QUALTRICS.md`).
+Without it, anyone who finds the study URL can enter in whichever arm they like, and those
+responses are indistinguishable from real ones in your data. You will paste this same value into
+Qualtrics later (see `QUALTRICS.md`).
 
 Leave `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` **empty**. Filling them in puts an ETH login in
-front of the study, which blocks Prolific participants.
+front of the study, which blocks Prolific participants and breaks the Qualtrics iframe.
 
 ---
 
 ## Step 2 — start the portal's two registries
 
-The insurance portal is a library this study depends on, and it is served from two small local
-servers. They must be running for the build, because the build fetches the portal from them.
+The insurance portal is a library this study depends on, served from two small local servers. They
+must be running before the build, because the build fetches the portal from them.
 
 In the **portal repository** (`mtec-insurance-portal-core`, not this one):
 
-```powershell
+```bash
 docker compose -f docker/maven-registry.yaml up -d
 docker compose -f docker/npm-registry.yaml   up -d
 ```
 
-Leave them running. If you have never published the portal to them, do that first — that is the
+Leave them running. If you have never published the portal into them, do that first — that is the
 portal repo's own README.
 
 ---
@@ -105,22 +115,26 @@ portal repo's own README.
 
 Back in `pre-test`:
 
-```powershell
-.\scripts\release.ps1
+```bash
+./scripts/release.sh
 ```
 
-The first run takes **10–15 minutes** and does this, in order:
+The first run takes **10–15 minutes** and, in order:
 
-1. Sees the resource group is empty, so it creates the platform first — a container registry, a
-   PostgreSQL server, a Container Apps environment, a managed identity and a log workspace. This
-   is the slow part (the database server is most of it).
-2. Builds the study into a Docker image, tagged with the current git commit.
-3. Pushes that image to the registry it just created.
+1. Sees the resource group is empty, so creates the platform first — a container registry, a
+   PostgreSQL server, a Container Apps environment, a managed identity and a log workspace. The
+   database server is most of that time.
+2. Builds the study into a Docker image tagged with the current git commit.
+3. Pushes it to the registry it just made.
 4. Deploys the app.
 
 Later runs skip step 1 and take two or three minutes.
 
-When it finishes it prints a table. The line you want is **`appUrl`** — that is your study.
+It prints a table at the end. The line you want is **`appUrl`** — that is your study.
+
+> On an Apple Silicon Mac the build is forced to `linux/amd64`. Azure Container Apps cannot run an
+> arm64 image, and the symptom is a container that starts and immediately dies. The script handles
+> this; it just means the build is a little slower than a native one.
 
 ---
 
@@ -130,21 +144,26 @@ Open `<appUrl>` in a browser. You should get a **fail-loud error page**, not the
 
 > Can't start the session — Could not start from the study handover: no handover token in the URL.
 
-That is correct and is the point: there is no way into the study except through Qualtrics with a
+That is correct, and is the point: there is no way into the study except through Qualtrics with a
 valid token. If you see the Salvena dashboard instead, something is wrong.
 
-Now make yourself a token and walk through one arm:
+Now make a token and walk one arm yourself:
 
-```powershell
-$body = '{"participantId":"pilot-1","arm":"S1","name":"Joe Smith","callbackUrl":"https://mtecethz.eu.qualtrics.com"}'
-$r = Invoke-RestMethod -Method Post -Uri "<appUrl>/api/handover" `
-       -ContentType "application/json" `
-       -Headers @{ "X-Handover-Secret" = "<your HANDOVER_SECRET>" } `
-       -Body $body
-Start-Process "<appUrl>/?t=$($r.token)"
+```bash
+APP="<appUrl>"
+SECRET="<your HANDOVER_SECRET>"
+
+TOKEN=$(curl -s -X POST "$APP/api/handover" \
+  -H 'Content-Type: application/json' \
+  -H "X-Handover-Secret: $SECRET" \
+  -d '{"participantId":"pilot-1","arm":"S1","name":"Joe Smith","callbackUrl":"https://mtecethz.eu.qualtrics.com"}' \
+  | python3 -c 'import sys,json; print(json.load(sys.stdin)["token"])')
+
+open "$APP/?t=$TOKEN"
 ```
 
-Swap `"arm":"S1"` for `S0`, `S2` or `S4` to try the others.
+Swap `"arm":"S1"` for `S0`, `S2` or `S4` to try the others. Use a different `participantId` each
+time, or you will resume the previous run instead of starting a fresh one.
 
 Then open `<appUrl>/data` — every click and timestamp, with a CSV export. For an S4 run, check
 there are exactly **two** `CLAIM_ATTEMPT` rows under **one** session.
@@ -173,20 +192,24 @@ the pre-test is finished, delete the whole resource group — that is the clean 
 
 ## When something goes wrong
 
-**`release.ps1` fails while building** — the registries from Step 2 are not running, or the portal
-has not been published to them. This is the most common failure.
+**`release.sh` fails while building** — the registries from Step 2 are not running, or the portal
+has never been published into them. This is by far the most common failure.
+
+**`permission denied: ./scripts/release.sh`** — `chmod +x scripts/*.sh`.
 
 **"The subscription is not registered to use namespace…"** — run the `az provider register`
 commands above, wait a minute, try again.
 
-**Deploy fails on the password** — it broke one of the rules: 8–128 characters, three of
-upper/lower/digit/special, and it must not contain the word `portaladmin`.
+**The deploy rejects the password** — it broke a rule: 8–128 characters, three of
+upper/lower/digit/special, and it must not contain the admin username (`portaladmin`).
 
-**The app URL loads but shows an error about the database** — the container usually starts before
-the database is reachable on a first deploy. Wait a minute and reload; if it persists, check
-Log stream.
+**`Cannot connect to the Docker daemon`** — Docker Desktop is not running. Open it and wait for
+the whale in the menu bar to settle.
+
+**The app URL loads but errors about the database** — on a first deploy the container often starts
+before the database is reachable. Wait a minute and reload; if it persists, check Log stream.
 
 **Participants see an ETH login page** — `AUTH_CLIENT_ID` / `AUTH_CLIENT_SECRET` are filled in.
 Empty them and redeploy.
 
-Paste me whatever the terminal prints and I will tell you what it means.
+Paste me whatever Terminal prints and I will tell you what it means.

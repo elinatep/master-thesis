@@ -83,19 +83,21 @@ A restart is a visible event; a hot reload is not.
 
 ## Running it
 
-The portal is a dependency, not a module. Start its registries from the portal repository:
+The portal is a dependency, not a module. Start its registries from the portal repository
+(`mtec-insurance-portal-core`):
 
-```
-..\mtec-insurance-portal-core> docker compose -f docker/maven-registry.yaml up -d   # :8082
-..\mtec-insurance-portal-core> docker compose -f docker/npm-registry.yaml   up -d   # :4873
+```bash
+docker compose -f docker/maven-registry.yaml up -d   # :8082
+docker compose -f docker/npm-registry.yaml   up -d   # :4873
 ```
 
-Then, from here:
+Then, from here — three terminals:
 
-```
-docker compose -f docker/postgres.yaml up -d     # → localhost:5432, db pretest_feeling_heard
-.\pretest-app>      .\mvnw.cmd spring-boot:run   # :8080
-.\pretest-frontend> npm run dev                  # :5173
+```bash
+docker compose -f docker/postgres.yaml up -d        # localhost:5432, db pretest_feeling_heard
+
+cd pretest-app      && ./mvnw spring-boot:run       # :8080   (Windows: .\mvnw.cmd)
+cd pretest-frontend && npm run dev                  # :5173
 ```
 
 There is no direct-URL path into the study: the token is the only accepted handover, and an unknown
@@ -121,8 +123,9 @@ command that deploys. **`QUALTRICS.md`** covers wiring the survey to it.
 In short:
 
 ```
-# infra\.env MUST exist (copy infra/.env.example and fill in three lines)
-.\scripts\release.ps1
+# infra/.env MUST exist (copy infra/.env.example and fill in three lines)
+./scripts/release.sh          # macOS / Linux
+.\scripts\release.ps1          # Windows
 ```
 
 It builds the current commit into a git-SHA-tagged image, pushes it, and deploys. `containerImage`
@@ -138,8 +141,12 @@ on the other mid-run, for no saving worth having at this scale.
 There is no OpenAI key anywhere in this deployment. The pre-test has no voice interaction; that is
 the only thing the bot's absence changes about hosting.
 
-`scripts/azure_db_reset.ps1` drops both schemas between pilot rounds, so an analysis never mixes
-runs from two different versions of the arms.
+`scripts/azure_db_reset.sh` (`.ps1` on Windows) drops both schemas between pilot rounds, so an
+analysis never mixes runs from two different versions of the arms.
+
+Every script comes in both flavours — `.sh` for macOS/Linux and `.ps1` for Windows — because the
+two people working on this are not on the same operating system. They do the same things; keep
+them in step.
 
 ## Tests
 
