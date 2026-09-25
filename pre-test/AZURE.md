@@ -238,8 +238,17 @@ commands above, wait a minute, try again.
 **The deploy rejects the password** — it broke a rule: 8–128 characters, three of
 upper/lower/digit/special, and it must not contain the admin username (`portaladmin`).
 
-**`Cannot connect to the Docker daemon`** — Docker Desktop is not running. Open it and wait for
-the whale in the menu bar to settle.
+**`failed to connect to the docker API at unix:///var/run/docker.sock`** — you have the Docker
+client but no running daemon. Check which:
+
+```bash
+ls -d /Applications/Docker.app
+```
+
+If it exists, Docker Desktop is just not started — `open -a Docker`, then wait for the whale icon
+in the menu bar to stop animating. If it does not exist, `brew install docker` was run instead of
+`brew install --cask docker`: the plain formula installs only the command-line client. Install the
+cask and open it.
 
 **The app URL loads but errors about the database** — on a first deploy the container often starts
 before the database is reachable. Wait a minute and reload; if it persists, check Log stream.
