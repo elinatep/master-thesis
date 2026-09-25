@@ -3,17 +3,19 @@
 # Usage:   ./scripts/deploy.ps1 -ContainerImage <acr>.azurecr.io/pretest-feeling-heard:<sha>
 # Reads:   infra/.env  (gitignored - copy infra/.env.example and fill in)
 #
-# Resource-GROUP scoped, not subscription scoped, and that is the point: the registry, identity,
-# logs, Container Apps environment and Postgres server are owned by levels-of-ai-help. This
-# deployment references them and creates only its own database and container app, so the two
-# studies cannot overwrite each other's platform.
+# Resource-GROUP scoped: the group must already exist, and this deployment never owns it.
+# Everything inside it - registry, identity, logs, Container Apps environment, Postgres server,
+# container app - belongs to this study alone. It does not share levels-of-ai-help's platform.
 #
 # Prefer ./scripts/release.ps1, which builds and tags the image before calling this.
 
 param(
     [string]$EnvFile = "$PSScriptRoot/../infra/.env",
-    [Parameter(Mandatory = $true)][string]$ContainerImage,
-    [string]$ResourceGroup
+    [string]$ContainerImage,
+    [string]$ResourceGroup,
+    # First deploy into an empty resource group: bring up the registry and database server only,
+    # so there is somewhere to push the image to. release.ps1 sets this for you.
+    [switch]$PlatformOnly
 )
 
 $ErrorActionPreference = 'Stop'
@@ -30,16 +32,27 @@ Get-Content $EnvFile | Where-Object { $_ -match '^\s*[^#]\S*\s*=' } | ForEach-Ob
 }
 
 if ([string]::IsNullOrWhiteSpace($ResourceGroup)) {
-    $ResourceGroup = if ([string]::IsNullOrWhiteSpace($vars['RESOURCE_GROUP'])) { 'rg-insurance-portal' } else { $vars['RESOURCE_GROUP'] }
+    $ResourceGroup = if ([string]::IsNullOrWhiteSpace($vars['RESOURCE_GROUP'])) { 'rg-e2-feeling-heard' } else { $vars['RESOURCE_GROUP'] }
 }
 
 $dbPassword = $vars['DB_ADMIN_PASSWORD']
 if ([string]::IsNullOrWhiteSpace($dbPassword)) {
-    throw "DB_ADMIN_PASSWORD missing or empty in $EnvFile. It is the password the SHARED Postgres server was created with."
+    throw "DB_ADMIN_PASSWORD missing or empty in $EnvFile. You choose it: this deployment creates its own Postgres server with that password. 8-128 chars, at least 3 of upper/lower/digit/special."
+}
+
+if (-not $PlatformOnly -and [string]::IsNullOrWhiteSpace($ContainerImage)) {
+    throw 'ContainerImage is required. Run ./scripts/release.ps1, which builds and tags it for you.'
 }
 
 # Each element is a single key=value token, so secret special-chars stay intact
-$params = @("dbAdminPassword=$dbPassword", "containerImage=$ContainerImage")
+$params = @("dbAdminPassword=$dbPassword")
+
+if ($PlatformOnly) {
+    Write-Host 'Platform only: creating the registry, database server and environment (no app yet).'
+    $params += 'deployApp=false'
+} else {
+    $params += "containerImage=$ContainerImage"
+}
 
 if (-not [string]::IsNullOrWhiteSpace($vars['DB_ADMIN_USER'])) {
     $params += "dbAdminUser=$($vars['DB_ADMIN_USER'])"

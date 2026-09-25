@@ -6,14 +6,14 @@
 # behavioural (the study log). Each carries its own Flyway history table, so dropping them is
 # enough - the next start rebuilds both from scratch.
 #
-# It does not touch the shared server or the other study's database. Run this between pilot rounds
-# so a pre-test analysis never mixes runs from two different versions of the arms.
+# The server itself is left alone. Run this between pilot rounds so an analysis never mixes runs
+# from two different versions of the arms.
 #
 # Requires psql on PATH and your IP allowed on the server's firewall.
 
 param(
     [string]$EnvFile = "$PSScriptRoot/../infra/.env",
-    [string]$ResourceGroup = 'rg-insurance-portal',
+    [string]$ResourceGroup = 'rg-e2-feeling-heard',
     [string]$DbName = 'pretest_feeling_heard'
 )
 

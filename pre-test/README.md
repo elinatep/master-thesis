@@ -115,28 +115,31 @@ console reveals the reset menu.
 
 ## Deploying
 
-`QUALTRICS.md` covers the survey side. For Azure:
+**`AZURE.md`** is the step-by-step guide — what to install, what goes in `infra/.env`, and the one
+command that deploys. **`QUALTRICS.md`** covers wiring the survey to it.
+
+In short:
 
 ```
-# infra\.env MUST exist (copy infra/.env.example)
+# infra\.env MUST exist (copy infra/.env.example and fill in three lines)
 .\scripts\release.ps1
 ```
 
-It builds the current commit into a git-SHA-tagged image, pushes to the shared ACR, and deploys.
-`containerImage` is a required Bicep parameter with no default, so a deploy cannot silently ship a
-stale image — `release.ps1` is the only supported path.
+It builds the current commit into a git-SHA-tagged image, pushes it, and deploys. `containerImage`
+has no default in the Bicep, so a deploy cannot silently ship a stale image — `release.ps1` is the
+only supported path. On a brand-new resource group the first run creates the platform on its own
+first, because the image has to be pushed to a registry that does not exist yet.
 
-**This deployment owns almost nothing.** The registry, managed identity, Log Analytics workspace,
-Container Apps environment and Postgres server are `levels-of-ai-help`'s, referenced here as
-`existing`. This study creates its own database on that server and its own container app, and
-nothing else — so the two studies cannot overwrite each other's platform. `infra/main.bicep` is
-resource-group scoped for the same reason.
+**This study stands up its own platform** — registry, identity, logs, Container Apps environment,
+Postgres server — in its own resource group. It does not share `levels-of-ai-help`'s. The two run
+in different windows, and sharing would mean a server resized or a registry emptied for one landing
+on the other mid-run, for no saving worth having at this scale.
 
 There is no OpenAI key anywhere in this deployment. The pre-test has no voice interaction; that is
 the only thing the bot's absence changes about hosting.
 
-`scripts/azure_db_reset.ps1` drops both schemas in *this* study's database between pilot rounds, so
-an analysis never mixes runs from two different versions of the arms.
+`scripts/azure_db_reset.ps1` drops both schemas between pilot rounds, so an analysis never mixes
+runs from two different versions of the arms.
 
 ## Tests
 

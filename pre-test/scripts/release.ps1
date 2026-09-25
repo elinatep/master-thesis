@@ -6,18 +6,31 @@
 # required Bicep parameter with no default, so this is the only supported way to deploy - a run
 # can never silently ship a stale image.
 #
-# The registry belongs to the shared platform, so it is looked up rather than hard-coded; pass
-# -Acr to override. ACR Tasks are disabled on this subscription, so the build is local docker.
+# The registry is created by the first deploy, so on a brand-new resource group there is nothing to
+# push to yet: the script deploys once with a placeholder image to bring the platform up, then
+# builds, pushes and deploys for real. Pass -Acr to skip the lookup. ACR Tasks are disabled on this
+# subscription, so the build is a local docker build.
 
 param(
     [string]$Acr,
     [string]$Repo = 'pretest-feeling-heard',
-    [string]$ResourceGroup = 'rg-insurance-portal'
+    [string]$ResourceGroup
 )
 
 $ErrorActionPreference = 'Stop'
 
 $root = (Resolve-Path "$PSScriptRoot/..").Path
+$envFile = "$root/infra/.env"
+
+if (-not (Test-Path $envFile)) {
+    throw "infra/.env not found. Copy infra/.env.example to infra/.env and fill it in."
+}
+
+if ([string]::IsNullOrWhiteSpace($ResourceGroup)) {
+    $line = Get-Content $envFile | Where-Object { $_ -match '^\s*RESOURCE_GROUP\s*=' } | Select-Object -First 1
+    $ResourceGroup = if ($line) { ($line -split '=', 2)[1].Trim() } else { 'rg-e2-feeling-heard' }
+}
+Write-Host "==> Resource group: $ResourceGroup" 
 
 $sha = (git -C $root rev-parse --short HEAD).Trim()
 if ([string]::IsNullOrWhiteSpace($sha)) { throw 'Could not read git commit SHA.' }
@@ -27,13 +40,21 @@ if (git -C $root status --porcelain) {
 }
 
 if ([string]::IsNullOrWhiteSpace($Acr)) {
-    Write-Host "==> Looking up the shared registry in $ResourceGroup"
+    $Acr = (az acr list --resource-group $ResourceGroup --query "[0].name" --output tsv)
+}
+
+if ([string]::IsNullOrWhiteSpace($Acr)) {
+    # First run against an empty resource group: the image has to be pushed to a registry that does
+    # not exist yet. Create the platform on its own first, then carry on with the real build.
+    # Only ever happens once; later runs find the registry and skip straight past.
+    Write-Host '==> No registry yet - creating the platform first (one-off, ~5-10 minutes)'
+    & "$PSScriptRoot/deploy.ps1" -PlatformOnly -ResourceGroup $ResourceGroup
     $Acr = (az acr list --resource-group $ResourceGroup --query "[0].name" --output tsv)
     if ([string]::IsNullOrWhiteSpace($Acr)) {
-        throw "No container registry found in $ResourceGroup. Has the shared platform been deployed from levels-of-ai-help?"
+        throw "Bootstrap finished but no registry appeared in $ResourceGroup. Check the deployment output above."
     }
-    Write-Host "    found: $Acr"
 }
+Write-Host "==> Registry: $Acr" 
 
 $image = "$Acr.azurecr.io/${Repo}:$sha"
 
