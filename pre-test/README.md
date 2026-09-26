@@ -138,7 +138,13 @@ Postgres server — in its own resource group. It does not share `levels-of-ai-h
 in different windows, and sharing would mean a server resized or a registry emptied for one landing
 on the other mid-run, for no saving worth having at this scale.
 
-The frontend image is built with `npm install`, not `npm ci`, for one dependency's sake:
+The frontend is compiled on the machine running `release.sh` and copied into the image; only the
+backend is built in the container. Emulated `linux/amd64` — which an Apple Silicon Mac must use,
+since Azure Container Apps cannot run arm64 — makes Dart Sass compute different contrast ratios
+inside Bootstrap's `color-contrast()`, which returns null and fails the stylesheet. The same
+package versions build correctly on the host. `docker/Dockerfile` has the details.
+
+The frontend is installed with `npm install`, not `npm ci`, for one dependency's sake:
 `@insurance-portal/core` is published to a registry on each developer's own machine, so its
 integrity hash differs per publisher and no committed value is true for everyone. Every other
 dependency still resolves from the lockfile, and the portal's version is still pinned.

@@ -268,9 +268,10 @@ Later runs skip step 1 and take two or three minutes.
 
 It prints a table at the end. The line you want is **`appUrl`** — that is your study.
 
-> On an Apple Silicon Mac the build is forced to `linux/amd64`. Azure Container Apps cannot run an
-> arm64 image, and the symptom is a container that starts and immediately dies. The script handles
-> this; it just means the build is a little slower than a native one.
+> On an Apple Silicon Mac the image is forced to `linux/amd64`, because Azure Container Apps cannot
+> run an arm64 one. That emulated environment also miscompiles the stylesheet, so the frontend is
+> built on your Mac and copied into the image rather than compiled inside it — which is why Node is
+> in the prerequisites, and why the build is faster than it looks. `docker/Dockerfile` explains it.
 
 ---
 
@@ -336,6 +337,10 @@ happen: the build uses `npm install` rather than `npm ci` for exactly this reaso
 published to a registry on your own machine, so its tarball bytes differ from whoever published it
 last, and no single hash in the lockfile can be right for both of you. If you see it again, check
 nobody has changed that line in `docker/Dockerfile` back.
+
+**`$color1: null is not a color`** from Sass — should no longer happen: the frontend is built on
+your machine, not in the emulated container where that occurs. If you see it, your local
+`npm run build` is genuinely failing; run it by hand in `pretest-frontend` to see why.
 
 **`release.sh` fails while building**, with Maven or npm unable to find `insurance-portal-core` or
 `@insurance-portal/core` — the registries from Step 0b are not running, or the portal has not been

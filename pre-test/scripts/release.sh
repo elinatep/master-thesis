@@ -13,6 +13,9 @@
 # The build resolves the insurance portal from the two local registries (docker/settings.xml and
 # the frontend's .npmrc both name host.docker.internal), so those must be running in the portal
 # repository before this will work.
+#
+# The frontend is compiled on this machine and copied into the image; only the backend is built in
+# the container. docker/Dockerfile explains why.
 
 set -euo pipefail
 
@@ -82,6 +85,16 @@ fi
 echo "==> Registry: $acr"
 
 image="$acr.azurecr.io/$repo:$sha"
+
+# Build the frontend here on the host, not in the image - see the note at the top of
+# docker/Dockerfile. Emulated linux/amd64 miscompiles the stylesheet; this machine does not.
+echo "==> Building the frontend (on this machine)"
+( cd "$root/pretest-frontend" && npm install --no-audit --no-fund && npm run build )
+
+if [[ ! -f "$root/pretest-frontend/dist/index.html" ]]; then
+  echo "ERROR: the frontend build produced no dist/index.html - refusing to ship an image without a UI." >&2
+  exit 1
+fi
 
 # --platform linux/amd64 is load-bearing on an Apple Silicon Mac: Docker would otherwise build an
 # arm64 image, which Azure Container Apps cannot run. The failure is a container that starts and

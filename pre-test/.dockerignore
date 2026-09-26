@@ -1,0 +1,12 @@
+# Keep the build context small. Note what is NOT here: **/dist.
+#
+# The sibling repos (insurance-portal-core, levels-of-ai-help) do exclude it, because they compile
+# their frontend inside the image. This one does not - the SPA is built on the host and copied in
+# (see the note at the top of docker/Dockerfile) - so excluding dist/ would silently produce an
+# image with no user interface.
+**/node_modules
+**/target
+.git
+.idea
+**/.mvn
+infra/.env

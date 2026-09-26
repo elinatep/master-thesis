@@ -69,6 +69,23 @@ Write-Host "==> Registry: $Acr"
 
 $image = "$Acr.azurecr.io/${Repo}:$sha"
 
+# Build the frontend here on the host, not in the image - see the note at the top of
+# docker/Dockerfile. Emulated linux/amd64 miscompiles the stylesheet; this machine does not.
+Write-Host '==> Building the frontend (on this machine)'
+Push-Location "$root/pretest-frontend"
+try {
+    npm install --no-audit --no-fund
+    if ($LASTEXITCODE -ne 0) { throw 'npm install failed in pretest-frontend.' }
+    npm run build
+    if ($LASTEXITCODE -ne 0) { throw 'npm run build failed in pretest-frontend.' }
+} finally {
+    Pop-Location
+}
+
+if (-not (Test-Path "$root/pretest-frontend/dist/index.html")) {
+    throw 'The frontend build produced no dist/index.html - refusing to ship an image without a UI.'
+}
+
 # --platform linux/amd64 is load-bearing on an ARM machine: Azure Container Apps cannot run an
 # arm64 image, and the symptom is a container that starts and immediately dies.
 Write-Host "==> Building $image"
