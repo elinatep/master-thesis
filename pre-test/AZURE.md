@@ -277,6 +277,21 @@ It prints a table at the end. The line you want is **`appUrl`** — that is your
 
 ## Step 3 — check it worked
 
+### First: what is `<appUrl>`?
+
+`release.sh` prints it at the end, in a box. If you don't see it there (older versions of the
+script printed an empty table instead), ask Azure:
+
+```bash
+echo "https://$(az containerapp show -g rg-e2-feeling-heard -n pretest-feeling-heard \
+  --query properties.configuration.ingress.fqdn -o tsv)"
+```
+
+That is your `<appUrl>` for everything below, and the one you give Qualtrics. It does not change
+when you redeploy, so note it down once.
+
+### Then: open it
+
 Open `<appUrl>` in a browser. You should get a **fail-loud error page**, not the portal:
 
 > Can't start the session — Could not start from the study handover: no handover token in the URL.

@@ -90,10 +90,63 @@ fi
 
 echo "==> Deploying to resource group $resource_group"
 
-az deployment group create \
+# Ask for the outputs as JSON, not as a table. `--output table` on a deployment's outputs object
+# prints an empty table: each output is itself an object ({type, value}), and the table renderer
+# has no columns to make of that. The first successful deploy of this study finished without ever
+# showing the app URL because of it.
+outputs="$(az deployment group create \
   --name pretest-feeling-heard \
   --resource-group "$resource_group" \
   --template-file "$root/infra/main.bicep" \
   --parameters "${params[@]}" \
   --query "properties.outputs" \
-  --output table
+  --output json)"
+
+# Pull one output's value out of that JSON without depending on jq being installed.
+output_value() {
+  printf '%s' "$outputs" | python3 -c '
+import json, sys
+name = sys.argv[1]
+try:
+    data = json.load(sys.stdin)
+except ValueError:
+    sys.exit(0)
+entry = (data or {}).get(name) or {}
+value = entry.get("value")
+if value:
+    print(value)
+' "$1" 2>/dev/null
+}
+
+app_url="$(output_value appUrl)"
+
+echo
+if [[ -n "$app_url" ]]; then
+  echo "-------------------------------------------------------------------------------"
+  echo " The pre-test is live at:"
+  echo
+  echo "   $app_url"
+  echo
+  echo " Open it in a browser and you should get an ERROR page, not the portal:"
+  echo '   "Could not start from the study handover: no handover token in the URL."'
+  echo " That is correct - nobody enters this study except through Qualtrics."
+  echo
+  echo " Qualtrics posts participants to:  $(output_value handoverRegisterUrl)"
+  echo " Your data is at:                  $(output_value researcherDataUrl)"
+  echo "-------------------------------------------------------------------------------"
+else
+  echo "Deployment finished, but no appUrl output came back."
+  if [[ $platform_only -eq 1 ]]; then
+    echo "That is expected with --platform-only: there is no app yet."
+  else
+    echo "Ask Azure directly:"
+    echo "  az containerapp show -g $resource_group -n pretest-feeling-heard \\"
+    echo "    --query properties.configuration.ingress.fqdn -o tsv"
+  fi
+fi
+
+# Still print the raw outputs, so the registry name, database host and so on are on the terminal
+# for anyone who needs them.
+echo
+echo "All deployment outputs:"
+printf '%s\n' "$outputs"

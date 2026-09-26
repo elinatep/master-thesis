@@ -77,10 +77,55 @@ if (-not [string]::IsNullOrWhiteSpace($clientId) -and -not [string]::IsNullOrWhi
 
 Write-Host "==> Deploying to resource group $ResourceGroup"
 
-az deployment group create `
+# Ask for the outputs as JSON, not as a table. `--output table` on a deployment's outputs object
+# prints an empty table: each output is itself an object ({type, value}), and the table renderer has
+# no columns to make of that. The first successful deploy of this study finished without ever
+# showing the app URL because of it.
+$outputsJson = az deployment group create `
     --name pretest-feeling-heard `
     --resource-group $ResourceGroup `
     --template-file "$PSScriptRoot/../infra/main.bicep" `
     --parameters $params `
     --query "properties.outputs" `
-    --output table
+    --output json
+
+$outputs = if ([string]::IsNullOrWhiteSpace($outputsJson)) { $null } else { $outputsJson | ConvertFrom-Json }
+
+function Get-OutputValue($name) {
+    if ($null -eq $outputs) { return '' }
+    $entry = $outputs.PSObject.Properties | Where-Object { $_.Name -eq $name }
+    if ($null -eq $entry) { return '' }
+    return $entry.Value.value
+}
+
+$appUrl = Get-OutputValue 'appUrl'
+
+Write-Host ''
+if (-not [string]::IsNullOrWhiteSpace($appUrl)) {
+    Write-Host '-------------------------------------------------------------------------------'
+    Write-Host ' The pre-test is live at:'
+    Write-Host ''
+    Write-Host "   $appUrl"
+    Write-Host ''
+    Write-Host ' Open it in a browser and you should get an ERROR page, not the portal:'
+    Write-Host '   "Could not start from the study handover: no handover token in the URL."'
+    Write-Host ' That is correct - nobody enters this study except through Qualtrics.'
+    Write-Host ''
+    Write-Host " Qualtrics posts participants to:  $(Get-OutputValue 'handoverRegisterUrl')"
+    Write-Host " Your data is at:                  $(Get-OutputValue 'researcherDataUrl')"
+    Write-Host '-------------------------------------------------------------------------------'
+} else {
+    Write-Host 'Deployment finished, but no appUrl output came back.'
+    if ($PlatformOnly) {
+        Write-Host 'That is expected with -PlatformOnly: there is no app yet.'
+    } else {
+        Write-Host 'Ask Azure directly:'
+        Write-Host "  az containerapp show -g $ResourceGroup -n pretest-feeling-heard --query properties.configuration.ingress.fqdn -o tsv"
+    }
+}
+
+# Still print the raw outputs, so the registry name, database host and so on are on the terminal
+# for anyone who needs them.
+Write-Host ''
+Write-Host 'All deployment outputs:'
+Write-Host $outputsJson
