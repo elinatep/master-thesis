@@ -228,12 +228,48 @@ SURVEY 2
   script proves the platform works, not that Qualtrics is wired to it. Then check
   `https://<app-fqdn>/data`, especially an S4 run: exactly two `CLAIM_ATTEMPT` rows under one
   session.
-- **Check both Qualtrics exports join.** Survey 1's `PROLIFIC_PID` must equal Survey 2's
-  `participantId` for every pilot run. Find that out on four responses, not four hundred.
+- **Check the three exports join**, with `./scripts/check_join.py` (below). Find a broken join
+  key on four pilot responses, not four hundred real ones.
 - **Check the briefing matches the portal's form.** The briefing lists *Type of damage, Cause, Date
   of incident, Estimated damage*; the portal's real form is *Policy, Type, Incident date, Amount
   claimed, Description*. There is no Cause field, and picking the right policy is a step the
   briefing does not mention.
+
+## Checking the join
+
+One participant ends up in three files: Survey 1 (consent, the randomised arm), Survey 2 (the
+emotion measures) and the platform (what they actually did). Nothing connects them but the Prolific
+id, carried Prolific → Survey 1 → handover → redirect → Survey 2. Every link in that chain can
+break without any single file looking wrong.
+
+Export all three — the two Qualtrics CSVs, and **Export CSV** on `<appUrl>/data` — and run:
+
+```bash
+./scripts/check_join.py survey1.csv survey2.csv behavioural-log.csv
+```
+
+A clean run ends:
+
+```
+RESULT: clean. 4 participant(s) join across all three files, arms agree.
+```
+
+Otherwise it names each case separately, because they mean different things:
+
+| What it reports | What it means |
+| --- | --- |
+| In Survey 1, never reached the platform | The redirect out of Survey 1 failed, or they abandoned at the handover. |
+| On the platform, never reached Survey 2 | They did the task but did not arrive at the post-measures — abandoned on the outcome screen, or `callbackUrl` points at the wrong survey. |
+| In Survey 2, with no platform record | Someone opened Survey 2's link directly. Add the empty-`participantId` branch. |
+| In Survey 2, with no Survey 1 response | The join key differs between the surveys — `PROLIFIC_PID` is not what reached `participantId`. |
+| Reached the platform but never completed a session | They left before clicking through the outcome screen. Exclude them, or the post-measures belong to an unfinished task. |
+| Arm disagrees | The randomiser, the platform and the URL do not agree on the condition. Nothing should ever be analysed while this is non-empty. |
+
+It also prints the arm balance across participants who join everywhere — which is the number that
+actually matters, not what the randomiser assigned.
+
+Qualtrics preview and test responses are ignored (they have the same shape as real ones and would
+otherwise read as a broken join); `--keep-previews` counts them. Standard library only.
 
 ## When something does not work
 
