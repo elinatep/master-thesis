@@ -132,6 +132,27 @@ def main():
                     help="count Qualtrics preview/test responses as participants")
     args = ap.parse_args()
 
+    # Check all three exist before reading any, and say where each one comes from. The arguments
+    # are three similar-looking CSV paths; a bare FileNotFoundError traceback on one of them does
+    # not say which, nor that the file is something you have to go and export first.
+    missing = [(label, path, where) for label, path, where in (
+        ("Survey 1", args.survey1, "Qualtrics -> Data & Analysis -> Export -> CSV"),
+        ("Survey 2", args.survey2, "Qualtrics -> Data & Analysis -> Export -> CSV"),
+        ("Platform", args.platform, "the Export CSV button on <appUrl>/data"),
+    ) if not os.path.isfile(path)]
+    if missing:
+        print("These files are not here:\n", file=sys.stderr)
+        for label, path, where in missing:
+            print(f"  {label:<9} {path}", file=sys.stderr)
+            print(f"            export it from {where}", file=sys.stderr)
+        print("\nThe names above are whatever you pass in - they are not fixed. Pass the paths to",
+              file=sys.stderr)
+        print("the files you actually downloaded, for example:\n", file=sys.stderr)
+        print("  ./scripts/check_join.py ~/Downloads/Survey1.csv ~/Downloads/Survey2.csv \\",
+              file=sys.stderr)
+        print("      ~/Downloads/behavioural-log-2026-09-26-19-05-15.csv", file=sys.stderr)
+        return 2
+
     s1 = read_qualtrics(args.survey1)
     s2 = read_qualtrics(args.survey2)
     pf = read_plain(args.platform)
