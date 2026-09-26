@@ -3,7 +3,11 @@ WORKDIR /fe
 # .npmrc scopes @insurance-portal to Verdaccio and must be in place before the install layer.
 # It names host.docker.internal, which resolves both on the host and in here.
 COPY levels-of-ai-help-frontend/package.json levels-of-ai-help-frontend/package-lock.json levels-of-ai-help-frontend/.npmrc ./
-RUN npm ci
+# `npm install`, not `npm ci`: @insurance-portal/core is published to a registry on the
+# developer's own machine, so its tarball bytes - and its integrity hash - differ between whoever
+# published it last, and a hash committed by one person fails `npm ci` for everyone else. The
+# version is still pinned and every other dependency still resolves from the lockfile.
+RUN npm install --no-audit --no-fund
 COPY levels-of-ai-help-frontend/ ./
 RUN npm run build
 

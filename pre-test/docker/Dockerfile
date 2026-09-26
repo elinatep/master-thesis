@@ -3,7 +3,14 @@ WORKDIR /fe
 # .npmrc scopes @insurance-portal to Verdaccio and must be in place before the install layer.
 # It names host.docker.internal, which resolves both on the host and in here.
 COPY pretest-frontend/package.json pretest-frontend/package-lock.json pretest-frontend/.npmrc ./
-RUN npm ci
+# `npm install`, not `npm ci`, because of ONE dependency: @insurance-portal/core is published to a
+# registry running on the developer's own machine, so its tarball bytes - and therefore its
+# integrity hash - differ between whoever published it last. A hash committed by one person fails
+# `npm ci` for everyone else with EINTEGRITY, and the lockfile cannot hold a value that is true for
+# both. The version is still pinned (^0.7.1) and every other dependency still resolves from the
+# lockfile, so what is given up is verification of an artifact fetched over plain HTTP from
+# localhost, which was never the thing protecting anybody.
+RUN npm install --no-audit --no-fund
 COPY pretest-frontend/ ./
 RUN npm run build
 

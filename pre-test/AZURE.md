@@ -331,6 +331,12 @@ the pre-test is finished, delete the whole resource group — that is the clean 
 **`ENOTFOUND host.docker.internal`** — the hosts entry from Step 0c is missing. macOS does not
 resolve that name on the host by itself.
 
+**`EINTEGRITY … integrity checksum failed`** on `@insurance-portal/core` — should no longer
+happen: the build uses `npm install` rather than `npm ci` for exactly this reason. The portal is
+published to a registry on your own machine, so its tarball bytes differ from whoever published it
+last, and no single hash in the lockfile can be right for both of you. If you see it again, check
+nobody has changed that line in `docker/Dockerfile` back.
+
 **`release.sh` fails while building**, with Maven or npm unable to find `insurance-portal-core` or
 `@insurance-portal/core` — the registries from Step 0b are not running, or the portal has not been
 published into them (Step 0e). This is by far the most common failure, and it is also what happens
