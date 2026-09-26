@@ -135,7 +135,27 @@ docker compose -f docker/npm-registry.yaml   up -d   # Verdaccio,  :4873
 Leave them running. They hold the published portal; the Docker build reaches them at
 `host.docker.internal`.
 
-### c. Registry credentials (one-off per machine)
+### c. Make `host.docker.internal` resolve (macOS only)
+
+`host.docker.internal` is the name Docker gives *containers* for reaching your machine. On Windows
+Docker Desktop also adds it to the hosts file, so it resolves on the host too; on macOS it does
+not. npm needs it to — `@insurance-portal/core` publishes there, and both frontends scope the
+`@insurance-portal` package to it — so without this, `npm adduser`, `npm publish` and `npm install`
+all fail with `ENOTFOUND host.docker.internal`.
+
+```bash
+sudo sh -c 'echo "127.0.0.1 host.docker.internal" >> /etc/hosts'
+```
+
+It asks for your Mac password. Check Verdaccio answers under that name:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" http://host.docker.internal:4873/-/ping
+```
+
+`200` is what you want. (Maven is unaffected — the portal publishes to `localhost:8082`.)
+
+### d. Registry credentials (one-off per machine)
 
 Maven — create or edit `~/.m2/settings.xml` so it contains:
 
@@ -162,7 +182,7 @@ npm adduser --registry http://host.docker.internal:4873
 
 Any username, password and email will do; it is a local registry.
 
-### d. Publish the portal into them
+### e. Publish the portal into them
 
 ```bash
 cd ~/eth/insurance-portal-core/insurance-portal-core
@@ -308,9 +328,12 @@ the pre-test is finished, delete the whole resource group — that is the clean 
 
 ## When something goes wrong
 
+**`ENOTFOUND host.docker.internal`** — the hosts entry from Step 0c is missing. macOS does not
+resolve that name on the host by itself.
+
 **`release.sh` fails while building**, with Maven or npm unable to find `insurance-portal-core` or
 `@insurance-portal/core` — the registries from Step 0b are not running, or the portal has not been
-published into them (Step 0d). This is by far the most common failure, and it is also what happens
+published into them (Step 0e). This is by far the most common failure, and it is also what happens
 after a Docker restart, which stops the registry containers. Bring them back up with the same
 `docker compose … up -d` commands; the published copies survive in their volumes.
 
