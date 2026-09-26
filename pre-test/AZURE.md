@@ -339,6 +339,30 @@ after a Docker restart, which stops the registry containers. Bring them back up 
 
 **`permission denied: ./scripts/release.sh`** — `chmod +x scripts/*.sh`.
 
+**`AuthorizationFailed … does not have authorization to perform action
+'Microsoft.Resources/deployments/validate/action'`** — nothing is wrong with the template or the
+`.env`; the deploy got far enough to ask Azure to validate, and Azure said no. Your account lacks
+write access to the resource group.
+
+At ETH this is usually **PIM**: you hold Contributor as an *eligible* role rather than an active
+one, and have to switch it on. Portal → search **Privileged Identity Management** → **My roles** →
+**Azure resources** → **Eligible assignments** → Activate.
+
+Then log in again, because the token the CLI is holding was issued before the activation and does
+not carry it:
+
+```bash
+az logout && az login
+az account set --subscription "<your subscription id>"
+```
+
+PIM activations **expire**, usually after eight hours. The same error on a later day, having changed
+nothing, is almost always this rather than a new problem.
+
+If PIM shows no eligible assignment, it is a plain missing grant instead: check with
+`az role assignment list --assignee <your email> --output table`, and ask whoever owns the
+subscription for Contributor on the resource group.
+
 **"The subscription is not registered to use namespace…"** — run the `az provider register`
 commands above, wait a minute, try again.
 
