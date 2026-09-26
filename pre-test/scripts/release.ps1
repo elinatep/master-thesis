@@ -39,13 +39,14 @@ if (git -C $root status --porcelain) {
     Write-Warning "Working tree is dirty - image '$sha' will not fully reflect the committed state."
 }
 
-# A lockfile that resolves a dependency from a local path builds fine on the machine that made it
-# and fails inside the image, where that path does not exist. Easy to create by accident, and the
-# error it produces (ENOENT on a tarball) says nothing about the lockfile. Catch it here.
-$lock = "$root/pretest-frontend/package-lock.json"
-if (Select-String -Path $lock -Pattern '"resolved": "file:' -Quiet) {
-    Select-String -Path $lock -Pattern '"resolved": "file:'
-    throw "package-lock.json resolves a dependency from a local file path, which will not exist inside the Docker build. Fix it with: cd pretest-frontend; rm -r node_modules; npm install"
+# A dependency declared or resolved from a local path builds on the machine that has that path and
+# fails inside the image. `npm install ../some.tgz` while testing rewrites BOTH package.json and
+# package-lock.json, and the eventual error (ENOENT on a tarball) names neither file.
+foreach ($f in @("$root/pretest-frontend/package.json", "$root/pretest-frontend/package-lock.json")) {
+    if (Select-String -Path $f -Pattern '"(file|link):' -Quiet) {
+        Select-String -Path $f -Pattern '"(file|link):'
+        throw "$f declares a dependency from a local path, which will not exist inside the Docker build. Fix it with: cd pretest-frontend; rm -r node_modules; npm install - then commit package.json and package-lock.json."
+    }
 }
 
 
@@ -57,19 +58,17 @@ if ([string]::IsNullOrWhiteSpace($Acr)) {
     # First run against an empty resource group: the image has to be pushed to a registry that does
     # not exist yet. Create the platform on its own first, then carry on with the real build.
     # Only ever happens once; later runs find the registry and skip straight past.
-    Write-Host '==> No registry yet - creating the platform first (one-off, ~5-10 minutes)'
+    Write-Host '==> No registry yet - creating the platform first (one-off, ~10 minutes)'
     & "$PSScriptRoot/deploy.ps1" -PlatformOnly -ResourceGroup $ResourceGroup
     $Acr = (az acr list --resource-group $ResourceGroup --query "[0].name" --output tsv)
     if ([string]::IsNullOrWhiteSpace($Acr)) {
         throw "Bootstrap finished but no registry appeared in $ResourceGroup. Check the deployment output above."
     }
 }
-Write-Host "==> Registry: $Acr" 
+Write-Host "==> Registry: $Acr"
 
 $image = "$Acr.azurecr.io/${Repo}:$sha"
 
-# The build resolves the portal from the local registries (docker/settings.xml and the frontend's
-# .npmrc both name host.docker.internal), so those have to be running in the portal repository.
 # --platform linux/amd64 is load-bearing on an ARM machine: Azure Container Apps cannot run an
 # arm64 image, and the symptom is a container that starts and immediately dies.
 Write-Host "==> Building $image"

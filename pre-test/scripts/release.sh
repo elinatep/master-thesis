@@ -49,19 +49,21 @@ if [[ -n "$(git -C "$root" status --porcelain)" ]]; then
   echo "WARNING: working tree is dirty - image '$sha' will not fully reflect the committed state."
 fi
 
-# A lockfile that resolves a dependency from a local path builds fine on the machine that made it
-# and fails inside the image, where that path does not exist. It is easy to create by accident -
-# `npm install ../some.tgz` while testing rewrites the entry - and the error it produces (ENOENT on
-# a tarball) says nothing about the lockfile. Catch it here, where the message can.
-lock="$root/pretest-frontend/package-lock.json"
-if grep -q '"resolved": "file:' "$lock" 2>/dev/null; then
-  echo "ERROR: $lock resolves a dependency from a local file path:" >&2
-  grep -n '"resolved": "file:' "$lock" >&2
-  echo >&2
-  echo "That path will not exist inside the Docker build. Fix it with:" >&2
-  echo "  cd pretest-frontend && rm -rf node_modules && npm install && git add package-lock.json" >&2
-  exit 1
-fi
+# A dependency declared or resolved from a local path builds on the machine that has that path and
+# fails inside the image, where it does not exist. `npm install ../some.tgz` while testing rewrites
+# BOTH package.json and package-lock.json, and the error it eventually produces (ENOENT on a
+# tarball) names neither file. Check both, for any local specifier, not one spelling of one of them.
+for f in "$root/pretest-frontend/package.json" "$root/pretest-frontend/package-lock.json"; do
+  if grep -q '"\(file\|link\):' "$f" 2>/dev/null; then
+    echo "ERROR: $f declares a dependency from a local path:" >&2
+    grep -n '"\(file\|link\):' "$f" >&2
+    echo >&2
+    echo "That path will not exist inside the Docker build. Fix it with:" >&2
+    echo "  cd pretest-frontend && rm -rf node_modules && npm install && cd .." >&2
+    echo "then commit package.json and package-lock.json." >&2
+    exit 1
+  fi
+done
 
 
 if [[ -z "$acr" ]]; then
@@ -69,6 +71,9 @@ if [[ -z "$acr" ]]; then
 fi
 
 if [[ -z "$acr" ]]; then
+  # First run against an empty resource group: the image has to be pushed to a registry that does
+  # not exist yet. Create the platform on its own first, then carry on with the real build.
+  # Only ever happens once; later runs find the registry and skip straight past.
   echo "==> No registry yet - creating the platform first (one-off, ~10 minutes)"
   "$root/scripts/deploy.sh" --platform-only --resource-group "$resource_group"
   acr="$(az acr list --resource-group "$resource_group" --query "[0].name" --output tsv)"
