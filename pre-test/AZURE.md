@@ -277,48 +277,60 @@ It prints a table at the end. The line you want is **`appUrl`** — that is your
 
 ## Step 3 — check it worked
 
-### First: what is `<appUrl>`?
-
-`release.sh` prints it at the end, in a box. If you don't see it there (older versions of the
-script printed an empty table instead), ask Azure:
+Run this, from the `pre-test` directory:
 
 ```bash
-echo "https://$(az containerapp show -g rg-e2-feeling-heard -n pretest-feeling-heard \
-  --query properties.configuration.ingress.fqdn -o tsv)"
+./scripts/pilot.sh --url
 ```
 
-That is your `<appUrl>` for everything below, and the one you give Qualtrics. It does not change
-when you redeploy, so note it down once.
+It prints your app URL. There is nothing to fill in — it reads the resource group from
+`infra/.env` and asks Azure for the rest. The URL does not change when you redeploy, so note it
+down: it is the one you give Qualtrics.
 
-### Then: open it
+### Open that URL in a browser
 
-Open `<appUrl>` in a browser. You should get a **fail-loud error page**, not the portal:
+You should get a **fail-loud error page**, not the portal:
 
 > Can't start the session — Could not start from the study handover: no handover token in the URL.
 
 That is correct, and is the point: there is no way into the study except through Qualtrics with a
-valid token. If you see the Salvena dashboard instead, something is wrong.
+valid token. If you see the Salvena dashboard instead, something is wrong — tell me.
 
-Now make a token and walk one arm yourself:
+### Now walk an arm yourself
 
 ```bash
-APP="<appUrl>"
-SECRET="<your HANDOVER_SECRET>"
-
-TOKEN=$(curl -s -X POST "$APP/api/handover" \
-  -H 'Content-Type: application/json' \
-  -H "X-Handover-Secret: $SECRET" \
-  -d '{"participantId":"pilot-1","arm":"S1","name":"Joe Smith","callbackUrl":"https://mtecethz.eu.qualtrics.com"}' \
-  | python3 -c 'import sys,json; print(json.load(sys.stdin)["token"])')
-
-open "$APP/?t=$TOKEN"
+./scripts/pilot.sh S4
 ```
 
-Swap `"arm":"S1"` for `S0`, `S2` or `S4` to try the others. Use a different `participantId` each
-time, or you will resume the previous run instead of starting a fresh one.
+That registers a handover the way Qualtrics will, prints the entry link, and opens it. Again,
+nothing to fill in: it takes the handover secret from `infra/.env` and the URL from Azure, which
+are the same two values the deploy used.
 
-Then open `<appUrl>/data` — every click and timestamp, with a CSV export. For an S4 run, check
-there are exactly **two** `CLAIM_ATTEMPT` rows under **one** session.
+Start with **S4** — it is the only arm with two attempts, so it exercises the most. You should land
+on the Salvena dashboard, file a claim, get the E-4092 failure, file a second one, and end on the
+outcome screen.
+
+Then the others:
+
+```bash
+./scripts/pilot.sh S0
+./scripts/pilot.sh S1
+./scripts/pilot.sh S2
+```
+
+Each run gets a fresh participant id automatically. That matters: reusing an id **resumes** the
+earlier session, so an S4 re-run arrives with an attempt already spent and the failure you were
+looking for never happens. Pass your own id as a second argument if you want one
+(`./scripts/pilot.sh S4 my-test-1`), and change it each time.
+
+### Check what was recorded
+
+Open `<appUrl>/data` — every click and timestamp, with a CSV export. For the S4 run, check there
+are exactly **two** `CLAIM_ATTEMPT` rows under **one** session id.
+
+Two *sessions* there means a bug that breaks the manipulation: the attempt counter restarts, so the
+second attempt looks like a first one and the participant never sees the failure the arm specifies.
+Confirm this before you touch Qualtrics.
 
 ---
 

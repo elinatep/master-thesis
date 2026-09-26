@@ -152,6 +152,14 @@ dependency still resolves from the lockfile, and the portal's version is still p
 There is no OpenAI key anywhere in this deployment. The pre-test has no voice interaction; that is
 the only thing the bot's absence changes about hosting.
 
+`scripts/pilot.sh S4` walks one arm as a participant would: it asks Azure for the app URL, reads the
+handover secret from `infra/.env`, registers a handover exactly as Qualtrics will, and opens the
+entry link. Doing that by hand means pasting a URL and a secret into a `curl` command, where a
+mistyped secret comes back as a bare 401 that reads like a broken app. Each run gets a fresh
+participant id, because reusing one resumes the earlier session — and an S4 re-run that resumes
+arrives with an attempt already spent, so the scripted failure never fires and nothing says why.
+`--url` alone just prints the URL.
+
 `scripts/azure_db_reset.sh` (`.ps1` on Windows) drops both schemas between pilot rounds, so an
 analysis never mixes runs from two different versions of the arms.
 
