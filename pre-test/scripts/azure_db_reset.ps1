@@ -9,7 +9,10 @@
 # The server itself is left alone. Run this between pilot rounds so an analysis never mixes runs
 # from two different versions of the arms.
 #
-# Requires psql on PATH and your IP allowed on the server's firewall.
+# Requires psql on PATH, and your own IP allowed on the server's firewall. The deployment opens the
+# firewall to Azure services only - that is what lets the container app in, and it deliberately does
+# not let your machine in. Both are checked below before anything is dropped, because both otherwise
+# fail AFTER the confirmation prompt, which reads as though the wipe half-happened.
 
 param(
     [string]$EnvFile = "$PSScriptRoot/../infra/.env",
@@ -34,8 +37,49 @@ if ([string]::IsNullOrWhiteSpace($password)) { throw "DB_ADMIN_PASSWORD missing 
 $server = (az postgres flexible-server list --resource-group $ResourceGroup --query "[0].fullyQualifiedDomainName" --output tsv)
 if ([string]::IsNullOrWhiteSpace($server)) { throw "No Postgres server found in $ResourceGroup." }
 
+if (-not (Get-Command psql -ErrorAction SilentlyContinue)) {
+    Write-Host 'psql is not on PATH - this script needs it to talk to Postgres.' -ForegroundColor Red
+    Write-Host 'Install the PostgreSQL client tools, or:  winget install PostgreSQL.PostgreSQL'
+    exit 1
+}
+
+# The deployment's only firewall rule is AllowAllAzureServices, which lets the container app in and
+# your machine stay out. Without a rule for this machine psql just hangs until it times out, well
+# after the confirmation prompt - so check now, while nothing has been dropped.
+$myIp = try { (Invoke-RestMethod -Uri 'https://api.ipify.org' -TimeoutSec 10).Trim() } catch { '' }
+if ([string]::IsNullOrWhiteSpace($myIp)) {
+    Write-Warning 'Could not work out this machine''s public IP; skipping the firewall check. If psql hangs below, that is why.'
+} else {
+    $serverName = (az postgres flexible-server list --resource-group $ResourceGroup --query "[0].name" --output tsv)
+    $allowed = az postgres flexible-server firewall-rule list `
+        --resource-group $ResourceGroup --name $serverName `
+        --query "[?startIpAddress=='$myIp'] | length(@)" --output tsv 2>$null
+    if ($allowed -ne '1') {
+        $ruleName = "laptop-$($myIp -replace '\.', '-')"
+        Write-Host "Your IP ($myIp) is not allowed on $serverName's firewall, so psql cannot connect."
+        Write-Host 'Adding a rule opens the database to this IP until you remove it.'
+        $answer = Read-Host "Add a firewall rule for $myIp? [y/N]"
+        if ($answer -eq 'y') {
+            az postgres flexible-server firewall-rule create `
+                --resource-group $ResourceGroup --name $serverName `
+                --rule-name $ruleName `
+                --start-ip-address $myIp --end-ip-address $myIp `
+                --output none
+            Write-Host 'Rule added. Remove it when you are done:'
+            Write-Host "  az postgres flexible-server firewall-rule delete -g $ResourceGroup -n $serverName -r $ruleName --yes"
+        } else {
+            Write-Host 'Not adding it. psql will not be able to connect.' -ForegroundColor Red
+            exit 1
+        }
+    }
+}
+
+Write-Host ''
 Write-Host "About to DROP schemas insurance_portal and behavioural in $DbName on $server."
-$confirm = Read-Host "This deletes every participant's data in the pre-test. Type the database name to confirm"
+Write-Host "This deletes every participant's data in the pre-test."
+Write-Host 'Export it first if you have not: the CSV button at <appUrl>/data.'
+Write-Host ''
+$confirm = Read-Host "Type the database name to confirm ($DbName)"
 if ($confirm -ne $DbName) { Write-Host 'Aborted.'; exit 1 }
 
 $env:PGPASSWORD = $password
