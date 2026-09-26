@@ -17,7 +17,8 @@
 param(
     [string]$EnvFile = "$PSScriptRoot/../infra/.env",
     [string]$ResourceGroup = 'rg-e2-feeling-heard',
-    [string]$DbName = 'pretest_feeling_heard'
+    [string]$DbName = 'pretest_feeling_heard',
+    [string]$AppName = 'pretest-feeling-heard'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -87,4 +88,29 @@ psql --host=$server --username=$user --dbname=$DbName --set=sslmode=require `
      --command='DROP SCHEMA IF EXISTS behavioural CASCADE; DROP SCHEMA IF EXISTS insurance_portal CASCADE;'
 Remove-Item Env:PGPASSWORD
 
-Write-Host "==> Dropped. Restart the container app (or redeploy) to rebuild both schemas."
+Write-Host '==> Dropped.'
+
+# Restart the app rather than telling the reader to. Dropping the schemas leaves the running
+# container pointed at tables that no longer exist: Flyway and the portal's seeding both run at
+# startup, so until it restarts every request fails on a missing relation. Leaving that as a note
+# at the end of the output means the study is broken in a way nothing announces - and /data keeps
+# serving whatever the browser already had, which reads as "the wipe did not work".
+Write-Host '==> Restarting the container app so it rebuilds both schemas and re-seeds the account'
+
+$revision = az containerapp revision list `
+    --resource-group $ResourceGroup --name $AppName `
+    --query "[?properties.active].name | [0]" --output tsv 2>$null
+
+if ([string]::IsNullOrWhiteSpace($revision)) {
+    Write-Host "Could not find an active revision of '$AppName' to restart." -ForegroundColor Red
+    Write-Host 'Restart it yourself, or the app will keep failing on missing tables:'
+    Write-Host "  az containerapp revision restart -g $ResourceGroup -n $AppName --revision <name>"
+    exit 1
+}
+
+az containerapp revision restart `
+    --resource-group $ResourceGroup --name $AppName --revision $revision --output none
+
+Write-Host "==> Restarted ($revision). Give it about a minute, then reload <appUrl>/data with a hard"
+Write-Host '    refresh (Ctrl-Shift-R). It should show 0 sessions.'
+

@@ -20,6 +20,7 @@ set -euo pipefail
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 env_file="$root/infra/.env"
 db_name="pretest_feeling_heard"
+app_name="pretest-feeling-heard"
 resource_group=""
 
 while [[ $# -gt 0 ]]; do
@@ -108,4 +109,28 @@ PGPASSWORD="$db_password" psql \
   --set=sslmode=require \
   --command='DROP SCHEMA IF EXISTS behavioural CASCADE; DROP SCHEMA IF EXISTS insurance_portal CASCADE;'
 
-echo "==> Dropped. Restart the container app (or redeploy) to rebuild both schemas."
+echo "==> Dropped."
+
+# Restart the app rather than telling the reader to. Dropping the schemas leaves the running
+# container pointed at tables that no longer exist: Flyway and the portal's seeding both run at
+# startup, so until it restarts every request fails on a missing relation. Leaving that as a note
+# at the end of the output means the study is broken in a way nothing announces - and /data keeps
+# serving whatever the browser already had, which reads as "the wipe did not work".
+echo "==> Restarting the container app so it rebuilds both schemas and re-seeds the account"
+
+revision="$(az containerapp revision list \
+              --resource-group "$resource_group" --name "$app_name" \
+              --query "[?properties.active].name | [0]" --output tsv 2>/dev/null || true)"
+
+if [[ -z "$revision" ]]; then
+  echo "Could not find an active revision of '$app_name' to restart." >&2
+  echo "Restart it yourself, or the app will keep failing on missing tables:" >&2
+  echo "  az containerapp revision restart -g $resource_group -n $app_name --revision <name>" >&2
+  exit 1
+fi
+
+az containerapp revision restart \
+  --resource-group "$resource_group" --name "$app_name" --revision "$revision" --output none
+
+echo "==> Restarted ($revision). Give it about a minute, then reload <appUrl>/data with a hard"
+echo "    refresh (Cmd-Shift-R). It should show 0 sessions."
