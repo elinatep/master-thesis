@@ -39,6 +39,16 @@ if (git -C $root status --porcelain) {
     Write-Warning "Working tree is dirty - image '$sha' will not fully reflect the committed state."
 }
 
+# A lockfile that resolves a dependency from a local path builds fine on the machine that made it
+# and fails inside the image, where that path does not exist. Easy to create by accident, and the
+# error it produces (ENOENT on a tarball) says nothing about the lockfile. Catch it here.
+$lock = "$root/pretest-frontend/package-lock.json"
+if (Select-String -Path $lock -Pattern '"resolved": "file:' -Quiet) {
+    Select-String -Path $lock -Pattern '"resolved": "file:'
+    throw "package-lock.json resolves a dependency from a local file path, which will not exist inside the Docker build. Fix it with: cd pretest-frontend; rm -r node_modules; npm install"
+}
+
+
 if ([string]::IsNullOrWhiteSpace($Acr)) {
     $Acr = (az acr list --resource-group $ResourceGroup --query "[0].name" --output tsv)
 }

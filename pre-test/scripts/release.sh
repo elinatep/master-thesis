@@ -49,6 +49,21 @@ if [[ -n "$(git -C "$root" status --porcelain)" ]]; then
   echo "WARNING: working tree is dirty - image '$sha' will not fully reflect the committed state."
 fi
 
+# A lockfile that resolves a dependency from a local path builds fine on the machine that made it
+# and fails inside the image, where that path does not exist. It is easy to create by accident -
+# `npm install ../some.tgz` while testing rewrites the entry - and the error it produces (ENOENT on
+# a tarball) says nothing about the lockfile. Catch it here, where the message can.
+lock="$root/pretest-frontend/package-lock.json"
+if grep -q '"resolved": "file:' "$lock" 2>/dev/null; then
+  echo "ERROR: $lock resolves a dependency from a local file path:" >&2
+  grep -n '"resolved": "file:' "$lock" >&2
+  echo >&2
+  echo "That path will not exist inside the Docker build. Fix it with:" >&2
+  echo "  cd pretest-frontend && rm -rf node_modules && npm install && git add package-lock.json" >&2
+  exit 1
+fi
+
+
 if [[ -z "$acr" ]]; then
   acr="$(az acr list --resource-group "$resource_group" --query "[0].name" --output tsv 2>/dev/null || true)"
 fi
