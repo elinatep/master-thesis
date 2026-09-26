@@ -29,15 +29,27 @@ policy and file the claim there. It is the portal's own form, writing a real cla
 own claims engine.
 
 ```
-Qualtrics  consent → bonus → briefing
+Qualtrics  consent → bonus → briefing                              SURVEY 1
                 ↓  POST /api/handover  {participantId, arm, name, callbackUrl} → token
                 ↓  redirect to  /?t=<token>
 Portal     dashboard → navigate → file a claim (the portal's own form) → submit
                 ↓  the portal reports what happened; the study takes over
 Study      outcome screen  →  [S4: retry → back into the portal's form → submit → dead end]
-                ↓  Continue: redirect to callbackUrl?participantId=…
-Qualtrics  Emotion T1 → filler → Emotion T2 → appraisals → checks → demographics → debrief
+                ↓  Continue: redirect to callbackUrl?participantId=…&arm=…
+Qualtrics  Emotion T1 → filler → Emotion T2 → appraisals → checks     SURVEY 2
+           → demographics → debrief → Prolific
 ```
+
+**Two surveys, not one.** `callbackUrl` is a second Qualtrics survey rather than the one the
+participant came from. A Qualtrics response ends when it redirects out and cannot be re-entered
+partway, so there is nothing to come back to. The cost is that the post-measures live in a separate
+response, joined on the Prolific id; the gain is that the portal gets the whole browser window
+instead of a ~750px question column, which is most of what makes it read as a real website rather
+than a screenshot inside a questionnaire.
+
+The platform also runs embedded in a Qualtrics question, posting a completion message to the survey
+instead of redirecting — it detects which mode it is in (`window.self !== window.top`) and the same
+deployment serves both. `QUALTRICS.md` sets out both and why the redirect is the default.
 
 ## Three decisions worth knowing about
 

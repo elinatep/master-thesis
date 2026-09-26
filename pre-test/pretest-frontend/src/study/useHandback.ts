@@ -10,10 +10,24 @@ import { getCondition } from './session'
  */
 export const COMPLETION_MESSAGE = 'salvena-pretest:complete'
 
-/** Appends the participant id to the callback URL as a query param (preserving any existing params). */
-function withParticipantId(callbackUrl: string, participantId: string): string {
+/**
+ * Appends the participant id and arm to the callback URL, preserving any params already on it.
+ *
+ * <p>Both, not just the id, because in the redirect design the callback URL is a SECOND Qualtrics
+ * survey rather than the one the participant came from. That survey has no memory of the first: it
+ * is a separate response, and the randomiser that chose the arm ran in a survey that has already
+ * ended. Passing the arm through means the post-measures land in the same row as the condition
+ * they belong to, and that the assignment can be checked against the platform's own record without
+ * joining two databases first.
+ *
+ * <p>Read as a manipulation check, not as the source of truth. This value has been through the
+ * participant's browser; the authoritative arm is the one on the handover row, which only ever
+ * existed server-side.
+ */
+function withHandbackParams(callbackUrl: string, participantId: string, arm: string | null): string {
   const url = new URL(callbackUrl, window.location.origin)
   url.searchParams.set('participantId', participantId)
+  if (arm) url.searchParams.set('arm', arm)
   return url.toString()
 }
 
@@ -83,7 +97,7 @@ export function useHandback() {
     }
 
     if (callbackUrl && condition) {
-      window.location.href = withParticipantId(callbackUrl, condition.participantId)
+      window.location.href = withHandbackParams(callbackUrl, condition.participantId, condition.arm)
       return
     }
 
