@@ -109,6 +109,24 @@ def ids_and_arms(rows, id_col, arm_col):
     return arms, counts
 
 
+def canonical_arm(value):
+    """Reduce the several spellings of one arm to a single form.
+
+    The same condition is written differently in each file, because each was designed on its own:
+    the Qualtrics randomiser sets a numeric `arm` (0, 1, 2, 4) beside a descriptive `arm_label`
+    (S0_control), while the platform names its arms after the files in configuration/arms (S0, S1,
+    S2, S4). Comparing the raw strings would report every participant as a mismatch, which is worse
+    than not checking - a check that always fails gets ignored, including on the day it is right.
+    """
+    text = (value or "").strip()
+    if not text:
+        return ""
+    text = text.split("_")[0]          # S0_control -> S0
+    if text.isdigit():                 # 0 -> S0
+        return "S" + text
+    return text.upper()
+
+
 def show(label, ids, explanation):
     if not ids:
         return False
@@ -240,7 +258,7 @@ def main():
     mismatched = []
     for pid in sorted(complete):
         one, two, plat = s1_arms.get(pid, ""), s2_arms.get(pid, ""), pf_arms.get(pid, "")
-        if len({one, two, plat}) > 1:
+        if len({canonical_arm(one), canonical_arm(two), canonical_arm(plat)}) > 1:
             mismatched.append((pid, one, plat, two))
     if mismatched:
         problems = True
@@ -254,7 +272,7 @@ def main():
 
     if complete:
         print("\n  Arm balance (participants joined across all three):")
-        for arm, n in sorted(Counter(pf_arms[p] for p in complete).items()):
+        for arm, n in sorted(Counter(canonical_arm(pf_arms[p]) for p in complete).items()):
             print(f"    {arm or '(blank)':<8} {n}")
 
     print()
