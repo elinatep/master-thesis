@@ -73,8 +73,13 @@ if [[ -z "$my_ip" ]]; then
 else
   server_name="$(az postgres flexible-server list --resource-group "$resource_group" \
                    --query "[0].name" --output tsv)"
+  # --server-name, not --name. In the firewall-rule subgroup --name is the RULE, and passing the
+  # server to it fails with "the following arguments are required: --server-name/-s". The list
+  # below would then error into its `|| echo 0` fallback and report the IP as not allowed every
+  # time - the check silently always failing open into a prompt, which is how this went unnoticed.
+  rule_name="laptop-$(echo "$my_ip" | tr '.' '-')"
   allowed="$(az postgres flexible-server firewall-rule list \
-               --resource-group "$resource_group" --name "$server_name" \
+               --resource-group "$resource_group" --server-name "$server_name" \
                --query "[?startIpAddress=='$my_ip'] | length(@)" --output tsv 2>/dev/null || echo 0)"
   if [[ "$allowed" == "0" ]]; then
     echo "Your IP ($my_ip) is not allowed on $server_name's firewall, so psql cannot connect."
@@ -82,13 +87,13 @@ else
     read -r -p "Add a firewall rule for $my_ip? [y/N] " answer
     if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
       az postgres flexible-server firewall-rule create \
-        --resource-group "$resource_group" --name "$server_name" \
-        --rule-name "laptop-$(echo "$my_ip" | tr '.' '-')" \
+        --resource-group "$resource_group" --server-name "$server_name" \
+        --rule-name "$rule_name" \
         --start-ip-address "$my_ip" --end-ip-address "$my_ip" \
         --output none
       echo "Rule added. Remove it when you are done:"
       echo "  az postgres flexible-server firewall-rule delete -g $resource_group \\"
-      echo "    -n $server_name -r laptop-$(echo "$my_ip" | tr '.' '-') --yes"
+      echo "    --server-name $server_name --rule-name $rule_name --yes"
     else
       echo "Not adding it. psql will not be able to connect." >&2
       exit 1
