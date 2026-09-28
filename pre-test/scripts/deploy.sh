@@ -78,6 +78,17 @@ else
   echo "         Set HANDOVER_SECRET in infra/.env before a real run."
 fi
 
+researcher_password="$(read_var RESEARCHER_PASSWORD)"
+if [[ -n "$researcher_password" ]]; then
+  echo "Researcher data view: PASSWORD SET"
+  params+=( "researcherPassword=$researcher_password" )
+else
+  echo "Researcher data view: CLOSED (no RESEARCHER_PASSWORD - /data will refuse everyone)"
+fi
+
+researcher_user="$(read_var RESEARCHER_USER)"
+[[ -n "$researcher_user" ]] && params+=( "researcherUser=$researcher_user" )
+
 auth_client_id="$(read_var AUTH_CLIENT_ID)"
 auth_client_secret="$(read_var AUTH_CLIENT_SECRET)"
 if [[ -n "$auth_client_id" && -n "$auth_client_secret" ]]; then

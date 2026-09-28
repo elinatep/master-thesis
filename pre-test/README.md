@@ -161,6 +161,15 @@ The frontend is installed with `npm install`, not `npm ci`, for one dependency's
 integrity hash differs per publisher and no committed value is true for everyone. Every other
 dependency still resolves from the lockfile, and the portal's version is still pinned.
 
+`/data` — the researcher's view of the behavioural data — is behind HTTP Basic, from
+`RESEARCHER_PASSWORD`. Everything else stays open, because that is the study: participants arrive
+anonymously from Prolific and cannot be given accounts, so Easy Auth has to be off. That leaves
+`/data` reachable by anyone who knows the host, and every participant knows the host — they are
+redirected to it. Without a password any of them could read every other participant's Prolific ID
+and behavioural log, which is personal data. With the password unset those two paths are **closed**,
+not open: forgetting to configure who may read the data is not consent for everyone to read it, and
+it must not take the participant-facing study down either.
+
 There is no OpenAI key anywhere in this deployment. The pre-test has no voice interaction; that is
 the only thing the bot's absence changes about hosting.
 

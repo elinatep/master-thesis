@@ -287,6 +287,28 @@ It prints your app URL. There is nothing to fill in — it reads the resource gr
 `infra/.env` and asks Azure for the rest. The URL does not change when you redeploy, so note it
 down: it is the one you give Qualtrics.
 
+### A password for your data view
+
+`<appUrl>/data` is where you read and export the behavioural data, and it is the one page that is
+**not** for participants. Set a password for it in `infra/.env`:
+
+```
+RESEARCHER_PASSWORD=
+```
+
+Invent one, the way you did the handover secret (`uuidgen` works).
+
+This matters more than it looks. The study has to stay open — Prolific participants arrive
+anonymously and cannot log in — and every participant is redirected to this host, so the URL is not
+a secret. Without a password, any of them could open `/data` and read every other participant's
+Prolific ID and complete behavioural log.
+
+If you leave it empty, `/data` is **closed** rather than open: it refuses everyone, and the study
+keeps running. That is deliberate — a deployment that forgot the password should not publish the
+data to whoever visits, and it should not take the study down mid-run either.
+
+The password takes effect on the next `./scripts/release.sh`.
+
 ### Open that URL in a browser
 
 You should get a **fail-loud error page**, not the portal:

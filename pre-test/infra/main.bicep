@@ -42,6 +42,13 @@ param dbName string = 'pretest_feeling_heard'
 @secure()
 param handoverSecret string = ''
 
+@description('Username for the researcher data view at /data.')
+param researcherUser string = 'researcher'
+
+@description('Password for the researcher data view at /data and the behavioural log behind it. Empty = those two paths are CLOSED (not open): a deployment that forgot the password must not publish participants\' data to anyone who visits. Everything participants touch stays open either way.')
+@secure()
+param researcherPassword string = ''
+
 @description('Entra tenant ID used for Easy Auth.')
 param tenantId string = tenant().tenantId
 
@@ -86,12 +93,14 @@ module pretestApp 'modules/containerapp.bicep' = if (deployApp) {
                 value: 'jdbc:postgresql://${platform.outputs.pgFqdn}:5432/${platform.outputs.dbName}?sslmode=require'
             }
             { name: 'SPRING_DATASOURCE_USERNAME', value: dbAdminUser }
+            { name: 'RESEARCHER_USER', value: researcherUser }
         ]
         // Empty values are dropped by the module, so an unset handover secret simply does not reach
         // the container. There is no OpenAI key: the pre-test has no voice interaction.
         secretEnv: {
             SPRING_DATASOURCE_PASSWORD: dbAdminPassword
             HANDOVER_SECRET: handoverSecret
+            RESEARCHER_PASSWORD: researcherPassword
         }
         tenantId: tenantId
         authClientId: authClientId

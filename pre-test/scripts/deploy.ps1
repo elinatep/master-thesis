@@ -65,6 +65,17 @@ if (-not [string]::IsNullOrWhiteSpace($vars['HANDOVER_SECRET'])) {
     Write-Warning 'Handover secret: EMPTY - anyone who finds the URL can mint a token and enter the study in an arm of their choosing. Set HANDOVER_SECRET before a real run.'
 }
 
+if (-not [string]::IsNullOrWhiteSpace($vars['RESEARCHER_PASSWORD'])) {
+    Write-Host 'Researcher data view: PASSWORD SET'
+    $params += "researcherPassword=$($vars['RESEARCHER_PASSWORD'])"
+} else {
+    Write-Host 'Researcher data view: CLOSED (no RESEARCHER_PASSWORD - /data will refuse everyone)'
+}
+
+if (-not [string]::IsNullOrWhiteSpace($vars['RESEARCHER_USER'])) {
+    $params += "researcherUser=$($vars['RESEARCHER_USER'])"
+}
+
 $clientId     = $vars['AUTH_CLIENT_ID']
 $clientSecret = $vars['AUTH_CLIENT_SECRET']
 if (-not [string]::IsNullOrWhiteSpace($clientId) -and -not [string]::IsNullOrWhiteSpace($clientSecret)) {

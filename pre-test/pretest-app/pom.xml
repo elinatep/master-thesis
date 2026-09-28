@@ -71,6 +71,17 @@
         </dependency>
 
         <!--
+          For one thing only: a password on the researcher's data view. The study itself must stay
+          open - participants arrive anonymously from Prolific - so ResearcherSecurityConfig
+          permits every other path explicitly. See the note there on why /data cannot simply be
+          left unprotected: every participant is redirected to this host, so the URL is not secret.
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <!--
           The study's own migrations, for the behavioural schema (see db/migration/behavioural).
           The portal brings its own Flyway for its own schema; these two never share a history
           table, so the version series are independent.
@@ -92,6 +103,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

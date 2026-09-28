@@ -2,6 +2,7 @@ package solutions.andreas.study;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.MockMvcAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import tools.jackson.databind.ObjectMapper;
@@ -29,6 +31,11 @@ import tools.jackson.databind.ObjectMapper;
  */
 @SpringBootTest
 @Import(MockMvcAutoConfiguration.class)
+// The behavioural log is behind a password (see ResearcherSecurityConfig), so this gives the test
+// one to use. Without it the log is not merely locked but closed, and the assertion below would
+// fail with 403 - correctly, since nobody may read participants' data from a deployment that never
+// configured who may.
+@TestPropertySource(properties = "app.researcher.password=test-only")
 class ClaimFlowTest {
 
     @Autowired
@@ -159,7 +166,7 @@ class ClaimFlowTest {
         mvc.perform(fileClaim(participantId, "WATER_DAMAGE", "Burst pipe in the kitchen", "1200"));
         mvc.perform(fileClaim(participantId, "WATER_DAMAGE", "pipe burst, kitchen and hallway", "1200"));
 
-        String log = mvc.perform(get("/api/study/log"))
+        String log = mvc.perform(get("/api/study/log").with(httpBasic("researcher", "test-only")))
                 .andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
