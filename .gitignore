@@ -2,6 +2,8 @@
 target/
 dist/
 node_modules/
+__pycache__/
+*.pyc
 
 # Local environment / secrets (never committed - see infra/.env.example)
 #
