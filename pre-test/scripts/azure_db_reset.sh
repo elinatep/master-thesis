@@ -73,10 +73,14 @@ if [[ -z "$my_ip" ]]; then
 else
   server_name="$(az postgres flexible-server list --resource-group "$resource_group" \
                    --query "[0].name" --output tsv)"
-  # --server-name, not --name. In the firewall-rule subgroup --name is the RULE, and passing the
-  # server to it fails with "the following arguments are required: --server-name/-s". The list
-  # below would then error into its `|| echo 0` fallback and report the IP as not allowed every
-  # time - the check silently always failing open into a prompt, which is how this went unnoticed.
+  # The server is --server-name and the rule is --name. Both halves have to be right and they are
+  # easy to swap: --name alone is rejected with "the following arguments are required:
+  # --server-name/-s", and --rule-name is rejected as unrecognised. `az postgres flexible-server
+  # firewall-rule create --help` shows the pair.
+  #
+  # The list call below hides a mistake rather than reporting one: it errors into its `|| echo 0`
+  # fallback, which reads as "your IP is not allowed", so a broken check looks like a working one
+  # that always says the same thing - and the thing it says leads to a prompt.
   rule_name="laptop-$(echo "$my_ip" | tr '.' '-')"
   allowed="$(az postgres flexible-server firewall-rule list \
                --resource-group "$resource_group" --server-name "$server_name" \
@@ -88,12 +92,12 @@ else
     if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
       az postgres flexible-server firewall-rule create \
         --resource-group "$resource_group" --server-name "$server_name" \
-        --rule-name "$rule_name" \
+        --name "$rule_name" \
         --start-ip-address "$my_ip" --end-ip-address "$my_ip" \
         --output none
       echo "Rule added. Remove it when you are done:"
       echo "  az postgres flexible-server firewall-rule delete -g $resource_group \\"
-      echo "    --server-name $server_name --rule-name $rule_name --yes"
+      echo "    --server-name $server_name --name $rule_name --yes"
     else
       echo "Not adding it. psql will not be able to connect." >&2
       exit 1

@@ -52,8 +52,8 @@ if ([string]::IsNullOrWhiteSpace($myIp)) {
     Write-Warning 'Could not work out this machine''s public IP; skipping the firewall check. If psql hangs below, that is why.'
 } else {
     $serverName = (az postgres flexible-server list --resource-group $ResourceGroup --query "[0].name" --output tsv)
-    # --server-name, not --name: in the firewall-rule subgroup --name is the RULE name, and the
-    # server passed to it is rejected outright.
+    # The server is --server-name and the rule is --name. Swapping either is rejected: --name for
+    # the server gives "arguments are required: --server-name/-s", --rule-name is unrecognised.
     $ruleName = "laptop-$($myIp -replace '\.', '-')"
     $allowed = az postgres flexible-server firewall-rule list `
         --resource-group $ResourceGroup --server-name $serverName `
@@ -65,11 +65,11 @@ if ([string]::IsNullOrWhiteSpace($myIp)) {
         if ($answer -eq 'y') {
             az postgres flexible-server firewall-rule create `
                 --resource-group $ResourceGroup --server-name $serverName `
-                --rule-name $ruleName `
+                --name $ruleName `
                 --start-ip-address $myIp --end-ip-address $myIp `
                 --output none
             Write-Host 'Rule added. Remove it when you are done:'
-            Write-Host "  az postgres flexible-server firewall-rule delete -g $ResourceGroup --server-name $serverName --rule-name $ruleName --yes"
+            Write-Host "  az postgres flexible-server firewall-rule delete -g $ResourceGroup --server-name $serverName --name $ruleName --yes"
         } else {
             Write-Host 'Not adding it. psql will not be able to connect.' -ForegroundColor Red
             exit 1
