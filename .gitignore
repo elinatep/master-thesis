@@ -4,9 +4,21 @@ dist/
 node_modules/
 
 # Local environment / secrets (never committed - see infra/.env.example)
+#
+# The .* variants matter as much as the plain ones: rotating a secret leaves a .env.bak, and
+# editors leave .env.swp and .env~. Only `.env` was listed here, so any of those would have been
+# an untracked file holding a live credential, waiting for the next `git add -A`.
+# .env.example is the committed template and is excluded from the exclusion.
 .env
+.env.*
+!.env.example
 infra/.env
+infra/.env.*
+!infra/.env.example
 
 # Editor / OS
 .DS_Store
 *.swp
+# Editor backups. `.env.*` above does not catch `.env~` - no dot - and that file holds whatever
+# the secret was before the last edit.
+*~
