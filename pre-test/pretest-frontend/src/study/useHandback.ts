@@ -11,23 +11,30 @@ import { getCondition } from './session'
 export const COMPLETION_MESSAGE = 'salvena-pretest:complete'
 
 /**
- * Appends the participant id and arm to the callback URL, preserving any params already on it.
+ * Appends the participant id and the arm to the callback URL, preserving any params already on it.
  *
- * <p>Both, not just the id, because in the redirect design the callback URL is a SECOND Qualtrics
- * survey rather than the one the participant came from. That survey has no memory of the first: it
- * is a separate response, and the randomiser that chose the arm ran in a survey that has already
- * ended. Passing the arm through means the post-measures land in the same row as the condition
+ * <p>The arm as well as the id, because in the redirect design the callback URL is a SECOND
+ * Qualtrics survey rather than the one the participant came from. That survey has no memory of the
+ * first: it is a separate response, and the randomiser that chose the arm ran in a survey that has
+ * already ended. Passing the arm on means the post-measures land in the same row as the condition
  * they belong to, and that the assignment can be checked against the platform's own record without
  * joining two databases first.
  *
- * <p>Read as a manipulation check, not as the source of truth. This value has been through the
- * participant's browser; the authoritative arm is the one on the handover row, which only ever
- * existed server-side.
+ * <p>Read as a manipulation check, not as the source of truth - hence the name. This value has
+ * been through the participant's browser; the authoritative arm is the one on the handover row,
+ * which only ever existed server-side.
+ *
+ * <p>It is called {@code platformArm} rather than {@code arm} to leave the survey's own name free.
+ * The first survey can carry its values across the platform by putting them on the callback URL
+ * ({@code ...?arm=4&arm_label=S4_irritation_website}) - the params below are merged, not replaced.
+ * Writing to {@code arm} would silently overwrite the value the randomiser assigned with the
+ * platform's own spelling of it, so every display condition and branch downstream that tests the
+ * randomiser's value would stop matching, with nothing to show why.
  */
 function withHandbackParams(callbackUrl: string, participantId: string, arm: string | null): string {
   const url = new URL(callbackUrl, window.location.origin)
   url.searchParams.set('participantId', participantId)
-  if (arm) url.searchParams.set('arm', arm)
+  if (arm) url.searchParams.set('platformArm', arm)
   return url.toString()
 }
 

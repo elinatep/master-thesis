@@ -193,7 +193,11 @@ def main():
         return 2
 
     s1_arm = pick_column(s1, ["arm"], args.survey1, "arm") if s1 else None
-    s2_arm = pick_column(s2, ["arm"], args.survey2, "arm") if s2 else None
+    # platformArm first: it is the arm the platform actually ran, reported back on the redirect,
+    # so comparing it to the randomiser's value checks the two ends against each other. `arm` in
+    # Survey 2 may be the randomiser's own value carried across on the callback URL, which would
+    # only ever agree with itself.
+    s2_arm = pick_column(s2, ["platformArm", "arm"], args.survey2, "arm") if s2 else None
     pf_arm = pick_column(pf, ["arm"], args.platform, "arm") if pf else None
 
     s1_arms, s1_counts = ids_and_arms(s1, s1_id, s1_arm)

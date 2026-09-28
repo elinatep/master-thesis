@@ -72,16 +72,19 @@ Add a **Web Service** element, after the randomiser and before the End of Survey
 
 - **URL**: `https://<app-fqdn>/api/handover`
 - **Method**: `POST`
-- **Body**: JSON
+- **Body**: set the type dropdown to `application/json`, then four parameters, each of type
+  **String** (not JSON - a JSON-typed value is parsed as raw JSON and these are all text):
 
-```json
-{
-  "participantId": "${e://Field/PROLIFIC_PID}",
-  "arm": "${e://Field/arm}",
-  "name": "Joe Smith",
-  "callbackUrl": "https://mtecethz.eu.qualtrics.com/jfe/form/SV_XXXXXXXX"
-}
-```
+| Parameter | Value |
+| --- | --- |
+| `participantId` | `${e://Field/PROLIFIC_PID}` |
+| `arm` | `S${e://Field/arm}` |
+| `name` | `Joe Smith` |
+| `callbackUrl` | Survey 2's anonymous link, plus anything Survey 1 wants to carry across |
+
+The `S` prefix is there because a Qualtrics randomiser naturally sets a numeric `arm` (0, 1, 2, 4)
+while the platform names its arms after the files in `configuration/arms` (S0, S1, S2, S4).
+`S` + `4` costs one character and no extra embedded-data field per arm to keep in step.
 
 - **Header**: `X-Handover-Secret: <the HANDOVER_SECRET you deployed with>`
 - **Set Embedded Data**: map the response field `token` → `handoverToken`
@@ -89,6 +92,19 @@ Add a **Web Service** element, after the randomiser and before the End of Survey
 `callbackUrl` is **Survey 2's anonymous link**. This is the whole trick: the platform sends the
 participant onward to wherever this points, so Survey 1 decides where the chain goes next without
 the platform knowing anything about your survey.
+
+**Put query parameters on it to carry Survey 1's own values across.** Survey 2 is a separate
+response and remembers nothing of Survey 1 - not the randomiser's arm, not anything else. The
+platform merges its parameters into whatever is already on this URL rather than replacing them, so
+this works:
+
+```
+https://mtecethz.qualtrics.com/jfe/form/SV_XXXXXXXX?arm=${e://Field/arm}&arm_label=${e://Field/arm_label}
+```
+
+Survey 2 then receives `arm=4` and `arm_label=S4_irritation_website` exactly as Survey 1 set them,
+alongside the platform's own `participantId` and `platformArm`. Any display logic or branch in
+Survey 2 that tests the randomiser's values keeps working untouched.
 
 The arm is registered here, server-side, and never travels in a URL. What the participant's browser
 carries is an opaque token that means nothing on its own.
@@ -107,21 +123,29 @@ https://<app-fqdn>/?t=${e://Field/handoverToken}
 
 ```
 participantId  (leave blank)
-arm            (leave blank)
+platformArm    (leave blank)
+arm            (leave blank)   <- only if Survey 1 carries it on the callback URL
+arm_label      (leave blank)   <- likewise
 ```
 
 Qualtrics fills these from the query string automatically, as long as the names match exactly.
-The platform appends both when it hands the participant on:
+A full arrival looks like:
 
 ```
-…/SV_XXXXXXXX?participantId=<PROLIFIC_PID>&arm=S4
+…/SV_XXXXXXXX?arm=4&arm_label=S4_irritation_website&participantId=<PROLIFIC_PID>&platformArm=S4
 ```
 
-`participantId` is your join key back to Survey 1 and to the platform's own data — it is the same
-Prolific ID all the way through. `arm` is a manipulation check: it lets you confirm in the Qualtrics
-data alone that the arm assigned in Survey 1 is the arm the participant actually saw.
+`participantId` is your join key back to Survey 1 and to the platform's own data - the same
+Prolific ID all the way through. `arm` and `arm_label` are Survey 1's own values, passed across
+unchanged, so Survey 2's existing logic keeps working. `platformArm` is the arm the platform
+actually ran, which makes the two independently recorded and therefore checkable against each
+other.
 
-Treat `arm` as a check, not as truth. It has been through the participant's browser. The
+It is deliberately not called `arm`. Writing the platform's spelling into `arm` would overwrite
+what the randomiser assigned, and every condition downstream that tests the randomiser's value
+would quietly stop matching.
+
+Treat `platformArm` as a check, not as truth. It has been through the participant's browser. The
 authoritative record is the handover row in the platform database, which only ever existed
 server-side.
 
