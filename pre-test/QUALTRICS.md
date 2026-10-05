@@ -169,6 +169,62 @@ Redirect to your Prolific completion URL as usual.
 
 ---
 
+## 3. Prolific
+
+Prolific sits in front of Survey 1 and behind Survey 2. The chain becomes:
+
+```
+Prolific  →  Survey 1  →  Salvena  →  Survey 2  →  Prolific (submission complete)
+```
+
+### The study URL
+
+In Prolific, choose **"I'll use URL parameters"** and give it Survey 1's anonymous link with
+Prolific's three placeholders on the end:
+
+```
+https://mtecethz.qualtrics.com/jfe/form/SV_XXXXXXXX?PROLIFIC_PID={{%PROLIFIC_PID%}}&STUDY_ID={{%STUDY_ID%}}&SESSION_ID={{%SESSION_ID%}}
+```
+
+Prolific substitutes those per participant. `PROLIFIC_PID` is the one that matters - it is the join
+key through the whole chain and what the platform registers the participant under.
+
+**All three have to be in the "Value will be set from Panel or URL" state** in Survey 1's Embedded
+Data block - the one with no `=` beside it. A field with an explicit empty value is *assigned*
+empty at the top of the flow, overwriting what arrived on the URL. That is not a hypothetical: it
+is what made every handover fail with an empty participantId until it was found.
+
+### Coming back
+
+Prolific gives the study a completion URL, of the form:
+
+```
+https://app.prolific.com/submissions/complete?cc=XXXXXXXX
+```
+
+Put it on **Survey 2's** End of Survey (Customize → Redirect to a URL). A participant who reaches
+it is marked as having completed; one who never does stays unsubmitted and has to be reviewed by
+hand.
+
+### Screening
+
+The persona is a Manchester policyholder, the portal is a British insurer and the amounts are in
+pounds, so the participant pool should be too: filter on **United Kingdom** residence and fluent
+English. A participant reading "£1,200" about a flat in Manchester with no idea what a household
+contents policy is costs a data point and some of their goodwill.
+
+### The bonus
+
+The briefing promises a task bonus, and the arms name specific amounts (GBP 1.08 in S0, GBP 0.06
+in S2). Prolific pays the base reward automatically; **bonuses are a separate action** - you assign
+them per submission after the fact, from the participant ids. Decide before launch whether the
+bonus is actually paid per arm (in which case S2 participants are paid less for the same work, and
+the ethics application has to say so) or whether every participant receives the full amount once
+the study is over regardless of the arm they were shown. Both are defensible; being vague about it
+in the briefing is not.
+
+---
+
 # Option B — the iframe
 
 Keep this if you decide the immediacy of Emotion T1 outweighs the realism of a full window.
