@@ -5,7 +5,7 @@ import '@insurance-portal/core/theme.scss'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import '@insurance-portal/core/index.css'
 import { App } from '@insurance-portal/core'
-import { configurePortalHost } from '@insurance-portal/core/host'
+import { configureFormat, configurePortalHost } from '@insurance-portal/core/host'
 import StudyGate from './study/StudyGate.tsx'
 import NavigationBridge from './study/NavigationBridge.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
@@ -30,6 +30,12 @@ import { logEvent } from './study/log'
  *
  * Every cell of the design uses the identical portal. Only the outcome differs.
  */
+
+// The portal's own pages - policies, claims, the dashboard - format money and dates themselves.
+// Left alone they use the library's Swiss defaults, so a Manchester policyholder would read
+// "CHF 1'200.00" and "14.03.2026" on a British insurer's website. The arms' own amounts are
+// written in the arm files and were already in pounds; this is what the portal says around them.
+configureFormat({ currency: 'GBP', groupSeparator: ',', dateSeparator: '/' })
 
 configurePortalHost({
   apiHeaders: participantHeaders,
