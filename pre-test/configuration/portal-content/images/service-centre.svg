@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" role="img" aria-label="">
+  <rect width="400" height="200" fill="#14507D"/>
+  <!-- skyline -->
+  <rect x="70" y="96" width="46" height="80" fill="#E7EFF5"/>
+  <rect x="126" y="64" width="52" height="112" fill="#FFFFFF"/>
+  <rect x="188" y="110" width="42" height="66" fill="#E7EFF5"/>
+  <rect x="240" y="80" width="50" height="96" fill="#FFFFFF"/>
+  <!-- windows -->
+  <g fill="#14507D">
+    <rect x="136" y="76" width="10" height="10"/><rect x="152" y="76" width="10" height="10"/>
+    <rect x="136" y="94" width="10" height="10"/><rect x="152" y="94" width="10" height="10"/>
+    <rect x="136" y="112" width="10" height="10"/><rect x="152" y="112" width="10" height="10"/>
+    <rect x="250" y="92" width="10" height="10"/><rect x="266" y="92" width="10" height="10"/>
+    <rect x="250" y="110" width="10" height="10"/><rect x="266" y="110" width="10" height="10"/>
+  </g>
+</svg>

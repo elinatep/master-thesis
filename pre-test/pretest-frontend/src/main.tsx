@@ -9,6 +9,7 @@ import { configurePortalHost } from '@insurance-portal/core/host'
 import StudyGate from './study/StudyGate.tsx'
 import NavigationBridge from './study/NavigationBridge.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
+import TaskCard from './study/TaskCard.tsx'
 import DataPage from './study/DataPage.tsx'
 import OutcomeScreen from './pretest/OutcomeScreen.tsx'
 import { OUTCOME_PATH, isClaimOutcomeEvent } from './pretest/outcomeRoute.ts'
@@ -35,6 +36,11 @@ configurePortalHost({
   accountRef: () => getCondition()?.participantId ?? null,
   interactionMode: () => 'interactive',
   navbarChrome: () => <StudyChrome />,
+  // The scenario, pinned over the portal on every page. Qualtrics shows the briefing once and the
+  // survey has ended by the time the participant reaches the claim form, so there is nowhere to
+  // look it up: a misremembered amount files a different claim from the one the arm was written
+  // for, and the outcome is then about a claim nobody designed.
+  assistant: () => <TaskCard />,
   onEvent: (type, data) => {
     // Log first, unconditionally. The takeover below changes the route, and an event lost to a
     // navigation is an unrecoverable data point.

@@ -1,0 +1,15 @@
+{
+  "name": "Salvena",
+  "legalName": "Salvena Insurance Ltd",
+  "logo": "/api/content/images/salvena-logo.svg",
+  "address": {
+    "street": "22 Deansgate",
+    "postalCode": "M3 2BW",
+    "city": "Manchester"
+  },
+  "contact": {
+    "phone": "+44 161 496 0112",
+    "email": "service@example.com",
+    "hours": "Monday–Friday, 08:00–18:00"
+  }
+}

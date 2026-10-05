@@ -1,6 +1,11 @@
 # Your task
 
-Welcome. What a misfortune! Yesterday, a water pipe broke in your apartment and caused 500 CHF worth of damage to your clothes. Luckily, you know you have some insurance with Salvena, and they have a convenient self-service portal to report the incident.
+Yesterday a water pipe burst in your flat and damaged your clothes. You estimate the damage at
+**£1,200**.
 
+You have household contents cover with Salvena. Report the incident through their self-service
+portal.
 
-Once done, kindly click "Finish" to return to qualtrics.
+- Find your **household contents** policy
+- File a claim for the **water damage**
+- Give the date, what happened, and the amount

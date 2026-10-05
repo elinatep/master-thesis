@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" role="img" aria-label="">
+  <rect width="400" height="200" fill="#E7EFF5"/>
+  <!-- house -->
+  <path d="M92 118 L150 74 L208 118 Z" fill="#14507D"/>
+  <rect x="108" y="116" width="84" height="60" fill="#14507D"/>
+  <rect x="140" y="140" width="20" height="36" fill="#E7EFF5"/>
+  <!-- shield with tick -->
+  <path d="M258 66 h54 a8 8 0 0 1 8 8 v40 c0 24 -19 36 -35 46 c-16 -10 -35 -22 -35 -46 v-40 a8 8 0 0 1 8 -8 z" fill="#0F3D60"/>
+  <path d="M270 112 l12 12 l24 -26" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
