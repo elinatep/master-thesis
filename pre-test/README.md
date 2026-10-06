@@ -129,6 +129,10 @@ console reveals the reset menu.
 
 ## Deploying
 
+**`PROLIFIC.md`** is the run book for putting it in front of real participants: the ids Prolific
+puts on the URL, how they survive the trip through the platform, and the decisions - screening,
+reward, the bonus - that have to be made before publishing rather than after.
+
 **`AZURE.md`** is the step-by-step guide — what to install, what goes in `infra/.env`, and the one
 command that deploys. **`QUALTRICS.md`** covers wiring the survey to it.
 

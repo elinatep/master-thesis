@@ -192,6 +192,8 @@ Redirect to your Prolific completion URL as usual.
 
 ## 3. Prolific
 
+**Step by step, including the Prolific side: `PROLIFIC.md`.** This is the Qualtrics half.
+
 Prolific sits in front of Survey 1 and behind Survey 2. The chain becomes:
 
 ```
