@@ -252,6 +252,23 @@ def main():
         "The join key differs between the surveys: Survey 1's PROLIFIC_PID is not what reached "
         "Survey 2's participantId.")
 
+    # Survey 2 may hold the id twice: participantId comes back from the platform, PROLIFIC_PID is
+    # carried straight across by Survey 1. They should agree for everyone, and a row where they do
+    # not is a row where something went wrong between the two - invisible otherwise, because either
+    # one alone looks perfectly reasonable.
+    s2_pid = pick_column(s2, ["PROLIFIC_PID"], args.survey2, "Prolific id") if s2 else None
+    if s2_pid and s2_pid != s2_id:
+        crossed = set()
+        for r in s2:
+            direct = (r.get(s2_pid) or "").strip()
+            viaPlatform = (r.get(s2_id) or "").strip()
+            if direct and viaPlatform and direct != viaPlatform:
+                crossed.add(f"{viaPlatform} (platform) != {direct} (survey 1)")
+        problems |= show(
+            "Survey 2's two copies of the id disagree", crossed,
+            "One came back through the platform and one straight from Survey 1. They are the same "
+            "participant or the chain crossed two of them over.")
+
     problems |= show(
         "Reached the platform but never completed a session", {p for p in c if not pf_completed[p]},
         "No session marked complete - they left before clicking through the outcome screen. "

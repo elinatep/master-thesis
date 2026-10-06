@@ -99,12 +99,26 @@ platform merges its parameters into whatever is already on this URL rather than 
 this works:
 
 ```
-https://mtecethz.qualtrics.com/jfe/form/SV_XXXXXXXX?arm=${e://Field/arm}&arm_label=${e://Field/arm_label}
+https://mtecethz.qualtrics.com/jfe/form/SV_XXXXXXXX?arm=${e://Field/arm}&arm_label=${e://Field/arm_label}&PROLIFIC_PID=${e://Field/PROLIFIC_PID}&STUDY_ID=${e://Field/STUDY_ID}&SESSION_ID=${e://Field/SESSION_ID}
 ```
 
 Survey 2 then receives `arm=4` and `arm_label=S4_irritation_website` exactly as Survey 1 set them,
 alongside the platform's own `participantId` and `platformArm`. Any display logic or branch in
 Survey 2 that tests the randomiser's values keeps working untouched.
+
+**The Prolific identifiers belong on there too, and not only for convenience.** `PROLIFIC_PID`
+already reaches Survey 2 by another route - Survey 1 hands it to the platform as `participantId`,
+and the platform appends that to the redirect - so putting it here looks redundant. It is not, for
+two reasons:
+
+- `STUDY_ID` and `SESSION_ID` have no other route. The platform never sees them, so without this
+  they simply do not exist in Survey 2.
+- Carrying the id independently makes the two copies a check on each other. `participantId` comes
+  back from the platform, `PROLIFIC_PID` goes straight across; they should be identical for every
+  participant, and a row where they are not is a row where something went wrong between the two -
+  which is otherwise invisible, because either one on its own looks perfectly reasonable.
+
+Nothing collides: the platform appends `participantId` and `platformArm` and writes no other name.
 
 The arm is registered here, server-side, and never travels in a URL. What the participant's browser
 carries is an opaque token that means nothing on its own.
@@ -122,11 +136,18 @@ https://<app-fqdn>/?t=${e://Field/handoverToken}
 ### a. Embedded Data (first element in the flow)
 
 ```
-participantId  (leave blank)
-platformArm    (leave blank)
-arm            (leave blank)   <- only if Survey 1 carries it on the callback URL
-arm_label      (leave blank)   <- likewise
+participantId  (leave blank)   <- from the platform
+platformArm    (leave blank)   <- from the platform
+arm            (leave blank)   <- carried across by Survey 1
+arm_label      (leave blank)   <- carried across by Survey 1
+PROLIFIC_PID   (leave blank)   <- carried across by Survey 1
+STUDY_ID       (leave blank)   <- carried across by Survey 1
+SESSION_ID     (leave blank)   <- carried across by Survey 1
 ```
+
+Every one of them in the "Value will be set from Panel or URL" state - no `=`. A field with an
+explicit empty value is assigned empty when the flow runs and overwrites what arrived on the URL,
+which is the single most common way this chain breaks silently.
 
 Qualtrics fills these from the query string automatically, as long as the names match exactly.
 A full arrival looks like:
