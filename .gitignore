@@ -24,3 +24,25 @@ infra/.env.*
 # Editor backups. `.env.*` above does not catch `.env~` - no dot - and that file holds whatever
 # the secret was before the last edit.
 *~
+
+# Participant data. Never committed.
+#
+# The exports carry Prolific ids, which are pseudonymous personal data under the ethics
+# application: a repository is the wrong place for them, and git history is the wrong place
+# twice over - a commit that lands here is still there after the file is deleted, and this
+# repository is on GitHub.
+#
+# Put the Qualtrics and platform exports under data/ and work on them there. The code that
+# reads them is committed; what they contain is not. The anonymised derivative (ids replaced
+# with P001, P002, ...) is the one that may be shared, and it is not excepted here on purpose:
+# decide that deliberately, per file, rather than by a pattern that looked safe once.
+# A directory named data/ at any level holds them, and nothing in it is committed except the
+# README that says so. `!` cannot rescue a file inside an ignored DIRECTORY, so the contents are
+# excluded rather than the directory itself.
+**/data/*
+!**/data/README.md
+
+# And a blanket rule, because the export does not have to be put in the right place to be
+# dangerous - a CSV dropped in the repository root is the likelier accident. Nothing tracked
+# today is a .csv, so this excludes no existing file.
+*.csv
