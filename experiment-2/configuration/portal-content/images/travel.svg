@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" role="img" aria-label="">
+  <rect width="400" height="200" fill="#14507D"/>
+  <!-- globe -->
+  <circle cx="118" cy="100" r="46" fill="#E7EFF5"/>
+  <path d="M118 54 a46 46 0 0 1 0 92 M84 76 h68 M84 124 h68" fill="none" stroke="#14507D" stroke-width="4"/>
+  <!-- plane -->
+  <path d="M228 118 L318 92 L306 74 L262 96 L236 70 L224 74 L240 100 L214 108 L204 98 L196 102 L206 118 L214 130 L224 126 L232 120 Z" fill="#FFFFFF"/>
+</svg>

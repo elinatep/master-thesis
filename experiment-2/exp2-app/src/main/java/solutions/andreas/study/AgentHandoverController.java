@@ -84,8 +84,11 @@ public class AgentHandoverController {
      * assistant left and the cell the agent has to play.
      *
      * <p>The cell is joined from the session rather than stored on the handover, so it is read-only
-     * here by construction. NOT YET AUTHENTICATED - see the note in the README; this endpoint
-     * exposes live participant transcript context and must be behind auth before any real run.
+     * here by construction.
+     *
+     * <p>Behind the agent credential - see {@link StudySecurityConfig}. It has to be: the entries
+     * carry participant ids and the summary of what the assistant was just told, and every
+     * participant knows this host because they are redirected to it.
      */
     @GetMapping("/agent/queue")
     public List<QueueEntry> queue() {

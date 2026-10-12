@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" role="img" aria-label="">
+  <rect width="400" height="200" fill="#E7EFF5"/>
+  <!-- roof -->
+  <path d="M70 120 L150 66 L230 120" fill="none" stroke="#14507D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- large water drop -->
+  <path d="M300 62 C300 62 274 96 274 118 a26 26 0 0 0 52 0 C326 96 300 62 300 62 Z" fill="#14507D"/>
+  <path d="M296 104 a10 10 0 0 0 -6 10" fill="none" stroke="#E7EFF5" stroke-width="5" stroke-linecap="round"/>
+  <!-- small drops -->
+  <circle cx="170" cy="150" r="7" fill="#0F3D60"/>
+  <circle cx="205" cy="162" r="5" fill="#0F3D60"/>
+</svg>

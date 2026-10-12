@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 185 48" width="185" height="48" role="img" aria-labelledby="salvena-logo-title">
+  <title id="salvena-logo-title">Salvena Insurance</title>
+  <!-- Shield mark -->
+  <g transform="translate(0,4) scale(0.87)">
+    <path d="M4,6 a4,4 0 0 1 4,-4 h24 a4,4 0 0 1 4,4 v20 c0,10 -8,16 -16,20 c-8,-4 -16,-10 -16,-20 z"
+          fill="#14507D"/>
+    <path d="M12.5,23 L17.5,28 L27.5,17"
+          fill="none" stroke="#FFFFFF" stroke-width="4"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="46" y="26"
+        font-family="Inter, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+        font-size="25" font-weight="600" letter-spacing="-0.3" fill="#14507D">Salvena</text>
+  <text x="47" y="39"
+        font-family="Inter, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+        font-size="8.5" font-weight="600" letter-spacing="1.5" fill="#6B7785">INSURANCE</text>
+</svg>

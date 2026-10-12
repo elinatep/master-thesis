@@ -1,6 +1,6 @@
 # Local development Postgres for Experiment 2 (AI-to-Human Handover).
 #
-# Its own database and its own compose project, deliberately: levels-of-ai-help runs the same
+# Its own database and its own compose project, deliberately: the pre-test runs the same
 # portal library with its own `behavioural` schema, and the two must not share a database.
 # Both stacks can be up at once, but not on the same port - change the mapping if you need both.
 # Not used in Azure — there the app connects to Azure Database for PostgreSQL.

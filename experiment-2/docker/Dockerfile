@@ -1,15 +1,21 @@
-FROM node:lts-alpine3.24 AS frontend
-WORKDIR /fe
-# .npmrc scopes @insurance-portal to Verdaccio and must be in place before the install layer.
-# It names host.docker.internal, which resolves both on the host and in here.
-COPY levels-of-ai-help-frontend/package.json levels-of-ai-help-frontend/package-lock.json levels-of-ai-help-frontend/.npmrc ./
-# `npm install`, not `npm ci`: @insurance-portal/core is published to a registry on the
-# developer's own machine, so its tarball bytes - and its integrity hash - differ between whoever
-# published it last, and a hash committed by one person fails `npm ci` for everyone else. The
-# version is still pinned and every other dependency still resolves from the lockfile.
-RUN npm install --no-audit --no-fund
-COPY levels-of-ai-help-frontend/ ./
-RUN npm run build
+# The image: Spring Boot serving the API and the pre-built SPA.
+#
+# The frontend is NOT built in here. It is built on the machine running scripts/release.sh, and
+# this copies the resulting dist/ in. That is a deliberate trade, made after the containerised
+# build failed in a way the host build does not:
+#
+#   Deploying to Azure Container Apps needs a linux/amd64 image, so on an Apple Silicon Mac the
+#   build runs under QEMU emulation. In that environment Dart Sass computes different contrast
+#   ratios inside Bootstrap's color-contrast(), which returns null and fails the stylesheet with
+#   "$color1: null is not a color". Identical package versions build correctly on the host and
+#   fail emulated.
+#
+# Building on the host uses the toolchain that demonstrably works, and is much faster besides. What
+# it gives up is a hermetic frontend build - but this build was never hermetic: it resolves the
+# insurance portal from two registries running on the developer's own machine.
+#
+# scripts/release.sh builds the frontend before calling docker, and fails loudly if dist/ is
+# missing, so a stale or absent bundle cannot be shipped by accident.
 
 FROM maven:3.9-eclipse-temurin-21 AS backend
 WORKDIR /app
@@ -17,11 +23,11 @@ WORKDIR /app
 # which in here is the container itself. This overrides it with host.docker.internal.
 COPY docker/settings.xml /root/.m2/settings.xml
 # Pom first, so the dependency layer caches until it actually changes.
-COPY levels-of-ai-help-app/pom.xml ./
+COPY exp2-app/pom.xml ./
 RUN mvn -q -e -B dependency:go-offline
-COPY levels-of-ai-help-app/src ./src
-# The SPA is served by Spring Boot out of static/.
-COPY --from=frontend /fe/dist/ ./src/main/resources/static/
+COPY exp2-app/src ./src
+# The SPA, built on the host, served by Spring Boot out of static/.
+COPY exp2-frontend/dist/ ./src/main/resources/static/
 # -U forces a snapshot re-check: Maven caches snapshots for a day, so without it a freshly
 # published portal is silently ignored and the image ships against yesterday's library.
 RUN mvn -q -B -U clean package -DskipTests
@@ -29,7 +35,12 @@ RUN mvn -q -B -U clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=backend /app/target/*.jar app.jar
-# No seed files to copy: the portal's fixtures and deployment content travel inside its own jar.
+# configuration/ carries the voice session config and the two sets of instructions, the task text,
+# the portal content override and this study's portal seed. The portal library's own fixtures and
+# content travel inside its jar; these override them (app.seed.location, app.content.location).
+#
+# Read from the filesystem per request, so a wording correction is a redeploy of this image and not
+# a rebuild of the frontend - but it IS still a redeploy. Nothing reads it from outside the image.
 COPY configuration ./configuration
 ENV VOICE_CONFIG_DIR=/app/configuration
 EXPOSE 8080

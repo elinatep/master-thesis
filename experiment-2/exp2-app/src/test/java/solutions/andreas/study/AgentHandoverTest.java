@@ -3,10 +3,13 @@ package solutions.andreas.study;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.MockMvcAutoConfiguration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
@@ -24,11 +28,15 @@ import tools.jackson.databind.ObjectMapper;
  */
 @SpringBootTest
 @Import(MockMvcAutoConfiguration.class)
+// The queue is behind the agent credential (StudySecurityConfig), so these tests have to hold one.
+// Reading it unauthenticated is covered by StudySecurityConfigTest; here the credential is setup,
+// not the subject - but it is the deployed shape, so the test uses it rather than working around it.
+@TestPropertySource(properties = { "app.agent.username=agent", "app.agent.password=ag3nt" })
 class AgentHandoverTest {
 
     private static final String SUMMARY = """
             {"dispute_summary":"Says the 90% cover was clear when she filed.",\
-            "requested_outcome":"The full 900 pounds.",\
+            "requested_outcome":"The full 1,080 pounds.",\
             "grounds_given":"Policy page showed 90% for water damage.",\
             "customer_state":"very frustrated"}""";
 
@@ -48,7 +56,7 @@ class AgentHandoverTest {
                 .andExpect(jsonPath("$.status", is("waiting")))
                 .andExpect(jsonPath("$.position", greaterThanOrEqualTo(1)));
 
-        mvc.perform(get("/api/agent/queue"))
+        mvc.perform(get("/api/agent/queue").with(httpBasic("agent", "ag3nt")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@.participantId=='" + participantId + "')].summary.customer_state")
                         .value("very frustrated"));
@@ -80,7 +88,7 @@ class AgentHandoverTest {
         String noAck = openSession("p-cell-noack", true, false);
         mvc.perform(requestAgent(noAck, SUMMARY)).andExpect(status().isOk());
 
-        mvc.perform(get("/api/agent/queue"))
+        mvc.perform(get("/api/agent/queue").with(httpBasic("agent", "ag3nt")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@.participantId=='" + noAck + "')].humanAck").value(false));
     }
@@ -97,7 +105,7 @@ class AgentHandoverTest {
 
     @Test
     void transferWithoutASessionIsRejected() throws Exception {
-        mvc.perform(requestAgent("p-never-started", SUMMARY))
+        mvc.perform(requestAgent("p-never-started-" + UUID.randomUUID(), SUMMARY))
                 .andExpect(status().isBadRequest());
     }
 
@@ -112,7 +120,18 @@ class AgentHandoverTest {
                         new AgentHandoverController.HandoverRequest(summary)));
     }
 
-    private String openSession(String participantId, boolean aiAck, boolean humanAck) throws Exception {
+    /**
+     * Opens a session under a participant id unique to this run, and returns the id that was
+     * actually used.
+     *
+     * <p>The suffix is not decoration. These tests assert on what the queue contains, the queue is
+     * a table, and the transfer commits - so a fixed id accumulates one row per test run and the
+     * queue assertions start failing on the SECOND `mvn test` against the same database, reporting
+     * "a list of values [false,false]" rather than anything about the handover. The first run
+     * passes, which is the worst version of the problem.
+     */
+    private String openSession(String prefix, boolean aiAck, boolean humanAck) throws Exception {
+        String participantId = prefix + "-" + UUID.randomUUID().toString().substring(0, 8);
         mvc.perform(post("/api/study/session")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(new StudyController.SessionRequest(

@@ -1,0 +1,112 @@
+#!/usr/bin/env bash
+# release.sh - build the image tagged with the current git commit, push it, deploy it.
+#
+#   ./scripts/release.sh
+#
+# Tag = short git SHA, so every deployed revision maps to a known commit. containerImage has no
+# default in the Bicep, so this is the only supported way to deploy - a run can never silently ship
+# a stale image.
+#
+# On a brand-new resource group there is no registry to push to yet, so the platform is created on
+# its own first. That happens once; later runs find the registry and skip straight past.
+#
+# The build resolves the insurance portal from the two registries on this machine (docker/
+# settings.xml and the frontend's .npmrc both name host.docker.internal), so Reposilite and
+# Verdaccio must both be running in the portal repository before this will work.
+#
+# The frontend is compiled on this machine and copied into the image; only the backend is built in
+# the container. docker/Dockerfile explains why.
+
+set -euo pipefail
+
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+env_file="$root/infra/.env"
+acr=""
+repo="exp2-feeling-heard"
+resource_group=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --acr)            acr="$2"; shift 2 ;;
+    --repo)           repo="$2"; shift 2 ;;
+    --resource-group) resource_group="$2"; shift 2 ;;
+    -h|--help)        sed -n '2,19p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
+    *) echo "Unknown argument: $1" >&2; exit 2 ;;
+  esac
+done
+
+if [[ ! -f "$env_file" ]]; then
+  echo "infra/.env not found. Copy infra/.env.example to infra/.env and fill it in." >&2
+  exit 1
+fi
+
+if [[ -z "$resource_group" ]]; then
+  resource_group="$(sed -n 's/^[[:space:]]*RESOURCE_GROUP[[:space:]]*=//p' "$env_file" | head -n1 | sed 's/[[:space:]]*$//')"
+  [[ -n "$resource_group" ]] || resource_group="rg-exp2-feeling-heard"
+fi
+echo "==> Resource group: $resource_group"
+
+sha="$(git -C "$root" rev-parse --short HEAD)"
+[[ -n "$sha" ]] || { echo "Could not read git commit SHA." >&2; exit 1; }
+
+if [[ -n "$(git -C "$root" status --porcelain)" ]]; then
+  echo "WARNING: working tree is dirty - image '$sha' will not fully reflect the committed state."
+fi
+
+# A dependency declared or resolved from a local path builds on the machine that has that path and
+# fails inside the image, where it does not exist. `npm install ../some.tgz` while testing rewrites
+# BOTH package.json and package-lock.json, and the error it eventually produces (ENOENT on a
+# tarball) names neither file. Check both, for any local specifier, not one spelling of one of them.
+for f in "$root/exp2-frontend/package.json" "$root/exp2-frontend/package-lock.json"; do
+  if grep -q '"\(file\|link\):' "$f" 2>/dev/null; then
+    echo "ERROR: $f declares a dependency from a local path:" >&2
+    grep -n '"\(file\|link\):' "$f" >&2
+    echo >&2
+    echo "That path will not exist inside the Docker build. Fix it with:" >&2
+    echo "  cd exp2-frontend && rm -rf node_modules && npm install && cd .." >&2
+    echo "then commit package.json and package-lock.json." >&2
+    exit 1
+  fi
+done
+
+if [[ -z "$acr" ]]; then
+  acr="$(az acr list --resource-group "$resource_group" --query "[0].name" --output tsv 2>/dev/null || true)"
+fi
+
+if [[ -z "$acr" ]]; then
+  # First run against an empty resource group: the image has to be pushed to a registry that does
+  # not exist yet. Create the platform on its own first, then carry on with the real build.
+  # Only ever happens once; later runs find the registry and skip straight past.
+  echo "==> No registry yet - creating the platform first (one-off, ~10 minutes)"
+  "$root/scripts/deploy.sh" --platform-only --resource-group "$resource_group"
+  acr="$(az acr list --resource-group "$resource_group" --query "[0].name" --output tsv)"
+  [[ -n "$acr" ]] || { echo "Bootstrap finished but no registry appeared in $resource_group." >&2; exit 1; }
+fi
+echo "==> Registry: $acr"
+
+image="$acr.azurecr.io/$repo:$sha"
+
+# Build the frontend here on the host, not in the image - see the note at the top of
+# docker/Dockerfile. Emulated linux/amd64 miscompiles the stylesheet; this machine does not.
+echo "==> Building the frontend (on this machine)"
+( cd "$root/exp2-frontend" && npm install --no-audit --no-fund && npm run build )
+
+if [[ ! -f "$root/exp2-frontend/dist/index.html" ]]; then
+  echo "ERROR: the frontend build produced no dist/index.html - refusing to ship an image without a UI." >&2
+  exit 1
+fi
+
+# --platform linux/amd64 is load-bearing on an Apple Silicon Mac: Docker would otherwise build an
+# arm64 image, which Azure Container Apps cannot run. The failure is a container that starts and
+# immediately dies, which is a miserable thing to debug.
+echo "==> Building $image"
+docker build --platform linux/amd64 -f "$root/docker/Dockerfile" -t "$image" "$root"
+
+echo "==> Logging in + pushing to ACR"
+az acr login --name "$acr"
+docker push "$image"
+
+echo "==> Deploying"
+"$root/scripts/deploy.sh" --image "$image" --resource-group "$resource_group"
+
+echo "==> Done. Deployed image: $image"

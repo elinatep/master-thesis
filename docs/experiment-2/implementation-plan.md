@@ -47,6 +47,14 @@ Consequences to handle:
 - Both deployables would share one Postgres Flexible Server. They cannot share a
   `behavioural` schema — give Experiment 2 its **own database** on that server. Flyway
   histories are already per-repo, so nothing else collides.
+
+  > **Settled differently, Oct 2026.** `levels-of-ai-help` is not in this repository and is not
+  > deployed from it, so there was no platform for Experiment 2 to reference. It owns
+  > `experiment-2/infra/platform.bicep` and deploys into its **own resource group**, separate
+  > from the pre-test's. The reasoning in `docs/experiment-2/deployment.md` is about the
+  > pre-test rather than about Experiment 3, but it reaches the same place: the data of a
+  > finished study must survive the next one being deployed, resized or deleted. The own-database
+  > point stands and is implemented.
 - **Pin the portal artifact versions** before the study run. `CLAUDE.md` warns that Maven
   caches SNAPSHOTs for a day, so a republished portal can be silently missed.
 
@@ -148,6 +156,16 @@ tolerate it. The schema already has a per-policy `currency` column and `money()`
 a currency parameter — so the fix is parameterising the two PDF services and the call sites,
 not a rewrite. Five non-test files touched.
 
+> **Done, Oct 2026**, additively: `configureFormat()` on the frontend and `MoneyFormat` on the
+> backend, both defaulting to the Swiss values, so nothing that does not opt in changes. Both
+> studies opt in — `configureFormat({ currency: 'GBP', … })` in `main.tsx` and
+> `portal.format.currency=GBP` in `study.properties` — and Experiment 2 also carries its own
+> `configuration/portal-content/` and `portal-seed/`, which are British throughout.
+>
+> One loose end: the library change is on `claude/configurable-currency-and-dates` and is **not
+> merged into the library's `main`**. Rebuilding the library from `main` silently takes the PDFs
+> back to CHF. Merge it.
+
 **b. Where the claim outcome is shown.** Per §5 it belongs in the portal. That makes the portal
 session contiguous — file claim → see the £50 → dispute → AI → human — with Qualtrics doing
 consent and briefing before, and the survey after. But `Emotion.check` (block 10) has to fire
@@ -176,6 +194,13 @@ and mic test before the endowment is committed, plus a documented exclusion rule
 ("fake data, scheduled sessions"). With a public Prolific link and an agent console holding live
 participant transcripts, that no longer holds. The console needs real auth; `/data` and the
 admin reset endpoints should be locked down in the Experiment 2 deployable.
+
+> **Done, Oct 2026.** `StudySecurityConfig` puts `/data`, `/api/study/log` and `/api/admin/**`
+> behind a researcher credential and `/agent`, `/agent/**` and `/api/agent/**` behind a separate
+> agent credential. Two credentials rather than one because the confederate holds one of them and
+> works unsupervised: if theirs also opened `/api/admin/reset/all`, a misclick would end the
+> study. An unset password closes its paths rather than opening them, and the participant-facing
+> half stays open either way. `StudySecurityConfigTest` covers both directions.
 
 **f. `CLAUDE.md` is stale on the voice provider.** It says the browser connects "directly to
 OpenAI (not via Azure)", but `configuration/voice/client.json` points `realtimeUrl` at

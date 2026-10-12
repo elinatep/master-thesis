@@ -1,0 +1,59 @@
+[
+  {
+    "id": "bundle",
+    "category": "Campaign",
+    "title": "Save 10% when you bundle household and liability",
+    "body": "Combine your household contents and personal liability cover on one contract and get 10% off both premiums. The discount applies automatically at your next renewal.",
+    "date": "2026-08-10",
+    "image": "/api/content/images/bundle.svg",
+    "article": [
+      "From this autumn, Salvena customers who hold both a household contents policy and a personal liability policy can combine them on a single contract and save 10% on both premiums.",
+      "Bundling keeps your everyday cover in one place: one contract, one renewal date, and one point of contact if you ever need to make a change or file a claim. There is nothing to fill in — if you already hold both policies, the discount is applied automatically at your next renewal and shown on your premium breakdown.",
+      "If you only hold one of the two today, adding the other is straightforward. Open the policy you would like to complement and use “Request a change”, or ask our service team, and we will prepare an offer for the combined contract.",
+      "The 10% bundle discount is available to private customers on standard household and personal liability tariffs. It cannot be combined with certain group or partner discounts; your personal offer always shows the final price."
+    ]
+  },
+  {
+    "id": "service-centre",
+    "category": "News",
+    "title": "Salvena opens a new service centre in Manchester",
+    "body": "Our new customer service centre near Manchester main station is now open, adding capacity for claims handling and advice in all national languages.",
+    "date": "2026-07-28",
+    "image": "/api/content/images/service-centre.svg",
+    "article": [
+      "Salvena has opened a new customer service centre a few minutes from Manchester main station. The centre adds capacity for claims handling and personal advice, and brings more of our specialists together under one roof.",
+      "The team advises in all four national languages as well as English, and works closely with our online self-service portal: whatever you start online — filing a claim, requesting a certificate, or asking for a change to a policy — can be picked up and continued by a person if you would like a hand.",
+      "For most customers, nothing changes in day-to-day contact: the portal, phone and email channels stay exactly as they are. The new centre simply means shorter waiting times and more availability during busy periods, such as the storm season and the year-end renewal window.",
+      "Our opening hours remain Monday to Friday, 08:00–18:00. You can always reach us on +44 161 496 0112 or at service@example.com."
+    ]
+  },
+  {
+    "id": "water-damage",
+    "category": "Tips",
+    "title": "Preventing water damage: a seasonal checklist",
+    "body": "Most household water claims are avoidable. Check hoses and seals, know where your main shut-off valve is, and drain outdoor pipes before the first frost.",
+    "date": "2026-07-15",
+    "image": "/api/content/images/water-damage.svg",
+    "article": [
+      "Water damage is one of the most common — and most preventable — household claims. A burst hose or a slow leak behind an appliance can cause thousands of francs of damage before anyone notices. A few minutes of maintenance each season goes a long way.",
+      "Start in the kitchen and bathroom. Check the hoses and seals on your dishwasher, washing machine and under sinks for cracks, bulges or damp patches, and replace anything that looks worn. Rubber hoses generally last around five years; braided steel hoses last longer and are worth the small upgrade.",
+      "Know where your main water shut-off valve is, and make sure everyone in the household knows too. If a pipe ever bursts, closing it quickly is the single most effective thing you can do to limit the damage.",
+      "Before the first frost, drain and disconnect outdoor taps and garden hoses so trapped water cannot freeze and split the pipe. If you are away for a longer period in winter, leave the heating on a low setting so indoor pipes stay above freezing.",
+      "If the worst happens, stop the water, move valuables to safety, and document the damage with photos before you clear up. You can file the claim and attach those photos directly in your Salvena portal."
+    ]
+  },
+  {
+    "id": "travel",
+    "category": "Campaign",
+    "title": "Planning a trip? Add travel cover in minutes",
+    "body": "Trip cancellation, medical expenses abroad and baggage protection — add travel cover to your Salvena account before you go and travel with peace of mind.",
+    "date": "2026-06-30",
+    "image": "/api/content/images/travel.svg",
+    "article": [
+      "Whether it is a week by the sea or a longer trip further afield, travel cover means an unexpected problem does not have to spoil the journey — or your budget. Salvena travel insurance brings the essentials together in one policy.",
+      "Trip cancellation reimburses non-refundable costs if you have to call off or cut short your trip for a covered reason, such as illness or an accident. Medical expenses abroad covers treatment and, where needed, medically organised transport home. Baggage protection helps if your luggage is lost, stolen or damaged in transit.",
+      "You can take out annual cover, which protects every trip you make in the year, or single-trip cover for one specific journey. Families travelling together are covered under one contract.",
+      "Adding travel cover is quick: ask our service team or request it from your Salvena account before you leave. Make sure the policy is in force before your departure date — cover has to start before the trip begins."
+    ]
+  }
+]

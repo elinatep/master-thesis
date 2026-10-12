@@ -1,9 +1,17 @@
 # configuration/
 
-Everything a participant is shown or told that is not portal content: the voice bot's session and
-per-cell instructions, and the task text. All of it is read from the filesystem per request, never
-bundled, so wording can be corrected without a rebuild - and so it is all in one place when the
-study is written up.
+Everything a participant is shown, told or read to: the voice bot's session and per-cell
+instructions, the human agent's script, the task text, and the portal's own content and seeded
+account. All of it is read from the filesystem per request, never bundled, so wording can be
+corrected without a rebuild - and so it is all in one place when the study is written up.
+
+| | |
+| --- | --- |
+| `voice/` | the AI leg: the Realtime session, the two condition blocks, the tool set |
+| `human/` | the confederate's script: one shared base plus one condition block |
+| `study/task.md` | the task card pinned beside the portal |
+| `portal-content/` | who Salvena is, as the portal presents it - British, replacing the library's Swiss default **wholesale** |
+| `portal-seed/` | the account the participant finds: two policies, 90% water-damage cover, and no claims yet |
 
 - Native dev: the backend runs from `exp2-app/`, so this resolves via `../configuration`.
 - Docker/Azure: the image copies this dir to `/app/configuration` (`VOICE_CONFIG_DIR`).
@@ -63,6 +71,30 @@ constant, not **acknowledgement**, which it manipulates. Confusing the two would
 impossible to separate. A per-cell tools file would make a capability difference easy to introduce
 by accident, and a capability confound is indistinguishable from the effect being measured once
 the data is in.
+
+## human/
+
+The second leg of the call. Same construction as `voice/instructions/`: one shared base
+(`human-base.md`) plus exactly one condition block (`human-ack.md` / `human-noack.md`), for the
+same reason - two long near-identical scripts drift apart, and the first correction made in one and
+not the other is a confound nothing catches.
+
+Read by a person, not by the application, so nothing here is served over HTTP.
+`human/README.md` has the design argument and what is still open.
+
+## portal-content/ and portal-seed/
+
+The portal's own half of what the participant sees, pointed at by `app.content.location` and
+`app.seed.location`.
+
+**`portal-content/` replaces the library's content directory wholesale rather than merging with
+it** - anything the default provides and this does not is simply absent, which shows up as a
+missing picture on an insurer's website rather than as an error. `PortalContentOverrideTest`
+compares the two directories by filename and fails naming what is missing.
+
+Both exist because the shipped defaults are Swiss (Zürich, +41, CHF) and the sample is British, and
+because the library's demo account arrives with claims already filed - including two for water
+damage, which a participant about to report their first burst pipe would find waiting for them.
 
 ## `study/task.md` - the participant's task
 

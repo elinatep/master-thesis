@@ -2,7 +2,7 @@
 <!--
   Maven settings for the image build only (copied to /root/.m2/settings.xml in the Dockerfile).
 
-  levels-of-ai-help-app/pom.xml declares the same repository at http://localhost:8082 - correct on
+  exp2-app/pom.xml declares the same repository at http://localhost:8082 - correct on
   the host,
   wrong inside a container, where localhost is the container. This profile re-declares it
   at host.docker.internal, which Docker Desktop resolves to the host.
