@@ -67,6 +67,9 @@ param agentPassword string = ''
 @secure()
 param openAiApiKey string = ''
 
+@description('Where Azure Communication Services holds its data, for the participant-to-agent call. Switzerland for this study: the ethics application commits to holding research data on ETH infrastructure, and this is the one setting that decides where the calling service keeps its own.')
+param callDataLocation string = 'Switzerland'
+
 @description('Realtime API base URL the backend mints ephemeral tokens against. The token endpoint is <base>/realtime/client_secrets. Empty keeps the application default (the MTEC Azure OpenAI deployment).')
 param openAiBaseUrl string = ''
 
@@ -82,6 +85,31 @@ param authClientSecret string = ''
 
 @description('If true, every request must be authenticated. Only meaningful when authClientId is set.')
 param requireAuthentication bool = true
+
+// Azure Communication Services: the participant-to-agent voice call.
+//
+// Long-lived, like the platform, but declared HERE rather than in platform.bicep on purpose. The
+// app needs its connection string, and a module can only hand that over as an output - which lands
+// in the resource group's deployment history, readable by anyone with read access to the group, for
+// as long as the history is kept. Declaring it alongside the app means listKeys() is read inline
+// into a container app secret and the connection string is never an output of anything.
+//
+// ACS rather than our own WebRTC signalling and a TURN server: it is an Azure service, so it falls
+// under the same Microsoft agreement the ethics application already rests on for Azure OpenAI, and
+// it handles media relay for participants behind restrictive home networks. A TURN server we ran
+// ourselves would be a second thing to operate, and getting it wrong shows up as participants
+// simply unable to connect, mid-session, with a confederate waiting.
+//
+// It bills per participant-minute and nothing while idle: roughly USD 25 for all 400 sessions.
+resource callService 'Microsoft.Communication/communicationServices@2023-04-01' = {
+    name: 'acs-${appName}'
+    // 'global' is the only accepted location for this resource type. Where the data actually lives
+    // is callDataLocation - that is the setting that matters for the ethics application.
+    location: 'global'
+    properties: {
+        dataLocation: callDataLocation
+    }
+}
 
 // Long-lived: registry, identity, logs, Container Apps environment, Postgres server.
 module platform 'modules/platform.bicep' = {
@@ -130,6 +158,9 @@ module exp2App 'modules/containerapp.bicep' = if (deployApp) {
             RESEARCHER_PASSWORD: researcherPassword
             AGENT_PASSWORD: agentPassword
             OPENAI_API_KEY: openAiApiKey
+            // Read straight from the resource above, so this is one secret nobody has to carry in
+            // infra/.env or paste anywhere.
+            COMMUNICATION_CONNECTION_STRING: callService.listKeys().primaryConnectionString
         }
         tenantId: tenantId
         authClientId: authClientId
@@ -145,6 +176,7 @@ module exp2App 'modules/containerapp.bicep' = if (deployApp) {
 output appUrl string = deployApp ? 'https://${exp2App!.outputs.appFqdn}' : ''
 output handoverRegisterUrl string = deployApp ? 'https://${exp2App!.outputs.appFqdn}/api/handover' : ''
 output researcherDataUrl string = deployApp ? 'https://${exp2App!.outputs.appFqdn}/data' : ''
+output callServiceName string = callService.name
 output acrName string = platform.outputs.acrName
 output pgFqdn string = platform.outputs.pgFqdn
 output dbName string = platform.outputs.dbName

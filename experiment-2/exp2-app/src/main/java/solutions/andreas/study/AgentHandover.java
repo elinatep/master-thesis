@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import java.util.Map;
+import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
@@ -25,6 +26,11 @@ import org.hibernate.type.SqlTypes;
  *
  * <p>The assigned condition is not copied here. It lives on {@link StudySession} and the console
  * joins to it, so nothing an agent does during a call can touch it.
+ *
+ * <p>{@code callId} is the address of the voice call the two of them join. It is assigned here, at
+ * transfer time, rather than when an agent picks up: the participant has just been told a colleague
+ * is coming, so they start joining immediately, and the agent then joins the call that is already
+ * waiting. No audio is stored - this identifies a call, it does not record one.
  */
 @Entity
 @Table(name = "agent_handover", schema = "behavioural")
@@ -57,6 +63,9 @@ public class AgentHandover {
     @Column(name = "ended_at")
     private OffsetDateTime endedAt;
 
+    @Column(name = "call_id", nullable = false, updatable = false)
+    private UUID callId;
+
     protected AgentHandover() {
     }
 
@@ -64,6 +73,7 @@ public class AgentHandover {
         this.sessionId = sessionId;
         this.participantId = participantId;
         this.summary = summary;
+        this.callId = UUID.randomUUID();
     }
 
     public Long getId() {
@@ -80,6 +90,10 @@ public class AgentHandover {
 
     public Map<String, Object> getSummary() {
         return summary;
+    }
+
+    public UUID getCallId() {
+        return callId;
     }
 
     public OffsetDateTime getRequestedAt() {

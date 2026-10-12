@@ -129,9 +129,21 @@ The deploy and the pilot both read `infra/.env`, so there is no URL or secret to
 
 ## Known gaps
 
-- **The agent console does not exist yet.** `GET /api/agent/queue` is its backend and is behind the
-  agent credential; the console UI and the participant↔agent voice leg (WebRTC signalling,
-  STUN/TURN) are still to build. This is the next piece of work.
+- **The agent console's page does not exist yet.** Everything behind it does: the queue, the brief
+  (the condition card, the assistant's summary, the AI transcript), claiming a handover, ending it,
+  and the call token for either side - all under `/api/agent/**` and `/api/call/token`, all behind
+  their credentials, covered by `AgentConsoleTest`. What is missing is the UI at `/agent` and the
+  participant's waiting-and-connecting state. That is the next piece of work.
+- **The call runs on Azure Communication Services**, created by the deploy, with its data in
+  Switzerland. Both browsers get a short-lived token and join a group call named by the handover;
+  no audio passes through this application and none is stored. Chosen over our own WebRTC
+  signalling plus a TURN server because it is an Azure service - the same Microsoft agreement the
+  ethics application already rests on for Azure OpenAI - and because it handles media relay for
+  participants on restrictive home networks.
+- **The agent is never told the AI condition.** They see `humanAck`, their own instruction, and the
+  transcript. They will often infer the rest and blinding is impossible; what this buys is
+  consistency rather than blindness. `AgentConsoleTest` asserts no agent-facing payload carries the
+  AI factor, so a later convenience field cannot quietly undo it.
 - **The AI leg needs `OPENAI_API_KEY`** in `infra/.env`, minted server-side into an ephemeral
   token. Without it the portal works and the assistant cannot connect.
 - **The portal's generated PDFs follow `portal.format.currency`**, which is set to GBP here - but

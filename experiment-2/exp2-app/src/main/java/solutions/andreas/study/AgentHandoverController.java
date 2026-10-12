@@ -1,7 +1,6 @@
 package solutions.andreas.study;
 
 import jakarta.validation.Valid;
-import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
@@ -80,31 +79,31 @@ public class AgentHandoverController {
     }
 
     /**
-     * The queue an agent console polls: who is waiting, longest first, with the summary the
-     * assistant left and the cell the agent has to play.
+     * Where the participant's transfer has got to. Polled by their own page while they wait.
      *
-     * <p>The cell is joined from the session rather than stored on the handover, so it is read-only
-     * here by construction.
-     *
-     * <p>Behind the agent credential - see {@link StudySecurityConfig}. It has to be: the entries
-     * carry participant ids and the summary of what the assistant was just told, and every
-     * participant knows this host because they are redirected to it.
+     * <p>They have just been told a colleague is coming and the assistant has gone quiet, so the
+     * page has to be able to say something true in the meantime. Silence after a promise reads as
+     * the service having dropped them - which, in a study measuring whether people feel heard, is
+     * a confound introduced by the implementation.
      */
-    @GetMapping("/agent/queue")
-    public List<QueueEntry> queue() {
-        return handovers.findByPickedUpAtIsNullOrderByRequestedAtAsc().stream()
-                .map(h -> {
-                    StudySession s = sessions.findById(h.getSessionId()).orElse(null);
-                    return new QueueEntry(
-                            h.getId(),
-                            h.getParticipantId(),
-                            h.getSessionId(),
-                            s == null ? null : s.getCondition().humanAck(),
-                            h.getSummary(),
-                            h.getRequestedAt(),
-                            waitedSeconds(h));
-                })
-                .toList();
+    @GetMapping("/study/agent-handover")
+    public ParticipantStatus status() {
+        String participantId = participants.currentRef();
+        StudySession session = sessions.findFirstByParticipantIdOrderByStartedAtDesc(participantId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "No open study session for participant " + participantId));
+        AgentHandover h = handovers
+                .findFirstBySessionIdAndEndedAtIsNullOrderByRequestedAtDesc(session.getId())
+                .orElse(null);
+        if (h == null) {
+            return new ParticipantStatus(null, "none", 0, null);
+        }
+        QueueTicket ticket = ticketFor(h);
+        String state = h.getPickedUpAt() != null ? "connected" : ticket.status();
+        // The call id goes out as soon as the transfer exists, not when an agent picks up: the
+        // participant starts joining immediately and waits inside the call, so the moment the agent
+        // arrives there is nothing left to negotiate.
+        return new ParticipantStatus(h.getId(), state, ticket.position(), h.getCallId().toString());
     }
 
     private QueueTicket ticketFor(AgentHandover handover) {
@@ -118,10 +117,6 @@ public class AgentHandoverController {
         // agent. Reporting "connecting" is truthful and keeps the assistant's line to the
         // participant right ("putting you through" rather than "you are Nth in the queue").
         return new QueueTicket(handover.getId(), "connecting", 0);
-    }
-
-    private static long waitedSeconds(AgentHandover h) {
-        return Duration.between(h.getRequestedAt(), OffsetDateTime.now()).toSeconds();
     }
 
     /**
@@ -151,7 +146,11 @@ public class AgentHandoverController {
     public record QueueTicket(Long handoverId, String status, int position) {
     }
 
-    public record QueueEntry(Long handoverId, String participantId, Long sessionId, Boolean humanAck,
-            Map<String, Object> summary, OffsetDateTime requestedAt, long waitedSeconds) {
+    /**
+     * What the waiting participant's page is told. No condition in here, in either factor: the page
+     * renders the same whatever cell they are in, and the only thing that differs between
+     * participants is what they hear.
+     */
+    public record ParticipantStatus(Long handoverId, String state, int position, String callId) {
     }
 }

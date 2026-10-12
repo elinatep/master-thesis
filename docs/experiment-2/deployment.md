@@ -202,12 +202,16 @@ Works:
 - the AI voice leg, if `OPENAI_API_KEY` is set
 - `/data`, `/api/admin/**` and `/api/agent/queue` behind their passwords
 
+- the whole server side of the handover: the queue, the brief the agent reads before picking up,
+  claiming and ending a call, and the tokens both sides use to join it
+- Azure Communication Services, created by the deploy, holding its data in Switzerland - one more
+  resource in the group, billed per participant-minute and nothing while idle
+
 Does not work yet:
 
-- **the human agent's console.** The queue endpoint behind it exists and is protected; the page
-  that shows it does not, and neither does the participant↔agent voice leg. That is the next piece
-  of work, and it is the half of the study that the confederate scripts in
-  `configuration/human/` are written for.
+- **the agent console's page, and the participant's waiting screen.** Everything they talk to is
+  built and tested; the two UIs are not. That is the next piece of work, and it is the half of the
+  study the confederate scripts in `configuration/human/` are written for.
 
 ---
 

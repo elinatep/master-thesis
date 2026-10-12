@@ -135,6 +135,11 @@ if [[ -n "$openai_base_url" ]]; then
   params+=( "openAiBaseUrl=$openai_base_url" )
 fi
 
+# Not read from .env: the template creates the Communication Services resource and reads its own
+# connection string into the container's secrets. Printed so the line is accounted for alongside
+# the others rather than silently absent.
+echo "Participant-agent call: Azure Communication Services (created by this deploy)"
+
 auth_client_id="$(read_var AUTH_CLIENT_ID)"
 auth_client_secret="$(read_var AUTH_CLIENT_SECRET)"
 if [[ -n "$auth_client_id" && -n "$auth_client_secret" ]]; then
