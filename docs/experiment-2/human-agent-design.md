@@ -73,3 +73,23 @@ Both legs must land in **one** transcript keyed to the same session, tagged by s
   portal session — it has to fire after the £50 outcome and before the dispute decision.
 - Whether the AI writes its handover summary explicitly (a tool call the transcript
   records) or the console derives it. The former is more analysable.
+
+Settled since: the agent's instructions are written, in
+`experiment-2/configuration/human/` - one shared base plus an acknowledgement block per
+condition, the same construction as the AI prompts and for the same reason. The three
+things they fix that are easy to miss:
+
+- **Length parity.** Both blocks spend three moments at the same points in the call; the
+  acknowledging one spends them on feelings and the other on procedural detail, so
+  acknowledgement is not confounded with talk time. The pilot has to verify this rather
+  than assume it.
+- **Continuity is constant, not manipulated.** The agent always opens having read the
+  transcript and never makes the participant start over, in all four cells. The survey's
+  continuity items check the handover design works; they are not a factor.
+- **The final reimbursement is never revealed on the call**, and the pushback that leads
+  there has fixed answers, because it will come up on most calls and an improvised answer
+  is a difference between participants that nobody recorded.
+
+Three things they leave open, all needing a decision before the pilot: the agent's name,
+whether the card states the AI condition (the agent can infer it from the transcript
+anyway, so the choice is consistent or half-inferred), and the session log format.
