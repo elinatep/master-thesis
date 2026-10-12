@@ -87,30 +87,42 @@ az group create --name rg-exp2-feeling-heard --location switzerlandnorth
 Switzerland North matters: the ethics application commits to holding research data on ETH
 infrastructure.
 
-## 3. Fill in `infra/.env`
+## 3. Generate the secrets
 
 ```bash
 cd experiment-2
-cp infra/.env.example infra/.env
+./scripts/init_env.sh
 ```
 
-Then open `infra/.env` and set five values. The file explains each one in place; in short:
+That creates `infra/.env` from the template, generates the four secrets it needs, writes them in,
+and prints them once so you can put them in a password manager. Do that when it prints them: the
+database password is created *with* the Postgres server on the first deploy and Azure will never
+show it to you again, so if `infra/.env` is lost after that the server is unreachable while still
+running and still billing.
 
-| Key | What to put |
+It fills only the keys that are **empty**, so running it twice cannot replace a password the
+deployed database is already using.
+
+| Key | Where it comes from |
 | --- | --- |
-| `RESOURCE_GROUP` | `rg-exp2-feeling-heard` (already there) |
-| `DB_ADMIN_PASSWORD` | **you choose.** 8-128 chars, 3 of upper/lower/digit/special. Save it somewhere you will still have in March - it cannot be read back out of Azure |
-| `HANDOVER_SECRET` | `uuidgen` and paste the result. A **different** value from the pre-test's |
-| `RESEARCHER_PASSWORD` | **you choose.** The password on `/data` and on the endpoints that can delete the study |
-| `AGENT_PASSWORD` | **you choose.** What the confederate signs in with. Different from the researcher's - that separation is what stops a misclick ending the study |
-| `OPENAI_API_KEY` | **you need to get this.** See below |
+| `RESOURCE_GROUP` | already in the template |
+| `DB_ADMIN_PASSWORD` | generated |
+| `HANDOVER_SECRET` | generated |
+| `RESEARCHER_PASSWORD` | generated |
+| `AGENT_PASSWORD` | generated |
+| `OPENAI_API_KEY` | **somebody has to give you this** - see below |
+
+To check later what is set without printing any values:
 
 ```bash
-uuidgen    # for HANDOVER_SECRET
+for k in DB_ADMIN_PASSWORD HANDOVER_SECRET RESEARCHER_PASSWORD AGENT_PASSWORD OPENAI_API_KEY; do
+  v=$(sed -n "s/^[[:space:]]*$k[[:space:]]*=//p" infra/.env | head -1)
+  if [ -n "$v" ]; then printf '%-22s set\n' "$k"; else printf '%-22s EMPTY\n' "$k"; fi
+done
 ```
 
-**Do not paste any of these into a chat, an email or a commit.** `infra/.env` is gitignored, and
-that is the only place they should exist outside your password manager.
+**Do not paste any of these into a chat, an email or a commit.** `infra/.env` is gitignored, the
+script makes it readable only by you, and that plus your password manager should be the only copies.
 
 ### The OpenAI key
 

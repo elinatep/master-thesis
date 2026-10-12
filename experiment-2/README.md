@@ -111,8 +111,18 @@ exists to catch edits to the prompts. `ConditionIntakeTest` round-trips all four
 
 Full step-by-step, including creating the resource group: `docs/experiment-2/deployment.md`.
 
-Once `infra/.env` exists, one command builds the frontend, builds and pushes the image, and
-deploys:
+First, the secrets:
+
+```
+./scripts/init_env.sh
+```
+
+It creates `infra/.env`, generates the four secrets, and prints them once for your password manager
+- the database password especially, which is created with the Postgres server and cannot be read
+back out of Azure afterwards. It fills only empty keys, so a second run cannot replace a password
+the deployed database is already using.
+
+Then one command builds the frontend, builds and pushes the image, and deploys:
 
 ```
 ./scripts/release.sh
