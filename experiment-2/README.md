@@ -128,6 +128,10 @@ Then one command builds the frontend, builds and pushes the image, and deploys:
 ./scripts/release.sh
 ```
 
+`scripts/enqueue.sh <participantId>` stands in for the assistant's `transfer_to_human_agent` call,
+so the human leg can be tested without `OPENAI_API_KEY`. The participant needs an open session
+first, which their page creates on load.
+
 Then walk one cell of the 2×2 end to end, as a participant would:
 
 ```

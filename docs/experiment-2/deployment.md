@@ -225,9 +225,21 @@ Works:
 Not proven yet:
 
 - **no real call has ever connected.** Both ends are built and the server side is tested, but a
-  group call needs the deployed ACS resource and two browsers. After the first deploy: open
-  `./scripts/pilot.sh ack-ack` in one tab, let the assistant transfer you, and open `<appUrl>/agent`
-  in another. You are both sides of the call - use headphones or you will hear yourself.
+  group call needs the deployed ACS resource and two browsers.
+
+  The first run after a deploy, and this works with no `OPENAI_API_KEY`:
+
+  ```bash
+  ./scripts/pilot.sh ack-ack          # tab 1: the participant. Wait for the portal to appear
+  ./scripts/enqueue.sh <the id it printed>
+  ```
+
+  Tab 1 switches to "putting you through". Then open `<appUrl>/agent`, sign in with the agent
+  credential, pick yourself up and join. **Headphones** - the two tabs will otherwise feed each
+  other.
+
+  That one run exercises the whole chain: the ACS token mint, the group call connecting, the
+  condition card, the transcript, and the handback to Qualtrics at the end.
 
 ---
 
