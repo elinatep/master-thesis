@@ -129,11 +129,14 @@ The deploy and the pilot both read `infra/.env`, so there is no URL or secret to
 
 ## Known gaps
 
-- **The agent console's page does not exist yet.** Everything behind it does: the queue, the brief
-  (the condition card, the assistant's summary, the AI transcript), claiming a handover, ending it,
-  and the call token for either side - all under `/api/agent/**` and `/api/call/token`, all behind
-  their credentials, covered by `AgentConsoleTest`. What is missing is the UI at `/agent` and the
-  participant's waiting-and-connecting state. That is the next piece of work.
+- **Nothing has been through a real call yet.** Both ends are built - the console at `/agent`, the
+  participant's hold-and-connect panel, and the Azure Communication Services leg between them - but
+  a group call needs a deployed ACS resource and two browsers, so it has never actually connected.
+  The first thing to do after a deploy is two tabs and a conversation with yourself.
+- **`TRANSFER_GRACE_MS` in `CallStage.tsx` is a guess.** It is how long the assistant keeps talking
+  after the transfer is registered, so it can finish "I'm putting you through now" before its
+  session is torn down. Six seconds. Listen at the pilot for whether it is ever cut off, or whether
+  there is dead air before the hold message.
 - **The call runs on Azure Communication Services**, created by the deploy, with its data in
   Switzerland. Both browsers get a short-lived token and join a group call named by the handover;
   no audio passes through this application and none is stored. Chosen over our own WebRTC

@@ -207,11 +207,15 @@ Works:
 - Azure Communication Services, created by the deploy, holding its data in Switzerland - one more
   resource in the group, billed per participant-minute and nothing while idle
 
-Does not work yet:
+- the agent console at `<appUrl>/agent`, behind the agent credential, and the participant's
+  hold-and-connect panel
 
-- **the agent console's page, and the participant's waiting screen.** Everything they talk to is
-  built and tested; the two UIs are not. That is the next piece of work, and it is the half of the
-  study the confederate scripts in `configuration/human/` are written for.
+Not proven yet:
+
+- **no real call has ever connected.** Both ends are built and the server side is tested, but a
+  group call needs the deployed ACS resource and two browsers. After the first deploy: open
+  `./scripts/pilot.sh ack-ack` in one tab, let the assistant transfer you, and open `<appUrl>/agent`
+  in another. You are both sides of the call - use headphones or you will hear yourself.
 
 ---
 

@@ -63,6 +63,17 @@ export function useVoiceSession() {
     logEvent('VOICE_STATUS', { status })
   }, [status])
 
+  // Tear the session down when this surface goes away. The handover unmounts it to end the AI leg,
+  // and without this the peer connection stays open and the microphone stays live - so the
+  // assistant would still be holding the mic while the participant is talking to a person.
+  // stop() reads refs rather than state, so there is no stale-closure problem in the cleanup.
+  useEffect(() => {
+    return () => {
+      stop()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   function send(obj: unknown) {
     dcRef.current?.send(JSON.stringify(obj))
   }

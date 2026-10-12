@@ -11,6 +11,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@azure/communication-calling": "^2.0.0",
+    "@azure/communication-common": "^2.5.0",
     "@insurance-portal/core": "^0.8.0",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.11.3",

@@ -9,7 +9,8 @@ import StudyGate from './study/StudyGate.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
 import DataPage from './study/DataPage.tsx'
 import StudySplit from './study/StudySplit.tsx'
-import VoiceWidget from './voice/VoiceWidget'
+import CallStage from './call/CallStage'
+import AgentConsole from './agent/AgentConsole'
 import { configureFormat, configurePortalHost } from '@insurance-portal/core/host'
 import { participantHeaders } from './study/headers'
 import { getCondition } from './study/session'
@@ -47,8 +48,10 @@ configurePortalHost({
   interactionMode: () => 'interactive',
   onEvent: logEvent,
   navbarChrome: () => <StudyChrome />,
-  // Every cell has the voice assistant. What differs is what it says, not whether it is there.
-  assistant: () => <VoiceWidget />,
+  // Every cell has the voice assistant, and every cell hands over to a person afterwards. What
+  // differs is what each of them says, not whether they are there - so one surface owns both legs
+  // and the switch between them (see CallStage).
+  assistant: () => <CallStage />,
 })
 
 createRoot(document.getElementById('root')!).render(
@@ -62,6 +65,12 @@ createRoot(document.getElementById('root')!).render(
       */}
       <Routes>
         <Route path="/data" element={<DataPage />} />
+        {/*
+          The agent console. Outside StudyGate, like /data: opening it must not create a
+          participant session, and the person opening it is staff, not a participant. Spring
+          Security challenges /agent for the agent credential before this page is served at all.
+        */}
+        <Route path="/agent" element={<AgentConsole />} />
         <Route
           path="*"
           element={
