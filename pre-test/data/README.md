@@ -17,4 +17,21 @@ Then, from `pre-test`:
 ./scripts/check_join.py data/Intro.csv data/Outro.csv data/behavioural-log.csv
 ```
 
+## Database backups also land here
+
+`../scripts/backup_db.sh` writes three files per run, timestamped:
+
+```
+data/pretest-<UTC timestamp>.dump      restorable: pg_restore --no-owner -d <db> <file>
+data/pretest-<UTC timestamp>.sql       the same content as plain SQL, readable without tooling
+data/pretest-<UTC timestamp>.log.json  the behavioural log, as /data serves it
+```
+
+The dump is the only copy of the portal side - the claims participants actually filed. The `/data`
+export covers the behavioural log and not that, and "what did they type into the claim form" is a
+question the write-up may well need to answer.
+
+Gitignored like everything else here, which keeps it out of git. It does not make it backed up:
+copy it to an ETH drive or an external disk before anything on Azure is deleted.
+
 This README is the only file in here that is committed.

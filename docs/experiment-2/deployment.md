@@ -27,17 +27,24 @@ there by accident.
 
 ### Do not wipe the pre-test yet
 
-Deleting `rg-e2-feeling-heard` deletes the behavioural data with it, and the Azure-side password
-cannot be read back - only `pre-test/infra/.env` has it. Export first:
+Deleting `rg-e2-feeling-heard` deletes the database with it, and Azure's own automated backups live
+*inside* that resource group, so they go too. The admin password is in `pre-test/infra/.env` and
+nowhere else - Azure cannot show it to you again.
+
+From `pre-test/`:
 
 ```bash
-# from pre-test/, with your researcher password
-open "$(./scripts/pilot.sh --url | tail -1)/data"
+./scripts/backup_db.sh --check   # what is on the server, writes nothing
+./scripts/backup_db.sh           # dump + plain SQL + the behavioural log, into data/
 ```
 
-Download the CSV from that page, put it somewhere outside the repository, and only then consider
-deleting the group. It is costing roughly 50-60 CHF a month while it runs, so it is worth doing -
-just not before the data is somewhere else.
+That takes the portal schema as well as the behavioural one, which the `/data` page does not - the
+claims participants actually filed live in the portal's tables, and "what did they type into the
+claim form" is a question the write-up may need. It verifies the dump reads back before reporting
+success.
+
+Then copy those files somewhere that is actually backed up. Only then is deleting the group a
+reasonable thing to do - and it is worth doing, at roughly 50-60 CHF a month.
 
 ---
 

@@ -371,8 +371,24 @@ Open the resource group and you will find six things. You do not need to touch a
 
 To read the app's logs: Container App → **Monitoring** → **Log stream**.
 
-**Cost.** The database server is the bulk of it and bills whether or not anyone is using it. When
-the pre-test is finished, delete the whole resource group — that is the clean way to stop paying.
+**Cost.** The database server is the bulk of it and bills whether or not anyone is using it (very
+roughly 50–60 CHF a month for the group). When the pre-test is finished, deleting the whole
+resource group is the clean way to stop paying.
+
+**Take the data off first.** Deleting the group deletes the database, and Azure's automated backups
+live inside the same group, so they go with it. The admin password is in `infra/.env` and nowhere
+else — Azure cannot show it to you again.
+
+```bash
+./scripts/backup_db.sh          # dump + plain SQL + the behavioural log, into data/
+./scripts/backup_db.sh --check  # just say what is on the server
+```
+
+Then copy what it wrote somewhere that is actually backed up, and only then:
+
+```bash
+az group delete --name rg-e2-feeling-heard --yes
+```
 
 ---
 

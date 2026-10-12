@@ -188,6 +188,14 @@ arrives with an attempt already spent, so the scripted failure never fires and n
 `scripts/azure_db_reset.sh` (`.ps1` on Windows) drops both schemas between pilot rounds, so an
 analysis never mixes runs from two different versions of the arms.
 
+`scripts/backup_db.sh` takes the data off Azure first: a restorable `pg_dump`, the same thing as
+plain SQL, and the behavioural log as JSON, into the gitignored `data/`. Run it before the reset
+above and before deleting the resource group. Azure's own automated backups live *inside* that
+resource group, so they go when it goes - they protect against a bad week, not against a teardown.
+It verifies the dump reads back before telling you it worked, because a truncated archive otherwise
+stays convincing until the day you need it. `--check` reports what is on the server and writes
+nothing.
+
 Every script comes in both flavours — `.sh` for macOS/Linux and `.ps1` for Windows — because the
 two people working on this are not on the same operating system. They do the same things; keep
 them in step.
