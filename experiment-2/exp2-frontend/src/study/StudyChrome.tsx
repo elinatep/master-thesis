@@ -12,7 +12,17 @@ export default function StudyChrome() {
   return (
     <>
       <AdminMenu />
-      <Button size="sm" variant="success" disabled={finishing} onClick={finish}>
+      {/*
+        escalated: false, explicitly. Whoever leaves by this button did not go through the call -
+        they are finishing during the portal task - and Qualtrics gets a defined value for every
+        participant rather than having to treat a missing field as a third case.
+      */}
+      <Button
+        size="sm"
+        variant="success"
+        disabled={finishing}
+        onClick={() => void finish({ escalated: false })}
+      >
         {finishing ? 'Finishing…' : 'Finish'}
       </Button>
     </>
