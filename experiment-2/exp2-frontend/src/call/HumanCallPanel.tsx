@@ -1,10 +1,10 @@
 import { Badge, Button, Card, Spinner } from 'react-bootstrap'
 import { useAgentCall } from './useAgentCall'
 import { useHandback } from '../study/useHandback'
-import { TASK_RAIL_WIDTH, VOICE_WIDGET_GAP } from '../study/layout'
+import { VOICE_WIDGET_GAP } from '../study/layout'
 
-const WIDTH = `min(420px, calc(100vw - ${TASK_RAIL_WIDTH + 2 * VOICE_WIDGET_GAP}px))`
-const RIGHT = TASK_RAIL_WIDTH + VOICE_WIDGET_GAP
+const WIDTH = `min(420px, calc(100vw - ${2 * VOICE_WIDGET_GAP}px))`
+const RIGHT = VOICE_WIDGET_GAP
 
 /**
  * The participant's side of the call with the human employee.

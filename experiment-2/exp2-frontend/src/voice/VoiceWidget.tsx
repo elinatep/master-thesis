@@ -1,6 +1,6 @@
 import { Badge, Button, Card } from 'react-bootstrap'
 import { useVoiceSession, type VoiceStatus } from './useVoiceSession'
-import { TASK_RAIL_WIDTH, VOICE_WIDGET_GAP } from '../study/layout'
+import { VOICE_WIDGET_GAP } from '../study/layout'
 
 const STATUS_VARIANT: Record<VoiceStatus, string> = {
   idle: 'secondary',
@@ -13,12 +13,11 @@ const STATUS_VARIANT: Record<VoiceStatus, string> = {
 // condition under study, so it has to read as a present participant in the task rather than a
 // dismissible support bubble in the corner. The viewport clamp keeps it on screen on a small
 // laptop, where a fixed 420 would otherwise crowd the portal it sits over.
-const WIDTH = `min(420px, calc(100vw - ${TASK_RAIL_WIDTH + 2 * VOICE_WIDGET_GAP}px))`
+const WIDTH = `min(420px, calc(100vw - ${2 * VOICE_WIDGET_GAP}px))`
 
-// The panel is position:fixed, so it is placed against the viewport, not the portal pane it
-// visually belongs to - left alone it would sit on top of the task rail. Offsetting by the rail's
-// width parks it just inside the portal's column instead.
-const RIGHT = TASK_RAIL_WIDTH + VOICE_WIDGET_GAP
+// Bottom right, with the task card fixed at the top right. They share the right-hand edge and do
+// not overlap: the card is anchored under the navbar and this is anchored to the bottom.
+const RIGHT = VOICE_WIDGET_GAP
 
 export default function VoiceWidget() {
   // The session auto-starts on mount (see useVoiceSession); the participant never starts it.

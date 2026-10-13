@@ -1,60 +1,156 @@
 import { useEffect, useState } from 'react'
-import { fetchTask, type Task } from './task'
-import { logEvent } from './log'
+import { loadTask, type TaskBlock, type TaskSpan } from './task'
 
-// The task card: what the participant was asked to do, kept on screen for the whole session.
-//
-// It exists because the instruction is given in Qualtrics and then left behind — participants
-// arrive at the portal and, a few minutes in, can no longer remember the exact wording. It is
-// deliberately inert: no buttons, no links, nothing to click. Anything interactive here would be
-// apparatus the participant could act on, and it would behave differently at level 3 (where there
-// is no screen to click), so an identical, static card is the only version that is the same in
-// every condition.
-
+/**
+ * The scenario, kept on screen for the whole run.
+ *
+ * <p>Qualtrics shows the briefing once and then hands the participant to a portal they have never
+ * seen, where they have to find a policy, choose a claim type and enter an amount. By the time they
+ * reach the form the briefing is several screens behind them and unreachable - the survey has
+ * ended. A participant who misremembers the amount files a different claim from the one the study
+ * assigned, and the assessment they are then shown is about a claim nobody designed. Worse here
+ * than in the pre-test, because they go on to argue about that amount with two agents.
+ *
+ * <p>Rendered through the portal's {@code assistant} seam, which is host chrome drawn over the
+ * portal shell on every page. That is the whole reason it is here and not in a portal component:
+ * the portal is the thing being studied and must stay the same portal in every arm, while this is
+ * apparatus.
+ *
+ * <p>Collapsible, and it remembers the choice. Someone who wants the screen for the form should be
+ * able to have it, and someone who wants to re-read the amount should not have to remember where it
+ * went. It starts open, because the failure it prevents is worse than the inconvenience it causes.
+ */
 export default function TaskCard() {
-  const [task, setTask] = useState<Task | null>(null)
+  const [blocks, setBlocks] = useState<TaskBlock[] | null>(null)
   const [failed, setFailed] = useState(false)
+  const [open, setOpen] = useState(() => readOpen())
 
   useEffect(() => {
     let live = true
-    fetchTask()
-      .then((t) => live && setTask(t))
-      .catch((e: unknown) => {
-        if (!live) return
-        setFailed(true)
-        // Worth a row in the behavioural log: a session run without the task visible is not
-        // comparable to one run with it, and this is the only trace of that afterwards.
-        logEvent('TASK_LOAD_FAILED', { error: e instanceof Error ? e.message : String(e) })
-      })
+    loadTask()
+      .then((b) => live && setBlocks(b))
+      .catch(() => live && setFailed(true))
     return () => {
       live = false
     }
   }, [])
 
+  // Staff pages are not a participant run. A scenario card floating over the data export or the
+  // agent's console is just in the way - and on the console it would be actively confusing, since
+  // the person reading it is not the person the task belongs to.
+  const path = window.location.pathname
+  if (path.startsWith('/data') || path.startsWith('/agent')) return null
+
+  // A card that failed to load says so rather than rendering an empty box: a participant working
+  // without the task in front of them is exactly what this exists to prevent, and silence would
+  // make it look like a design choice.
+  if (failed) {
+    return (
+      <Shell open onToggle={() => {}}>
+        <p className="mb-0 small text-danger">
+          The task could not be loaded. Please continue with the scenario as described in the survey.
+        </p>
+      </Shell>
+    )
+  }
+
+  if (!blocks) return null
+
+  return (
+    <Shell
+      open={open}
+      onToggle={() => {
+        const next = !open
+        setOpen(next)
+        writeOpen(next)
+      }}
+    >
+      {blocks.map((block, i) => {
+        if (block.kind === 'heading') return null // the shell shows the title
+        if (block.kind === 'paragraph') {
+          return (
+            <p key={i} className="small mb-2">
+              <Spans spans={block.spans} />
+            </p>
+          )
+        }
+        return (
+          <ul key={i} className="small mb-2 ps-3">
+            {block.items.map((item, j) => (
+              <li key={j}>
+                <Spans spans={item} />
+              </li>
+            ))}
+          </ul>
+        )
+      })}
+    </Shell>
+  )
+}
+
+function Spans({ spans }: { spans: TaskSpan[] }) {
+  return (
+    <>
+      {spans.map((s, i) => (s.bold ? <strong key={i}>{s.text}</strong> : <span key={i}>{s.text}</span>))}
+    </>
+  )
+}
+
+function Shell({
+  open,
+  onToggle,
+  children,
+}: {
+  open: boolean
+  onToggle: () => void
+  children: React.ReactNode
+}) {
   return (
     <aside
+      className="card shadow-sm border-primary-subtle"
+      style={{
+        position: 'fixed',
+        // Below the navbar and clear of the right edge. Fixed rather than sticky so it survives the
+        // participant scrolling a long claims table.
+        top: '5rem',
+        right: '1rem',
+        width: 'min(20rem, calc(100vw - 2rem))',
+        zIndex: 1030,
+      }}
       aria-label="Your task"
-      className="h-100 border-start bg-body-tertiary"
-      style={{ overflowY: 'auto' }}
     >
-      <div className="p-4">
-        <h2 className="h5 mb-3">{task?.title ?? 'Your task'}</h2>
-
-        {task &&
-          task.paragraphs.map((p, i) => (
-            <p key={i} className="mb-3" style={{ lineHeight: 1.6 }}>
-              {p}
-            </p>
-          ))}
-
-        {!task && !failed && <p className="text-muted mb-0">Loading…</p>}
-
-        {failed && (
-          <p className="text-muted mb-0">
-            The task text could not be loaded. Please refer to the instructions in the survey.
-          </p>
-        )}
+      <div className="card-header d-flex align-items-center justify-content-between py-2">
+        <span className="fw-semibold small">Your task</span>
+        <button
+          type="button"
+          className="btn btn-sm btn-link p-0 text-decoration-none small"
+          onClick={onToggle}
+          aria-expanded={open}
+        >
+          {open ? 'Hide' : 'Show'}
+        </button>
       </div>
+      {open && <div className="card-body py-2">{children}</div>}
     </aside>
   )
+}
+
+// Per-browser, not per-participant: whether the card is folded away is a convenience, and nothing
+// about it belongs in the behavioural data. Wrapped because storage throws in a private window.
+const KEY = 'exp2.task.open'
+
+function readOpen(): boolean {
+  try {
+    return localStorage.getItem(KEY) !== '0'
+  } catch {
+    return true
+  }
+}
+
+function writeOpen(open: boolean): void {
+  try {
+    localStorage.setItem(KEY, open ? '1' : '0')
+  } catch {
+    /* ignore - the card still works, it just forgets */
+  }
 }

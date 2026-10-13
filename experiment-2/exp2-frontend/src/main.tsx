@@ -8,8 +8,8 @@ import { App } from '@insurance-portal/core'
 import StudyGate from './study/StudyGate.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
 import DataPage from './study/DataPage.tsx'
-import StudySplit from './study/StudySplit.tsx'
 import AssistantStage from './call/AssistantStage'
+import TaskCard from './study/TaskCard.tsx'
 import AgentConsole from './agent/AgentConsole'
 import OutcomeScreen from './outcome/OutcomeScreen.tsx'
 import NavigationBridge from './study/NavigationBridge.tsx'
@@ -58,7 +58,18 @@ configurePortalHost({
   // Present only after the participant has read the assessment and asked for a review
   // (AssistantStage). The portal task comes first and the assistant has nothing to discuss until
   // it is done.
-  assistant: () => <AssistantStage />,
+  assistant: () => (
+    <>
+      {/*
+        Both float over the portal rather than taking a column out of it: the card under the
+        navbar at the top right, the call panel at the bottom right. A fixed rail squeezed the
+        claims table and the claim form for the whole session to hold a card that is read
+        occasionally.
+      */}
+      <TaskCard />
+      <AssistantStage />
+    </>
+  ),
   onEvent: (type, data) => {
     logEvent(type, data)
     // The portal reports the submission and then navigates to the new claim's page, so the study
@@ -89,8 +100,9 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/agent" element={<AgentConsole />} />
         {/*
           Salvena's assessment of the claim, and the decision that follows it. Inside StudyGate -
-          it is a participant screen and needs their resolved condition - but outside StudySplit,
-          because the assessment is delivered on its own, with nothing to click past it.
+          it is a participant screen and needs their resolved condition - but it is not the portal,
+          and it deliberately has no task card over it: the assessment is delivered on its own,
+          with nothing beside it and nothing to click past it.
         */}
         <Route
           path={OUTCOME_PATH}
@@ -104,14 +116,7 @@ createRoot(document.getElementById('root')!).render(
           path="*"
           element={
             <StudyGate>
-              {/*
-                The task card sits beside the portal in every cell. Inside the gate, so it appears
-                only once a condition is resolved - and never on /data, which is routed above and is
-                the researcher's page, not a participant's.
-              */}
-              <StudySplit>
-                <App />
-              </StudySplit>
+              <App />
             </StudyGate>
           }
         />

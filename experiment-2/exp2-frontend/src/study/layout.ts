@@ -1,10 +1,7 @@
-// Width of the task rail (StudySplit), in pixels.
+// Gap kept between the fixed panels and the edge of the screen.
 //
-// Shared, because two unrelated things have to agree on it: the grid column the rail occupies, and
-// VoiceWidget's `right` offset — the widget is position:fixed, so it is placed against the viewport
-// and would otherwise sit on top of the rail. One constant, so moving the rail cannot silently
-// bury the assistant panel underneath it.
-export const TASK_RAIL_WIDTH = 340
-
-/** Gap kept between the assistant panel and the rail / the bottom of the screen. */
+// There used to be a TASK_RAIL_WIDTH here as well, for a grid column the task card lived in. The
+// card now floats over the portal instead (see TaskCard), which is what the pre-test does and what
+// the portal looks right in: a 340px column taken out of every page squeezed the claims table and
+// the claim form for the whole session, to hold a card that is only read occasionally.
 export const VOICE_WIDGET_GAP = 24
