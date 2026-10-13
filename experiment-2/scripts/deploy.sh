@@ -182,12 +182,92 @@ if value:
 
 app_url="$(output_value appUrl)"
 
+# Wait until the revision running THIS image is the one answering requests.
+#
+# Without this the script says "live" while the previous revision is still taking traffic: Container
+# Apps starts the new replica, and until it reports healthy the old one keeps answering. The first
+# person to open the app after a deploy therefore gets the PREVIOUS build - the old task text, the
+# old screens - and the second gets the new one, which reads as a bug in the study rather than as a
+# deploy that had not finished. It cost two rounds of debugging the wrong thing.
+#
+# JVM boot is tens of seconds, so this is a real wait rather than a formality.
+wait_for_revision() {
+  local deadline=$(( SECONDS + 420 ))
+  local state="" traffic="" revision=""
+
+  while (( SECONDS < deadline )); do
+    # The revision whose container runs exactly the image this deploy pushed. Matching on the image
+    # rather than on "latest" means a deployment that did not actually roll out cannot satisfy this.
+    local found
+    found="$(az containerapp revision list \
+      --resource-group "$resource_group" --name "$app_name" \
+      --query "[?properties.template.containers[0].image=='$image'].{n:name,s:properties.runningState,t:properties.trafficWeight} | [0]" \
+      --output json 2>/dev/null || true)"
+
+    revision="$(printf '%s' "$found" | python3 -c '
+import json, sys
+try:
+    d = json.load(sys.stdin) or {}
+except Exception:
+    d = {}
+print(d.get("n") or "")
+' 2>/dev/null)"
+    state="$(printf '%s' "$found" | python3 -c '
+import json, sys
+try:
+    d = json.load(sys.stdin) or {}
+except Exception:
+    d = {}
+print(d.get("s") or "")
+' 2>/dev/null)"
+    traffic="$(printf '%s' "$found" | python3 -c '
+import json, sys
+try:
+    d = json.load(sys.stdin) or {}
+except Exception:
+    d = {}
+print(d.get("t") if d.get("t") is not None else "")
+' 2>/dev/null)"
+
+    if [[ "$state" == "Running" && "$traffic" == "100" ]]; then
+      echo
+      echo "    $revision is running and taking all the traffic."
+      return 0
+    fi
+    printf '.'
+    sleep 5
+  done
+
+  echo
+  echo "    Gave up waiting after 7 minutes (last seen: state='$state' traffic='$traffic')." >&2
+  echo "    The app may still be rolling out. Check with:" >&2
+  echo "      az containerapp revision list -g $resource_group -n $app_name -o table" >&2
+  return 1
+}
+
+rollout_confirmed=0
+if [[ $platform_only -eq 0 && -n "$app_url" ]]; then
+  echo "==> Waiting for the new revision to take over"
+  # Not fatal: a deploy that worked must still print its URL, and a slow rollout is not a failure.
+  # But whether it was confirmed decides what the box below is allowed to claim.
+  if wait_for_revision; then rollout_confirmed=1; fi
+fi
+
 echo
 if [[ -n "$app_url" ]]; then
   echo "-------------------------------------------------------------------------------"
   echo " Experiment 2 is live at:"
   echo
   echo "   $app_url"
+  echo
+  if [[ $rollout_confirmed -eq 1 ]]; then
+    echo " The revision above is the one serving, so this is the build you just made -"
+    echo " no need to wait or hard-refresh."
+  else
+    echo " NOT CONFIRMED as the build you just made: the rollout had not completed above."
+    echo " Until it does, the app may still answer with the PREVIOUS build. Give it a minute"
+    echo " and re-check, rather than trusting what you see now."
+  fi
   echo
   echo " Open it in a browser and you should get an ERROR page, not the portal:"
   echo '   "Could not start from the study handover: no handover token in the URL."'

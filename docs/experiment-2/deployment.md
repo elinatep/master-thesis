@@ -259,6 +259,8 @@ not touch the schema, so the next participant is re-seeded on arrival.
 
 ## If something goes wrong
 
+| The first person in after a deploy sees the OLD study | The rollout had not finished. `release.sh` now waits for the new revision to be running and taking all the traffic before it reports the URL, and says plainly when it could not confirm that. If you deploy some other way, check `az containerapp revision list -g rg-exp2-feeling-heard -n exp2-feeling-heard -o table` before testing |
+
 | Symptom | Cause |
 | --- | --- |
 | `AuthorizationFailed` on deploy | PIM role expired, or `az` is holding a cached token. §1 |
