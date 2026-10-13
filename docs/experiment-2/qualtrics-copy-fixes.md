@@ -141,6 +141,57 @@ participant who skipped the portal.
 
 ---
 
+## 9. The platform now owns the whole middle of the study - **blocking**
+
+Decided 13 Oct 2026. The platform does not just take the claim any more. It does what the pre-test's
+anger arm did and then carries straight on into the call:
+
+```
+Qualtrics  consent, screening, endowment + comprehension, scenario briefing
+           -> one redirect to the platform
+Platform   file the claim in the portal
+           Salvena's assessment: 1,200 claimed / 1,080 expected / 60 awarded
+           "Contact customer service" or "Accept the assessment and finish"
+             -> if they contact:  AI assistant, then the human employee
+           -> one redirect back to Qualtrics
+Qualtrics  the post-interaction measures, the bonus, the debrief
+```
+
+One handover each way instead of three. That is why: the participant files a claim on the
+insurer's website and is assessed by the insurer's website, rather than filing on a website and
+then being told the result by a survey - which is the realism the pre-test was built to establish.
+
+So these survey blocks have to go, because the platform now does them:
+
+- **Initial Claim Outcome** - the platform shows the assessment, with the same figures and the
+  same wording (`configuration/study/outcome.json`, which is the pre-test's `S1.json`)
+- **Customer Service Review** - the platform's own screen offers the review
+- **AI Voice Assistant** and **Human Handover** - both happen inside the one platform visit, so
+  there is nothing to redirect to and no second `RESEARCHER SETUP REQUIRED` block
+
+And the **emotion check** has nowhere to sit between the outcome and the dispute decision any
+more, because both are now on the platform. It can go after the call with the other measures, or
+be dropped - it was marked *"separate pre-test"* in the survey anyway.
+
+### What comes back, and what you have to read
+
+The platform appends two parameters to the callback URL:
+
+| Parameter | Meaning |
+| --- | --- |
+| `participantId` | as before, the join key |
+| `escalated` | `true` if they asked customer service to review it, `false` if they accepted |
+
+**`escalated=false` means that participant never met either agent**, so they are in no cell of the
+2x2 and cannot contribute to the main analysis. Declare it as embedded data in the survey, set from
+the URL, and branch on it: someone who accepted should skip the manipulation-check and
+felt-heard blocks entirely rather than being asked how the employee made them feel.
+
+How many decline is unknown until the pilot, and it is the number that decides how far you have to
+over-recruit past 400.
+
+---
+
 ## One thing to check with Joe, not to fix here
 
 The ethics application's debrief (Appendix 1b) is where the **1,000 / 25 / 900** wording came from.

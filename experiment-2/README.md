@@ -13,6 +13,33 @@ transfer to a human agent, behavioural logging, handback.
 | `infra/` | The Azure deployment (Bicep). `.env.example` is the file you fill in. |
 | `scripts/` | Build, deploy, and walk one cell of the 2×2 as a participant. |
 
+## What a participant does
+
+One platform visit, in a straight line:
+
+```
+file the claim in the portal
+  -> Salvena's assessment: 1,200 claimed, 1,080 expected, 60 awarded
+       -> "Accept the assessment and finish"   -> back to Qualtrics, escalated=false
+       -> "Contact customer service"           -> the AI assistant
+                                               -> the human employee
+                                               -> back to Qualtrics, escalated=true
+```
+
+The assessment is the pre-test's winning anger script (`configuration/study/outcome.json`, which is
+its `S1.json`), held constant for everyone: the pre-test's job was to find an outcome that reliably
+produces anger without reading as a bug, and this study takes the winner as its setup. What varies
+between participants is what they then hear on the call.
+
+**The choice is real.** Accepting the assessment ends the task, which means that participant never
+meets either agent and is in no cell of the 2x2 - so the decision is logged (`ESCALATION_CHOICE`)
+and carried back to Qualtrics as `escalated`, where it has to be branched on. How many decline is
+unknown until the pilot, and it sets how far past 400 you have to recruit.
+
+**The assistant is not present until they ask for a review.** It used to mount with the portal and
+open a voice session immediately, which meant an assistant talking to someone who had not yet filed
+a claim, let alone seen anything to dispute.
+
 ## The design
 
 2 (AI voicebot acknowledgement: none, acknowledged) × 2 (Human acknowledgement: none,

@@ -63,7 +63,12 @@ export default function HumanCallPanel() {
         {status === 'ended' && (
           <>
             <p className="mt-3">The call has ended.</p>
-            <Button size="lg" className="w-100" disabled={finishing} onClick={() => void finish()}>
+            <Button
+              size="lg"
+              className="w-100"
+              disabled={finishing}
+              onClick={() => void finish({ escalated: true })}
+            >
               {finishing ? 'One moment…' : 'Continue to the questions'}
             </Button>
           </>

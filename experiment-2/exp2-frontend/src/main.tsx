@@ -9,8 +9,12 @@ import StudyGate from './study/StudyGate.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
 import DataPage from './study/DataPage.tsx'
 import StudySplit from './study/StudySplit.tsx'
-import CallStage from './call/CallStage'
+import AssistantStage from './call/AssistantStage'
 import AgentConsole from './agent/AgentConsole'
+import OutcomeScreen from './outcome/OutcomeScreen.tsx'
+import NavigationBridge from './study/NavigationBridge.tsx'
+import { OUTCOME_PATH, isClaimOutcomeEvent } from './outcome/outcomeRoute.ts'
+import { goTo } from './study/navigation'
 import { configureFormat, configurePortalHost } from '@insurance-portal/core/host'
 import { participantHeaders } from './study/headers'
 import { getCondition } from './study/session'
@@ -46,17 +50,29 @@ configurePortalHost({
   apiHeaders: participantHeaders,
   accountRef: () => getCondition()?.participantId ?? null,
   interactionMode: () => 'interactive',
-  onEvent: logEvent,
   navbarChrome: () => <StudyChrome />,
   // Every cell has the voice assistant, and every cell hands over to a person afterwards. What
   // differs is what each of them says, not whether they are there - so one surface owns both legs
   // and the switch between them (see CallStage).
-  assistant: () => <CallStage />,
+  //
+  // Present only after the participant has read the assessment and asked for a review
+  // (AssistantStage). The portal task comes first and the assistant has nothing to discuss until
+  // it is done.
+  assistant: () => <AssistantStage />,
+  onEvent: (type, data) => {
+    logEvent(type, data)
+    // The portal reports the submission and then navigates to the new claim's page, so the study
+    // asks to be taken to its own screen and NavigationBridge acts on it from an effect - after
+    // the portal's own navigation has committed. Issuing it from here would be overridden.
+    if (isClaimOutcomeEvent(type)) goTo(OUTCOME_PATH)
+  },
 })
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
+      {/* Carries out the redirect the portal's claim submission asks for. */}
+      <NavigationBridge />
       {/*
         The study's own routes sit above the portal's. /data is the researcher's behavioural export
         — study data, study page — so it is served here rather than being a portal route that
@@ -71,6 +87,19 @@ createRoot(document.getElementById('root')!).render(
           Security challenges /agent for the agent credential before this page is served at all.
         */}
         <Route path="/agent" element={<AgentConsole />} />
+        {/*
+          Salvena's assessment of the claim, and the decision that follows it. Inside StudyGate -
+          it is a participant screen and needs their resolved condition - but outside StudySplit,
+          because the assessment is delivered on its own, with nothing to click past it.
+        */}
+        <Route
+          path={OUTCOME_PATH}
+          element={
+            <StudyGate>
+              <OutcomeScreen />
+            </StudyGate>
+          }
+        />
         <Route
           path="*"
           element={
