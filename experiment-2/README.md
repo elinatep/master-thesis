@@ -36,9 +36,14 @@ meets either agent and is in no cell of the 2x2 - so the decision is logged (`ES
 and carried back to Qualtrics as `escalated`, where it has to be branched on. How many decline is
 unknown until the pilot, and it sets how far past 400 you have to recruit.
 
-**The assistant is not present until they ask for a review.** It used to mount with the portal and
-open a voice session immediately, which meant an assistant talking to someone who had not yet filed
-a claim, let alone seen anything to dispute.
+**The assistant is not present until they ask for a review**, and it opens on the assessment
+screen rather than taking them anywhere. The assessment stays on screen for the whole call, which
+is the point: it is the thing being disputed, and the agent's script has them refer to its figures.
+Sending the participant back to the portal dashboard to argue about numbers they can no longer see
+would be the study getting in its own way.
+
+It used to mount with the portal and open a voice session immediately, which meant an assistant
+talking to someone who had not yet filed a claim, let alone seen anything to dispute.
 
 ## The design
 

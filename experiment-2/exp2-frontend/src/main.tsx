@@ -8,7 +8,6 @@ import { App } from '@insurance-portal/core'
 import StudyGate from './study/StudyGate.tsx'
 import StudyChrome from './study/StudyChrome.tsx'
 import DataPage from './study/DataPage.tsx'
-import AssistantStage from './call/AssistantStage'
 import TaskCard from './study/TaskCard.tsx'
 import AgentConsole from './agent/AgentConsole'
 import OutcomeScreen from './outcome/OutcomeScreen.tsx'
@@ -51,25 +50,13 @@ configurePortalHost({
   accountRef: () => getCondition()?.participantId ?? null,
   interactionMode: () => 'interactive',
   navbarChrome: () => <StudyChrome />,
-  // Every cell has the voice assistant, and every cell hands over to a person afterwards. What
-  // differs is what each of them says, not whether they are there - so one surface owns both legs
-  // and the switch between them (see CallStage).
+  // The scenario, floating under the navbar at the top right rather than taking a column out of
+  // every page: a fixed rail squeezed the claims table and the claim form for the whole session to
+  // hold a card that is read occasionally.
   //
-  // Present only after the participant has read the assessment and asked for a review
-  // (AssistantStage). The portal task comes first and the assistant has nothing to discuss until
-  // it is done.
-  assistant: () => (
-    <>
-      {/*
-        Both float over the portal rather than taking a column out of it: the card under the
-        navbar at the top right, the call panel at the bottom right. A fixed rail squeezed the
-        claims table and the claim form for the whole session to hold a card that is read
-        occasionally.
-      */}
-      <TaskCard />
-      <AssistantStage />
-    </>
-  ),
+  // The call is NOT here. It happens on the assessment screen, which is where the participant asks
+  // for it and where the figures they are disputing stay visible - see OutcomeScreen.
+  assistant: () => <TaskCard />,
   onEvent: (type, data) => {
     logEvent(type, data)
     // The portal reports the submission and then navigates to the new claim's page, so the study
