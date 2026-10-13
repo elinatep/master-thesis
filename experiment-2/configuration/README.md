@@ -32,8 +32,15 @@ traceable: the OpenAI session and the browser-side capture settings both live in
   key** is *not* here - it stays in the `OPENAI_API_KEY` env var and never leaves the server.
 - `client.json` - the **browser-side** voice settings, served via `GET /api/voice/client-config`
   and applied by the React app: the `getUserMedia` mic constraints (echo cancellation etc.,
-  which affect VAD) and the Realtime SDP URL the browser connects to. The frontend falls back
-  to built-in defaults if this can't be fetched.
+  which affect VAD) and the assistant's opening greeting. The frontend falls back to built-in
+  defaults if this can't be fetched.
+
+  The Realtime SDP URL the browser connects to is **not** in here: it is derived from
+  `openai.base-url` (`OPENAI_BASE_URL`) and added to this response on the way out. Both ends of the
+  voice leg have to address the same Azure OpenAI resource - the server mints the ephemeral token
+  against one, the browser exchanges SDP against the other - and when this file carried its own
+  copy, pointing the deployment at a new resource moved the first and left the second behind. The
+  symptom is an authentication failure about a key that is perfectly valid.
 - `instructions/ai-base.md` - everything the two cells share: language, accent, the claim in
   front of the assistant, how to run the dispute call, and when to transfer.
 - `instructions/ai-ack.md` and `instructions/ai-noack.md` - **the manipulation, and nothing

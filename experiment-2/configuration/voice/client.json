@@ -1,5 +1,4 @@
 {
-  "realtimeUrl": "https://mtec-insurance-portal.openai.azure.com/openai/v1/realtime/calls",
   "audio": {
     "echoCancellation": true,
     "noiseSuppression": true,

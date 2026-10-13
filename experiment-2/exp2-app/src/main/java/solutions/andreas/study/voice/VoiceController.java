@@ -38,6 +38,7 @@ public class VoiceController {
     private final RestClient openai;
     private final ObjectMapper mapper;
     private final Path configDir;
+    private final String baseUrl;
 
     public VoiceController(
             @Value("${openai.api-key}") String apiKey,
@@ -46,6 +47,7 @@ public class VoiceController {
             ObjectMapper mapper) {
         this.mapper = mapper;
         this.configDir = Path.of(configDir);
+        this.baseUrl = baseUrl.endsWith("/") ? baseUrl.substring(0, baseUrl.length() - 1) : baseUrl;
         this.openai = RestClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader("Authorization", "Bearer " + apiKey)
@@ -75,16 +77,34 @@ public class VoiceController {
 
     /**
      * Browser-side voice config (mic capture constraints, the Realtime SDP URL), read from
-     * configuration/voice/client.json so ALL voice config lives in one traceable place rather
-     * than being hardcoded in the React app. Served as-is for the frontend to apply.
+     * configuration/voice/client.json so ALL voice config lives in one traceable place rather than
+     * being hardcoded in the React app.
+     *
+     * <p>{@code realtimeUrl} is <b>derived from {@code openai.base-url}</b> rather than written in
+     * the file. Both sides of the voice leg have to talk to the same Azure OpenAI resource - this
+     * application mints the ephemeral token against one endpoint and the browser exchanges SDP
+     * against the other - and when the file carried its own copy, pointing the deployment at a new
+     * resource moved the first and silently left the second behind. The failure is a token minted
+     * by one resource being presented to another, which comes back as an authentication error
+     * about a key that is perfectly valid.
+     *
+     * <p>A {@code realtimeUrl} in the file still wins, for the case where the two genuinely differ.
+     * Nothing uses that today.
      */
     @GetMapping(value = "/client-config", produces = MediaType.APPLICATION_JSON_VALUE)
+    @SuppressWarnings("unchecked")
     public String clientConfig() {
+        Path file = configDir.resolve("voice/client.json");
         try {
-            return Files.readString(configDir.resolve("voice/client.json"));
+            Map<String, Object> config = mapper.readValue(Files.readAllBytes(file), Map.class);
+            Object configured = config.get("realtimeUrl");
+            if (!(configured instanceof String url) || url.isBlank()) {
+                config.put("realtimeUrl", baseUrl + "/realtime/calls");
+            }
+            return mapper.writeValueAsString(config);
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Could not read voice client config from " + configDir, e);
+                    "Could not read voice client config from " + file, e);
         }
     }
 
