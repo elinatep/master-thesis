@@ -47,3 +47,33 @@ export function subscribeStage(listener: Listener): () => void {
   listeners.add(listener)
   return () => listeners.delete(listener)
 }
+
+const SESSION_KEY = 'salvena.stage.session'
+
+/**
+ * Point the stage at the session that has just been opened, resetting it if this is a new run.
+ *
+ * <p>Two cases have to be told apart, and the session id is what tells them apart.
+ *
+ * <p>A <b>reload</b> re-opens the same session (the backend hands the existing one back), and the
+ * participant must come back to where they were - a refresh during the call returns to the call
+ * rather than to a claim form they have already filled in.
+ *
+ * <p>A <b>new participant in the same tab</b> gets a different session. sessionStorage is per tab
+ * and survives a navigation, so without this they would inherit the previous participant's stage:
+ * the assessment would open already "in a call", they would never be offered the choice, and
+ * ESCALATION_CHOICE would never be logged for them. Unlikely with one participant per tab, and
+ * routine while piloting.
+ */
+export function syncStageToSession(sessionId: number): void {
+  try {
+    const previous = sessionStorage.getItem(SESSION_KEY)
+    const current = String(sessionId)
+    if (previous !== current) {
+      sessionStorage.setItem(SESSION_KEY, current)
+      if (previous !== null) setStage('task')
+    }
+  } catch {
+    // Storage blocked. The stage falls back to 'task' on read, which is the safe direction.
+  }
+}

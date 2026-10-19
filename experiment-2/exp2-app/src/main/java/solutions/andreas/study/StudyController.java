@@ -9,6 +9,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,8 @@ import tools.jackson.databind.ObjectMapper;
 @RequestMapping("/api/study")
 public class StudyController {
 
+    private static final Logger log = LoggerFactory.getLogger(StudyController.class);
+
     private final StudySessionRepository sessions;
     private final EventRepository events;
     private final TranscriptEntryRepository transcripts;
@@ -46,11 +50,41 @@ public class StudyController {
         this.mapper = mapper;
     }
 
-    /** Open a session for a participant/condition. Blank participant id => 400 (fail loud). */
+    /**
+     * Open a session for a participant/condition, or hand back the one they already have.
+     *
+     * <p>Blank participant id => 400 (fail loud).
+     *
+     * <p><b>Idempotent while a run is in progress.</b> The gate runs on every page load, and a
+     * reload is a page load - so this used to start a second session for a participant who
+     * refreshed. Everything downstream reads "the participant's most recent session", so that
+     * second, empty session became their current one and the first became unreachable: their filed
+     * claim no longer counted, the assessment answered "no claim has been filed yet", and an open
+     * handover could not be rejoined. A participant who pressed reload mid-study was quietly
+     * finished.
+     *
+     * <p>A session is reused only while it is not completed and the condition matches. A different
+     * condition means Qualtrics assigned a new one, which is a genuinely new run and gets its own
+     * session rather than silently inheriting the old cell.
+     */
     @PostMapping("/session")
     public SessionResponse openSession(@Valid @RequestBody SessionRequest req) {
+        String participantId = req.participantId().trim();
         Condition condition = new Condition(req.aiAck(), req.humanAck());
-        StudySession s = sessions.save(new StudySession(req.participantId().trim(), condition, req.userAgent()));
+
+        StudySession existing = sessions
+                .findFirstByParticipantIdAndCompletedFalseOrderByStartedAtDesc(participantId)
+                .filter(s -> s.getCondition().equals(condition))
+                .orElse(null);
+        if (existing != null) {
+            log.debug("Reusing the open session {} for participant {} ({})",
+                    existing.getId(), participantId, condition.cell());
+            return new SessionResponse(existing.getId(), existing.getParticipantId(),
+                    condition.aiAck(), condition.humanAck());
+        }
+
+        StudySession s = sessions.save(new StudySession(participantId, condition, req.userAgent()));
+        log.info("Opened session {} for participant {} ({})", s.getId(), participantId, condition.cell());
         return new SessionResponse(s.getId(), s.getParticipantId(), condition.aiAck(), condition.humanAck());
     }
 

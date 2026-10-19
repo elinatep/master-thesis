@@ -63,13 +63,24 @@ condition.
 `human-base.md` gives fixed answers for the pushback that leads there, because it will come up on
 most calls and an improvised answer is a difference between participants that nobody recorded.
 
+## Settled
+
+- **Whether the agent knows the AI condition.** No. The card shows `humanAck` — their own
+  instruction — and nothing about the AI leg. They can read the transcript and will often infer it,
+  so this is not blinding; it is consistency, so that what they are *told* is the same every
+  session rather than varying with how closely they read. `AgentConsoleTest` asserts that no
+  agent-facing payload carries the AI factor, so a later convenience field cannot quietly undo it.
+- **The session log.** [`session-log.md`](session-log.md): one spreadsheet row per call, filled in
+  immediately after hanging up. The column that matters most is `acknowledgement_slipped` — in a
+  no-ack call, "I'm sorry" is close to reflexive, and flagging it costs a data point while not
+  flagging it costs the finding.
+
 ## Still to settle, before the pilot
 
 - **The agent's name**, on the condition card. Same name every call, or varied? Same is one less
-  moving part; varied is more realistic if several agents run sessions.
-- **Whether the agent knows the AI condition.** They can see the transcript, so they will infer it.
-  Blinding is impossible; the question is whether to state it on the card so it is at least
-  consistent rather than half-inferred.
-- **The session log format** — session id, condition, duration, anything that went wrong, and
-  whether acknowledgement slipped out in a no-ack call. Needs to exist before the first call, not
-  after.
+  moving part; varied is more realistic if several agents run sessions. The card currently tells
+  them to give "the one on your condition card", which nothing yet fills in.
+- **How long the calls actually run**, and whether the two conditions match. The blocks are written
+  to take the same time; the pilot is where that gets checked, from `duration_min` in the session
+  log. If the acknowledging calls run consistently longer, the blocks get rewritten rather than the
+  agent padding on the call.

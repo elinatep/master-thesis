@@ -5,6 +5,7 @@
 // the session, even if requests arrive out of order server-side.
 
 import { cellLabel, type Condition } from './session'
+import { syncStageToSession } from './stage'
 
 const FLUSH_DELAY_MS = 1000
 
@@ -46,6 +47,9 @@ export async function createSession(cond: Condition): Promise<void> {
   if (!res.ok) throw new Error(`Could not open study session (${res.status})`)
   const data = (await res.json()) as { sessionId: number }
   sessionId = data.sessionId
+  // A reload hands back the same session and the participant resumes where they were; a different
+  // one means a different run, so anything the previous run left in this tab is cleared.
+  syncStageToSession(sessionId)
   hookUnload()
   hookGlobalErrors()
   console.debug('[study] session', sessionId, 'opened for', cond.participantId, 'cell', cellLabel(cond))

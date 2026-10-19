@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { CallClient, type Call, type CallAgent } from '@azure/communication-calling'
-import { AzureCommunicationTokenCredential } from '@azure/communication-common'
+import type { Call, CallAgent } from '@azure/communication-calling'
 
 /**
  * One side of the participant-to-agent voice call, on Azure Communication Services.
@@ -94,6 +93,19 @@ export function useAgentCall({ tokenUrl, displayName, autoJoin = false }: AgentC
       if (!creds.token || !creds.callId) {
         throw new Error('The call token response was incomplete')
       }
+
+      // Loaded here rather than imported at the top, and this is worth the awkwardness: the
+      // Calling SDK is about 1.5 MB of the bundle, and nothing needs it until somebody asks for a
+      // review. Every participant was downloading it before they had even filed a claim, on their
+      // own connection, and most of a page load is the first thing they judge the service on.
+      //
+      // The type-only import above stays static, so the types still check; only the runtime cost
+      // moves. By the time this runs the participant has read an assessment and clicked a button,
+      // which is several seconds of network head start.
+      const [{ CallClient }, { AzureCommunicationTokenCredential }] = await Promise.all([
+        import('@azure/communication-calling'),
+        import('@azure/communication-common'),
+      ])
 
       const client = new CallClient()
 
