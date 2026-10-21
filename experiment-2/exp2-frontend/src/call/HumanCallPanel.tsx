@@ -1,6 +1,7 @@
 import { Badge, Button, Card, Spinner } from 'react-bootstrap'
 import { useAgentCall } from './useAgentCall'
 import { useHandback } from '../study/useHandback'
+import { participantHeaders } from '../study/headers'
 import { VOICE_WIDGET_GAP } from '../study/layout'
 
 const WIDTH = `min(420px, calc(100vw - ${2 * VOICE_WIDGET_GAP}px))`
@@ -21,6 +22,10 @@ const RIGHT = VOICE_WIDGET_GAP
 export default function HumanCallPanel() {
   const { status, error, muted, hangUp, toggleMute } = useAgentCall({
     tokenUrl: '/api/call/token',
+    // Without this the server has no idea whose call to issue a token for. It answers 400, the
+    // participant never joins, and they sit watching "connecting" while the agent waits in an
+    // empty call - which is exactly what happened on the first live run.
+    tokenHeaders: participantHeaders,
     // Not a study variable: the participant's name is already known to the agent from the brief,
     // and the agent's own name comes off their condition card, not from here.
     displayName: 'Customer',

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Call, CallAgent } from '@azure/communication-calling'
+import { logEvent } from '../study/log'
 
 /**
  * One side of the participant-to-agent voice call, on Azure Communication Services.
@@ -36,13 +37,23 @@ interface Credentials {
 export interface AgentCallOptions {
   /** Where to POST for a token. Differs between the two sides; nothing else does. */
   tokenUrl: string
+  /**
+   * Headers the token request needs to say who is asking.
+   *
+   * <p>The two sides identify themselves differently, and this is where that difference lives. The
+   * agent is identified by the handover id in the URL and by their login, so they need none. The
+   * participant is identified by X-Participant-Id, like every other participant-facing call - and
+   * without it the server cannot tell whose call to issue a token for, which is a 400 and a
+   * participant who sits watching "connecting" forever.
+   */
+  tokenHeaders?: () => Record<string, string>
   /** Shown to the other side in the call. Not a study variable - see the note in CallStage. */
   displayName: string
   /** Join as soon as the hook mounts. The participant does; the agent clicks. */
   autoJoin?: boolean
 }
 
-export function useAgentCall({ tokenUrl, displayName, autoJoin = false }: AgentCallOptions) {
+export function useAgentCall({ tokenUrl, displayName, tokenHeaders, autoJoin = false }: AgentCallOptions) {
   const [status, setStatus] = useState<CallStatus>('idle')
   const [error, setError] = useState<string | null>(null)
   const [muted, setMuted] = useState(false)
@@ -79,12 +90,18 @@ export function useAgentCall({ tokenUrl, displayName, autoJoin = false }: AgentC
     setStatus('connecting')
 
     try {
-      const res = await fetch(tokenUrl, { method: 'POST' })
+      const res = await fetch(tokenUrl, { method: 'POST', headers: tokenHeaders?.() })
       if (res.status === 503) {
         throw new Error('Calling is not configured on this deployment')
       }
       if (res.status === 409) {
         throw new Error('There is no call to join yet')
+      }
+      if (res.status === 400) {
+        // The server could not tell who is asking. Named rather than folded into the generic
+        // message below, because the generic one ("Could not get a call token (400)") says nothing
+        // about the cause and this failure is silent on the server otherwise.
+        throw new Error('The call request did not identify the participant')
       }
       if (!res.ok) {
         throw new Error(`Could not get a call token (${res.status})`)
@@ -149,14 +166,21 @@ export function useAgentCall({ tokenUrl, displayName, autoJoin = false }: AgentC
       onParticipants()
       onMuted()
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e))
+      const message = e instanceof Error ? e.message : String(e)
+      // Into the behavioural log, not just onto the screen. The first live run failed here - the
+      // participant's token request was rejected - and the only trace of it was a line in the
+      // server log that nobody read for a day. Across four hundred sessions, how many calls failed
+      // and why is a number the study needs, and it has to come from the data rather than from
+      // somebody noticing.
+      logEvent('CALL_ERROR', { error: message })
+      setError(message)
       setStatus('error')
       // Let them try again: the commonest causes - a refused microphone, a token that arrived
       // late - are both things a second attempt fixes.
       startedRef.current = false
       void leave()
     }
-  }, [tokenUrl, displayName, leave])
+  }, [tokenUrl, displayName, tokenHeaders, leave])
 
   const hangUp = useCallback(async () => {
     await leave()
@@ -170,6 +194,15 @@ export function useAgentCall({ tokenUrl, displayName, autoJoin = false }: AgentC
     else await call.mute()
     setMuted(call.isMuted)
   }, [])
+
+  // Every transition, the same way the AI leg records VOICE_STATUS. Together they show how long a
+  // participant waited on hold and whether the two legs actually joined up.
+  //
+  // A no-op in the agent's console: logEvent does nothing without a participant session, and the
+  // console has none.
+  useEffect(() => {
+    logEvent('CALL_STATUS', { status })
+  }, [status])
 
   useEffect(() => {
     if (autoJoin) void join()
