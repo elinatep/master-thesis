@@ -68,22 +68,19 @@ On success the script waits 600 ms and clicks Next for the participant. So the q
 **alone on its page**: anything sharing the page with it gets skipped unanswered. Put a page break
 after it, and put the self-report question below on its own page.
 
-### One gap to close
+### The script
 
-Next is hidden until the check runs, and the exit button only appears after a failure — so a
-participant who never clicks *Test microphone* has no way forward at all. Add this inside the same
-`addOnload`, immediately after the `btn.addEventListener('click',test);` line:
+`qualtrics/mic-check.js` in this folder is the version in force — paste the whole file into the
+question's JavaScript editor, replacing everything Qualtrics pre-fills there.
 
-```js
-  setTimeout(function () {
-    if (Qualtrics.SurveyEngine.getEmbeddedData('mic_ok') !== 'yes') {
-      exitBtn.style.display = 'inline-block';
-    }
-  }, 20000);
-```
+It differs from what was pasted into the survey first in one way: Next is hidden until the check
+runs and the exit button only appears after a failure, so a participant who never clicked *Test
+microphone* had no way forward at all. The file reveals the exit button after 20 seconds. Twenty
+seconds of a page with no button is long enough that people close the tab, and a closed tab is a
+timed-out Prolific slot rather than a return.
 
-Twenty seconds of a page with no button is long enough that people close the tab, and a closed tab
-is a timed-out Prolific slot rather than a return.
+Keeping it here rather than only in Qualtrics means a change to it is reviewable and the survey can
+be rebuilt from the repository if it is ever lost.
 
 ### Then branch on it
 
