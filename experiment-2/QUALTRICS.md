@@ -222,7 +222,11 @@ Qualtrics built it. Open the response in Data & Analysis and read three fields:
 | `aiAck` / `humanAck` | `handoverToken` | What happened |
 | --- | --- | --- |
 | blank | blank | the Web Service never ran — preview, or it sits below the End of Survey |
-| filled | blank | it ran and failed, or `handoverToken` was never declared so the mapping had nowhere to write |
+| filled | blank | it ran and failed, so there was no token to write |
+
+A declared field with no value is **absent from the response's embedded-data view**, not shown as
+blank — so `handoverToken` missing from that list is the symptom, and says nothing about whether it
+was declared. Check the Survey Flow for that, not the response.
 
 **Preview is the usual answer.** Qualtrics does not fire Web Service elements there. Test the
 handover on the published anonymous link.
