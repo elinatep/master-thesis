@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Base64;
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Qualtrics handover. Two-step, so nothing sensitive travels in the redirect URL:
@@ -109,10 +116,47 @@ public class HandoverController {
      */
     public record RegisterRequest(
             @NotBlank String participantId,
-            @NotNull Boolean aiAck,
-            @NotNull Boolean humanAck,
+            @NotNull @JsonDeserialize(using = QualtricsBoolean.class) Boolean aiAck,
+            @NotNull @JsonDeserialize(using = QualtricsBoolean.class) Boolean humanAck,
             String name,
             String callbackUrl) {
+    }
+
+    /**
+     * Reads a factor the way a Qualtrics randomiser is likely to have written it.
+     *
+     * <p>A randomiser's embedded-data elements hold whatever the survey was built with - {@code
+     * true}/{@code false} in one survey, {@code 1}/{@code 0} in the next, and every value arrives
+     * quoted because the Web Service element types all body parameters as strings. Jackson accepts
+     * only the first pair, so the second produced an unreadable body: a 400 whose message named the
+     * request rather than the field, on a call that Qualtrics reports to nobody.
+     *
+     * <p>Anything else - an empty string above all, which is what an embedded-data field that was
+     * never set sends - becomes {@code null} and is caught by {@code @NotNull}. That keeps the
+     * property this endpoint exists to guarantee: a factor that did not arrive is a 400, never a
+     * silent {@code false} putting someone in a cell nobody assigned them to. It also reports it as
+     * a field error naming the factor, which the previous failure could not do.
+     */
+    static final class QualtricsBoolean extends ValueDeserializer<Boolean> {
+        @Override
+        public Boolean deserialize(JsonParser p, DeserializationContext ctx) throws JacksonException {
+            JsonToken t = p.currentToken();
+            if (t == JsonToken.VALUE_TRUE) {
+                return Boolean.TRUE;
+            }
+            if (t == JsonToken.VALUE_FALSE) {
+                return Boolean.FALSE;
+            }
+            String raw = p.getValueAsString();
+            if (raw == null) {
+                return null;
+            }
+            return switch (raw.trim().toLowerCase(Locale.ROOT)) {
+                case "true", "1" -> Boolean.TRUE;
+                case "false", "0" -> Boolean.FALSE;
+                default -> null;
+            };
+        }
     }
 
     public record RegisterResponse(String token, OffsetDateTime expiresAt) {

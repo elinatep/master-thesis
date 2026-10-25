@@ -68,6 +68,50 @@ class QualtricsRegisterFormatTest {
      * set - a randomiser branch that did not fire, a typo in a field name - and that participant
      * must fail at the gate rather than be quietly dropped into a cell.
      */
+    /**
+     * A randomiser built on 0/1 rather than true/false. Both conventions appear in the same
+     * survey - the cell label is written one way, the factors another - and which one a given
+     * randomiser element holds is not visible from here.
+     */
+    @Test
+    void theFactorsAreAcceptedAsZeroAndOne() throws Exception {
+        mvc.perform(post("/api/handover").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"participantId":"p-01","aiAck":"0","humanAck":"1"}"""))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty());
+    }
+
+    /** 0 is false, not merely "not true": the cell has to come back the right way round. */
+    @Test
+    void zeroAndOneMapToTheCellTheyName() throws Exception {
+        String token = com.fasterxml.jackson.databind.json.JsonMapper.builder().build()
+                .readTree(mvc.perform(post("/api/handover").contentType(MediaType.APPLICATION_JSON)
+                                .content("""
+                                        {"participantId":"p-01-cell","aiAck":"0","humanAck":"1"}"""))
+                        .andExpect(status().isOk())
+                        .andReturn().getResponse().getContentAsString())
+                .get("token").asText();
+
+        mvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
+                        .get("/api/handover/" + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.aiAck").value(false))
+                .andExpect(jsonPath("$.humanAck").value(true));
+    }
+
+    /**
+     * Anything that is not one of the four accepted spellings is rejected rather than guessed at.
+     * Guessing here would assign a condition nobody chose, and the run would look clean.
+     */
+    @Test
+    void anUnrecognisedFactorIsRejected() throws Exception {
+        mvc.perform(post("/api/handover").contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"participantId":"p-junk","aiAck":"maybe","humanAck":"1"}"""))
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     void anUnsetFactorIsStillRejected() throws Exception {
         mvc.perform(post("/api/handover")

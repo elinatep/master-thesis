@@ -170,10 +170,13 @@ Add a **Web Service** element, after the randomiser and before the End of Survey
 | `name` | `Joe Smith` |
 | `callbackUrl` | Survey 2's anonymous link, plus the parameters below |
 
-String is right even though the two factors are booleans: Qualtrics types everything as a string
-and the platform accepts `"true"` / `"false"`. `QualtricsRegisterFormatTest` pins that down,
-including that an **empty** string is rejected — so a randomiser branch that failed to fire gives a
-400 here rather than a participant quietly dropped into a cell nobody assigned.
+String is right even though the two factors are booleans: Qualtrics types everything as a string.
+The platform accepts `"true"` / `"false"` and `"1"` / `"0"`, so a randomiser built on either
+convention works and you do not have to rewrite one that already exists.
+
+What it does **not** accept is an empty string — what an embedded-data field that never got set
+sends — or anything else. Those are a 400 naming the factor, rather than a participant quietly
+dropped into a cell nobody assigned. `QualtricsRegisterFormatTest` pins all of it.
 
 - **Header**: `X-Handover-Secret: <the HANDOVER_SECRET you deployed with>`
 - **Set Embedded Data**: map the response field `token` → `handoverToken`
