@@ -211,6 +211,24 @@ condition.
 <appUrl>/?t=${e://Field/handoverToken}
 ```
 
+### When the portal says "no handover token in the URL"
+
+The address bar ends in a bare `?t=`. The redirect is correct and `handoverToken` was empty when
+Qualtrics built it. Open the response in Data & Analysis and read three fields:
+
+| `aiAck` / `humanAck` | `handoverToken` | What happened |
+| --- | --- | --- |
+| blank | blank | the Web Service never ran — preview, or it sits below the End of Survey |
+| filled | blank | it ran and failed, or `handoverToken` was never declared so the mapping had nowhere to write |
+
+**Preview is the usual answer.** Qualtrics does not fire Web Service elements there. Test the
+handover on the published anonymous link.
+
+**The order in the flow is load-bearing**, top to bottom: Embedded Data, then the blocks, then the
+Randomizer, then the Web Service, then the End of Survey. A randomiser below the Web Service means
+the factors are empty at the moment of the call, which is a 400 and then an empty `?t=` — the same
+symptom from a different cause.
+
 ---
 
 ## 3. Survey 2 — the measures
