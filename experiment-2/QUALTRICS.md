@@ -4,7 +4,7 @@ The platform is a stop in the middle of the survey. Qualtrics consents, screens 
 participant, hands them over, and takes them back afterwards for the measures.
 
 ```
-Survey 1   consent, screening, endowment + comprehension, scenario briefing
+Survey 1   consent, screening, MICROPHONE PRECHECK, endowment + comprehension, briefing
            assigns the cell, registers it with the platform, redirects
                                   |
 Platform   file the claim -> Salvena's assessment -> contact customer service or accept
@@ -25,13 +25,109 @@ https://exp2-feeling-heard.ambitioussmoke-69776fff.switzerlandnorth.azurecontain
 
 ---
 
-## 1. Survey 1 — up to the handover
+## 1. The microphone precheck
+
+Two checks, because there are two different failures and only one of them can be caught here.
+
+**Qualtrics can find out whether a microphone exists and whether they will grant it.** That is
+almost everyone who should not start, and finding them here means they are not briefed, not paid
+for a session that cannot work, and not holding a confederate's slot.
+
+**Qualtrics cannot grant permission for the platform.** Browsers scope it per site, so a
+participant who allows the microphone on qualtrics.com will still be asked again on the platform's
+host. That second ask is what the platform's own check handles, and it will usually pass instantly
+because the device is already known to work.
+
+Put this early — before the endowment, after consent.
+
+### The question
+
+Add a **Text / Graphic** question with this HTML:
+
+```html
+<p>This study includes a short voice conversation, so we need to check your microphone works.
+Nothing is recorded by this check.</p>
+<button type="button" id="mic-test" class="btn">Test my microphone</button>
+<p id="mic-result" role="status"></p>
+```
+
+And this JavaScript on the same question:
+
+```js
+Qualtrics.SurveyEngine.addOnload(function () {
+    this.hideNextButton();
+});
+
+Qualtrics.SurveyEngine.addOnReady(function () {
+    var page = this;
+    var container = page.getQuestionContainer();
+    var button = container.querySelector('#mic-test');
+    var result = container.querySelector('#mic-result');
+
+    function settle(value, message) {
+        Qualtrics.SurveyEngine.setEmbeddedData('micCheck', value);
+        result.textContent = message;
+        button.disabled = true;
+        // Shown whatever the outcome: a participant who cannot pass must still be able to move on
+        // and be screened out properly, rather than being stuck on a page with no way forward.
+        page.showNextButton();
+    }
+
+    button.addEventListener('click', function () {
+        // Behind a click deliberately. Safari refuses getUserMedia without a user gesture, so a
+        // check that runs on page load fails there for everyone, for the wrong reason.
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            settle('unavailable', 'This browser cannot use a microphone. Please try a different browser.');
+            return;
+        }
+        result.textContent = 'Asking your browser…';
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+            // Release it immediately. Holding the device here would leave the indicator on for the
+            // rest of the survey, which reads as being recorded.
+            stream.getTracks().forEach(function (t) { t.stop(); });
+            settle('ok', 'Your microphone works. Thank you.');
+        }).catch(function (e) {
+            settle('denied', 'Your browser did not allow access to the microphone: ' + e.name);
+        });
+    });
+});
+```
+
+Declare `micCheck` as Embedded Data earlier in the flow so it exists before this sets it.
+
+### Then branch on it
+
+After the question, a **Branch**: if `micCheck` **is not equal to** `ok`, send them to an End of
+Survey with no completion code and a message asking them to return the study on Prolific. They
+should be returned rather than run — a participant who cannot speak cannot produce the data this
+study is about.
+
+Count them. The share who fail here is the share of your sample that cannot do voice work at all,
+and you need it to know how far past 400 to recruit.
+
+### Why a self-report question is not enough
+
+"Do you have a working microphone?" is answered yes by people whose microphone is muted, by people
+in an in-app browser that cannot reach one, and by people who will refuse the prompt when it
+appears. Asking the browser costs the same screen and produces a fact instead of an intention.
+
+It is still worth one self-report question alongside it, because the browser cannot see the room:
+
+> "Are you somewhere quiet where you can speak out loud for about five minutes?"
+
+A No there is also a screen-out. A participant on a train can grant a microphone perfectly well —
+and the transcription will turn the background into sentences they never said.
+
+---
+
+## 2. Survey 1 — up to the handover
 
 ### a. Embedded Data (first element in the flow)
 
 Declare these so they exist before anything sets them:
 
 ```
+micCheck       (leave blank — the precheck sets it)
 aiAck          (leave blank)
 humanAck       (leave blank)
 cell           (leave blank)
@@ -121,7 +217,7 @@ condition.
 
 ---
 
-## 2. Survey 2 — the measures
+## 3. Survey 2 — the measures
 
 ### a. Embedded Data (first element in the flow)
 
@@ -164,7 +260,7 @@ without a completion code, the same way the pre-test does.
 
 ---
 
-## 3. What to delete from the survey as it stands
+## 4. What to delete from the survey as it stands
 
 The platform now owns the middle of the study. These blocks have to go, or participants will be
 asked the same things twice and shown an assessment they have already been given:
@@ -184,31 +280,9 @@ contradicts it — are listed in `docs/experiment-2/qualtrics-copy-fixes.md`.
 
 ---
 
-## 3b. The microphone check in Qualtrics
-
-The platform checks the microphone at the moment the call starts, which is the only place that can:
-permission is per-origin, so granting it to Qualtrics says nothing about the platform's host.
-
-What Qualtrics should do instead is screen out, **before the endowment**, the people who cannot do
-this at all — so they are not briefed, not paid for an unusable session, and not left having done
-ten minutes of work for a call that could never happen.
-
-Two questions, early, before consent or straight after it:
-
-- **"Are you using a laptop or desktop computer with a working microphone, in a quiet place where
-  you can speak out loud for about five minutes?"** Yes / No. A No is a screen-out, not a branch:
-  they should be returned on Prolific rather than run.
-- **"Which browser are you using?"** — or read it from the user agent. Chrome, Edge, Safari and
-  Firefox all do what is needed; an in-app browser (opening the link inside another app) often does
-  not, and that is a common way to arrive.
-
-Both are cheap, and neither replaces the platform's own check. They catch different failures: this
-one catches people who should not start, and the platform's catches the microphone that is present
-but muted, pointed at the wrong device, or refused when asked.
-
 ---
 
-## 4. Prolific
+## 5. Prolific
 
 Unchanged from the pre-test: `pre-test/PROLIFIC.md` covers the study URL, the completion code, the
 screening and the bonus. The only difference is that the bonus is a flat GBP 1.08 for everyone who
@@ -216,7 +290,7 @@ completed, because the final reimbursement is standardised.
 
 ---
 
-## 5. Checking it before you launch
+## 6. Checking it before you launch
 
 Run one participant through by hand, in a browser, with the survey in preview **off** — previews do
 not fire web service elements the same way.
