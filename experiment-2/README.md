@@ -36,6 +36,13 @@ meets either agent and is in no cell of the 2x2 - so the decision is logged (`ES
 and carried back to Qualtrics as `escalated`, where it has to be branched on. How many decline is
 unknown until the pilot, and it sets how far past 400 you have to recruit.
 
+**The microphone is checked before they are put through**, with a live level meter, because
+permission is per-origin and a participant whose microphone is muted otherwise finds out when a
+confederate is already on the line listening to silence. A refused permission is a stop with a way
+out — they can accept the assessment and still be paid. A quiet meter is not a stop: that may be a
+quiet microphone rather than a broken one, and it is recorded either way (`MIC_CHECK`), so a call
+that went ahead unconfirmed can be found afterwards.
+
 **The assistant is not present until they ask for a review**, and it opens on the assessment
 screen rather than taking them anywhere. The assessment stays on screen for the whole call, which
 is the point: it is the thing being disputed, and the agent's script has them refer to its figures.

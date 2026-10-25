@@ -184,6 +184,30 @@ contradicts it — are listed in `docs/experiment-2/qualtrics-copy-fixes.md`.
 
 ---
 
+## 3b. The microphone check in Qualtrics
+
+The platform checks the microphone at the moment the call starts, which is the only place that can:
+permission is per-origin, so granting it to Qualtrics says nothing about the platform's host.
+
+What Qualtrics should do instead is screen out, **before the endowment**, the people who cannot do
+this at all — so they are not briefed, not paid for an unusable session, and not left having done
+ten minutes of work for a call that could never happen.
+
+Two questions, early, before consent or straight after it:
+
+- **"Are you using a laptop or desktop computer with a working microphone, in a quiet place where
+  you can speak out loud for about five minutes?"** Yes / No. A No is a screen-out, not a branch:
+  they should be returned on Prolific rather than run.
+- **"Which browser are you using?"** — or read it from the user agent. Chrome, Edge, Safari and
+  Firefox all do what is needed; an in-app browser (opening the link inside another app) often does
+  not, and that is a common way to arrive.
+
+Both are cheap, and neither replaces the platform's own check. They catch different failures: this
+one catches people who should not start, and the platform's catches the microphone that is present
+but muted, pointed at the wrong device, or refused when asked.
+
+---
+
 ## 4. Prolific
 
 Unchanged from the pre-test: `pre-test/PROLIFIC.md` covers the study URL, the completion code, the

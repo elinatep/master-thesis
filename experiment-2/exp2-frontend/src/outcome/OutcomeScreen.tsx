@@ -6,6 +6,7 @@ import { getOutcome, type Outcome } from './api'
 import { logEvent } from '../study/log'
 import { getStage, setStage, subscribeStage } from '../study/stage'
 import AssistantStage from '../call/AssistantStage'
+import MicCheck from '../call/MicCheck'
 import { useHandback } from '../study/useHandback'
 
 /**
@@ -32,6 +33,10 @@ export default function OutcomeScreen() {
   // Whether the call has been asked for. Read from the shared stage rather than kept locally, so a
   // participant who reloads mid-call comes back to the call and not to the choice they already made.
   const [calling, setCalling] = useState(() => getStage() === 'call')
+  // Between asking for the review and being put through. Not a third stage in the shared store:
+  // it lasts seconds, and a participant who reloads during it should land back on the choice
+  // rather than mid-check.
+  const [checkingMic, setCheckingMic] = useState(false)
   // No confirm: accepting the assessment is itself the deliberate act, and asking them to confirm
   // a decision they just made reads as the page doubting them.
   const { finishing, finish } = useHandback({ confirm: false })
@@ -69,12 +74,26 @@ export default function OutcomeScreen() {
   const labels = scripted.escalation
 
   function contactCustomerService() {
-    // Logged before anything else can fail. Whether each participant asked for a review is the
-    // difference between a usable row and an excluded one, so it must not depend on the call
-    // starting successfully.
+    // Logged before anything else can fail, and before the microphone check. Whether each
+    // participant asked for a review is the difference between a usable row and an excluded one,
+    // and it must not depend on their microphone working.
     logEvent('ESCALATION_CHOICE', { contacted: true })
+    setCheckingMic(true)
+  }
+
+  function putThrough() {
     // No navigation: the assistant opens over this screen, and the assessment stays put.
+    setCheckingMic(false)
     setStage('call')
+  }
+
+  /**
+   * They asked for the review and could not get a microphone working. They still finish and are
+   * still paid - but as escalated: false, because they met neither agent and belong in no cell.
+   */
+  function giveUpOnTheCall() {
+    logEvent('ESCALATION_CHOICE', { contacted: false, reason: 'no microphone' })
+    void finish({ escalated: false })
   }
 
   function acceptAssessment() {
@@ -92,7 +111,9 @@ export default function OutcomeScreen() {
         the assessment and finish" on screen next to a live call invites ending the session
         mid-conversation, with a confederate on the line.
       */}
-      {calling ? (
+      {checkingMic ? (
+        <MicCheck onReady={putThrough} onGiveUp={giveUpOnTheCall} />
+      ) : calling ? (
         <div className="card mt-3">
           <div className="card-body">
             <p className="mb-0">
