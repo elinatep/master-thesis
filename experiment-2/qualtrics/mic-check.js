@@ -52,13 +52,32 @@ Qualtrics.SurveyEngine.addOnReady(function () {
   }
 
   // Replaces the question's own text, leaving Qualtrics' wrapper alone where it exists.
+  //
+  // The styling is an injected <style> block of id selectors marked !important, not inline
+  // padding, because the survey theme resets `button` to borderless and transparent — which
+  // left the control reading as a line of text nobody thought to click. Display is left out
+  // of it deliberately, so the show/hide below still works through the inline style.
   var target = container.querySelector('.QuestionText') || container;
   target.innerHTML =
+    '<style>' +
+    '#micbox button{font-family:inherit!important;font-size:16px!important;font-weight:600!important;' +
+    'line-height:1.2!important;border-radius:6px!important;padding:12px 22px!important;' +
+    'margin:6px 10px 6px 0!important;cursor:pointer!important;appearance:none!important;' +
+    '-webkit-appearance:none!important;text-decoration:none!important;}' +
+    '#micretry{background:#2b5cab!important;color:#fff!important;border:1px solid #24497f!important;}' +
+    '#micretry:hover:enabled{background:#24497f!important;}' +
+    '#micretry:disabled{background:#9bb0cf!important;border-color:#9bb0cf!important;cursor:default!important;}' +
+    '#micexit{background:#fff!important;color:#333!important;border:1px solid #9a9a9a!important;}' +
+    '#micexit:hover{background:#f0f0f0!important;}' +
+    '#micstat{margin:10px 0!important;}' +
+    '</style>' +
+    '<div id="micbox">' +
     '<p><strong>Microphone check</strong></p>' +
     '<p id="micstat">Test your microphone before continuing. Your browser may ask for permission.</p>' +
-    '<button type="button" id="micretry" style="padding:8px 14px;margin-right:8px;">Test microphone</button>' +
-    '<button type="button" id="micexit" style="padding:8px 14px;display:none;">I cannot use my microphone</button>' +
-    '<p style="font-size:12px;color:#666;">The Salvena portal may ask for microphone permission again because it runs on a different website.</p>';
+    '<button type="button" id="micretry">Test microphone</button>' +
+    '<button type="button" id="micexit" style="display:none;">I cannot use my microphone</button>' +
+    '<p style="font-size:12px;color:#666;">The Salvena portal may ask for microphone permission again because it runs on a different website.</p>' +
+    '</div>';
 
   var btn = target.querySelector('#micretry'),
       exitBtn = target.querySelector('#micexit'),
