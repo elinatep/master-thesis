@@ -73,6 +73,11 @@ after it, and put the self-report question below on its own page.
 `qualtrics/mic-check.js` in this folder is the version in force — paste the whole file into the
 question's JavaScript editor, replacing everything Qualtrics pre-fills there.
 
+**Test it on the published link, never in preview.** Preview renders the survey in an iframe, and a
+browser refuses microphone access to an iframe that was not given `allow="microphone"` — so in
+preview the check fails whatever the participant clicks. The script detects that and says so on
+screen, which is the difference between a confusing afternoon and a one-line answer.
+
 It differs from what was pasted into the survey first in one way: Next is hidden until the check
 runs and the exit button only appears after a failure, so a participant who never clicked *Test
 microphone* had no way forward at all. The file reveals the exit button after 20 seconds. Twenty
@@ -268,8 +273,6 @@ it was marked *"separate pre-test"* in the survey anyway.
 
 The wording fixes that are still outstanding — the debrief saying 900, the endowment sentence that
 contradicts it — are listed in `docs/experiment-2/qualtrics-copy-fixes.md`.
-
----
 
 ---
 

@@ -14,12 +14,34 @@
 //
 // On success it clicks Next itself, so nothing may share this page: anything that does
 // would be skipped unanswered.
+//
+// TEST IT ON THE PUBLISHED LINK, NOT IN PREVIEW. Qualtrics preview renders the survey
+// inside an iframe, and a browser refuses microphone access to an iframe that was not
+// given allow="microphone" — so in preview the check fails however the participant
+// answers the prompt. The script says so on screen when it detects that case.
 
 Qualtrics.SurveyEngine.addOnload(function () {
-  var q = this, el = document.getElementById(q.questionId);
-  if (!el || el.getAttribute('data-micinit')) return;
-  el.setAttribute('data-micinit', '1');
-  q.hideNextButton();
+  // Only the button hiding belongs here. The DOM work is in addOnReady, because in several
+  // themes the question is not in the document yet at addOnload and every lookup returns
+  // null — which is a check that silently does nothing at all.
+  this.hideNextButton();
+});
+
+Qualtrics.SurveyEngine.addOnReady(function () {
+  var q = this;
+
+  var container = null;
+  try { container = q.getQuestionContainer(); } catch (e) {}
+  if (!container) container = document.getElementById(q.questionId);
+  if (!container) {
+    // Cannot draw the check. Showing Next is the only safe failure: a hidden Next with
+    // nothing to click is a participant with no way out of the study.
+    Qualtrics.SurveyEngine.setEmbeddedData('mic_ok', 'no');
+    q.showNextButton();
+    return;
+  }
+  if (container.getAttribute('data-micinit')) return;
+  container.setAttribute('data-micinit', '1');
 
   var existing = Qualtrics.SurveyEngine.getEmbeddedData('session_token');
   if (!existing) {
@@ -29,17 +51,23 @@ Qualtrics.SurveyEngine.addOnload(function () {
     Qualtrics.SurveyEngine.setEmbeddedData('session_token', token);
   }
 
-  el.innerHTML =
+  // Replaces the question's own text, leaving Qualtrics' wrapper alone where it exists.
+  var target = container.querySelector('.QuestionText') || container;
+  target.innerHTML =
     '<p><strong>Microphone check</strong></p>' +
     '<p id="micstat">Test your microphone before continuing. Your browser may ask for permission.</p>' +
     '<button type="button" id="micretry" style="padding:8px 14px;margin-right:8px;">Test microphone</button>' +
     '<button type="button" id="micexit" style="padding:8px 14px;display:none;">I cannot use my microphone</button>' +
     '<p style="font-size:12px;color:#666;">The Salvena portal may ask for microphone permission again because it runs on a different website.</p>';
 
-  var btn = document.getElementById('micretry'),
-      exitBtn = document.getElementById('micexit'),
-      stat = document.getElementById('micstat');
+  var btn = target.querySelector('#micretry'),
+      exitBtn = target.querySelector('#micexit'),
+      stat = target.querySelector('#micstat');
   var attempt = 0, running = false;
+
+  // True in Qualtrics preview, false on the published link.
+  var framed = false;
+  try { framed = (window.self !== window.top); } catch (e) { framed = true; }
 
   function say(x) { if (stat) stat.textContent = x; }
 
@@ -48,6 +76,10 @@ Qualtrics.SurveyEngine.addOnload(function () {
     btn.disabled = false;
     exitBtn.style.display = 'inline-block';
     Qualtrics.SurveyEngine.setEmbeddedData('mic_ok', 'no');
+    if (framed) {
+      msg += ' (This survey is running inside a preview frame, which browsers never allow ' +
+             'microphone access to. Open the published survey link instead.)';
+    }
     say(msg);
   }
 
@@ -85,10 +117,13 @@ Qualtrics.SurveyEngine.addOnload(function () {
       Qualtrics.SurveyEngine.setEmbeddedData('mic_ok', 'yes');
       say('Microphone works. Continuing…');
       setTimeout(function () { q.clickNextButton(); }, 600);
-    }).catch(function () {
+    }).catch(function (err) {
       if (mine !== attempt) return;
       clearTimeout(timer);
-      fail('Microphone access failed. Check your browser permission and try again, or exit the study.');
+      // The error name is on screen deliberately: NotAllowedError is a refusal,
+      // NotFoundError is no device at all, and the two need different advice.
+      var name = (err && err.name) ? err.name : 'unknown error';
+      fail('Microphone access failed (' + name + '). Check your browser permission and try again, or exit the study.');
     });
   }
 
