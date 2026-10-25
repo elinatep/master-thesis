@@ -27,7 +27,15 @@ https://exp2-feeling-heard.ambitioussmoke-69776fff.switzerlandnorth.azurecontain
 
 ## 1. The microphone precheck
 
-Two checks, because there are two different failures and only one of them can be caught here.
+**The survey already has one.** A script on a question in Survey 1 builds the whole check itself —
+it replaces the question's own contents at load, so there is no HTML to paste and nothing in the
+Qualtrics editor to keep in step with it. It is better than a from-scratch version in three ways
+worth keeping: it lets them retry after a denial, it gives up after 60 seconds instead of hanging,
+and it warns them that the portal will ask again on its own domain.
+
+Leave the script as it is. What it needs is the flow around it, below.
+
+### Two checks, because there are two different failures
 
 **Qualtrics can find out whether a microphone exists and whether they will grant it.** That is
 almost everyone who should not start, and finding them here means they are not briefed, not paid
@@ -36,88 +44,73 @@ for a session that cannot work, and not holding a confederate's slot.
 **Qualtrics cannot grant permission for the platform.** Browsers scope it per site, so a
 participant who allows the microphone on qualtrics.com will still be asked again on the platform's
 host. That second ask is what the platform's own check handles, and it will usually pass instantly
-because the device is already known to work.
+because the device is already known to work. The script says so on screen, which stops the second
+prompt reading as something having gone wrong.
 
-Put this early — before the endowment, after consent.
+Put the question early — before the endowment, after consent.
 
-### The question
+### What the script writes
 
-Add a **Text / Graphic** question with this HTML:
+| Field | Values | Set when |
+| --- | --- | --- |
+| `mic_ok` | `yes` / `no` / empty | empty while testing, `yes` on success, `no` on denial, timeout, an unsupported browser, or the exit button |
+| `session_token` | a UUID | once, at load, if not already set |
 
-```html
-<p>This study includes a short voice conversation, so we need to check your microphone works.
-Nothing is recorded by this check.</p>
-<button type="button" id="mic-test" class="btn">Test my microphone</button>
-<p id="mic-result" role="status"></p>
-```
+Both must be declared as Embedded Data **before** this question in the Survey Flow, or the values
+do not survive the response and the branch below cannot see them.
 
-And this JavaScript on the same question:
+`session_token` is not used by the platform — the platform identifies people by `participantId`,
+which is the Prolific id. It is a per-response id for your own records. Harmless to keep.
+
+### It advances by itself
+
+On success the script waits 600 ms and clicks Next for the participant. So the question must be
+**alone on its page**: anything sharing the page with it gets skipped unanswered. Put a page break
+after it, and put the self-report question below on its own page.
+
+### One gap to close
+
+Next is hidden until the check runs, and the exit button only appears after a failure — so a
+participant who never clicks *Test microphone* has no way forward at all. Add this inside the same
+`addOnload`, immediately after the `btn.addEventListener('click',test);` line:
 
 ```js
-Qualtrics.SurveyEngine.addOnload(function () {
-    this.hideNextButton();
-});
-
-Qualtrics.SurveyEngine.addOnReady(function () {
-    var page = this;
-    var container = page.getQuestionContainer();
-    var button = container.querySelector('#mic-test');
-    var result = container.querySelector('#mic-result');
-
-    function settle(value, message) {
-        Qualtrics.SurveyEngine.setEmbeddedData('micCheck', value);
-        result.textContent = message;
-        button.disabled = true;
-        // Shown whatever the outcome: a participant who cannot pass must still be able to move on
-        // and be screened out properly, rather than being stuck on a page with no way forward.
-        page.showNextButton();
+  setTimeout(function () {
+    if (Qualtrics.SurveyEngine.getEmbeddedData('mic_ok') !== 'yes') {
+      exitBtn.style.display = 'inline-block';
     }
-
-    button.addEventListener('click', function () {
-        // Behind a click deliberately. Safari refuses getUserMedia without a user gesture, so a
-        // check that runs on page load fails there for everyone, for the wrong reason.
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            settle('unavailable', 'This browser cannot use a microphone. Please try a different browser.');
-            return;
-        }
-        result.textContent = 'Asking your browser…';
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-            // Release it immediately. Holding the device here would leave the indicator on for the
-            // rest of the survey, which reads as being recorded.
-            stream.getTracks().forEach(function (t) { t.stop(); });
-            settle('ok', 'Your microphone works. Thank you.');
-        }).catch(function (e) {
-            settle('denied', 'Your browser did not allow access to the microphone: ' + e.name);
-        });
-    });
-});
+  }, 20000);
 ```
 
-Declare `micCheck` as Embedded Data earlier in the flow so it exists before this sets it.
+Twenty seconds of a page with no button is long enough that people close the tab, and a closed tab
+is a timed-out Prolific slot rather than a return.
 
 ### Then branch on it
 
-After the question, a **Branch**: if `micCheck` **is not equal to** `ok`, send them to an End of
+After the question, a **Branch**: if `mic_ok` **is not equal to** `yes`, send them to an End of
 Survey with no completion code and a message asking them to return the study on Prolific. They
 should be returned rather than run — a participant who cannot speak cannot produce the data this
 study is about.
 
+Nest the End of Survey *inside* the branch. Beside it instead of inside it, and everyone ends
+there.
+
 Count them. The share who fail here is the share of your sample that cannot do voice work at all,
 and you need it to know how far past 400 to recruit.
 
-### Why a self-report question is not enough
+### Why a self-report question is still needed
 
 "Do you have a working microphone?" is answered yes by people whose microphone is muted, by people
 in an in-app browser that cannot reach one, and by people who will refuse the prompt when it
-appears. Asking the browser costs the same screen and produces a fact instead of an intention.
+appears. Asking the browser costs the same screen and produces a fact instead of an intention —
+which is what the script does.
 
-It is still worth one self-report question alongside it, because the browser cannot see the room:
+But the browser cannot see the room, so ask one thing it cannot know:
 
 > "Are you somewhere quiet where you can speak out loud for about five minutes?"
 
 A No there is also a screen-out. A participant on a train can grant a microphone perfectly well —
 and the transcription will turn the background into sentences they never said.
-
 ---
 
 ## 2. Survey 1 — up to the handover
@@ -127,7 +120,8 @@ and the transcription will turn the background into sentences they never said.
 Declare these so they exist before anything sets them:
 
 ```
-micCheck       (leave blank — the precheck sets it)
+mic_ok         (leave blank — the precheck sets it)
+session_token  (leave blank — the precheck mints it)
 aiAck          (leave blank)
 humanAck       (leave blank)
 cell           (leave blank)
