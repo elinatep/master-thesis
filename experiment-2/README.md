@@ -139,6 +139,13 @@ Both factors are required. An absent factor is a 400, never a silent `false`.
 exists to catch edits to the prompts. `ConditionIntakeTest` round-trips all four cells.
 `AgentHandoverTest` covers the transfer.
 
+## Wiring it into Qualtrics
+
+[`QUALTRICS.md`](QUALTRICS.md): the randomiser for the 2×2, the web service that registers the
+cell, the redirect chain, and what to branch on when a participant declines the review. Also what
+to delete from the survey as it stands, now that the platform owns the assessment and the
+escalation decision.
+
 ## Deploying to Azure
 
 Full step-by-step, including creating the resource group: `docs/experiment-2/deployment.md`.
