@@ -64,6 +64,15 @@ export function useAgentCall({ tokenUrl, displayName, tokenHeaders, autoJoin = f
   // Guards the double-invocation of effects under React StrictMode in dev. Without it the
   // participant joins the same call twice and hears themselves.
   const startedRef = useRef(false)
+  // Who ended it, and whether anyone was ever there to end it.
+  //
+  // Both sides report 'ended' identically, so without this a participant who hung up mid-greeting
+  // and a call the agent closed properly are the same row in the log - which is exactly the
+  // question that could not be answered about the first two who left. 'local' is this browser:
+  // the Leave button, since nothing else sets it. 'remote' is the other side, or the connection.
+  const leftLocallyRef = useRef(false)
+  const othersEverRef = useRef(false)
+  const endReasonRef = useRef<{ code?: number; subCode?: number } | null>(null)
 
   const leave = useCallback(async () => {
     const call = callRef.current
@@ -147,11 +156,16 @@ export function useAgentCall({ tokenUrl, displayName, tokenHeaders, autoJoin = f
           // 'waiting' vs 'live' is about whether anyone else is here, not about the connection.
           setStatus(call.remoteParticipants.length > 0 ? 'live' : 'waiting')
         } else if (call.state === 'Disconnected') {
+          // Read before the refs are cleared: the SDK's own reason separates a deliberate hang-up
+          // from a dropped connection, which no amount of timing analysis can.
+          const reason = call.callEndReason
+          endReasonRef.current = reason ? { code: reason.code, subCode: reason.subCode } : null
           setStatus('ended')
         }
       }
       const onParticipants = () => {
         const n = call.remoteParticipants.length
+        if (n > 0) othersEverRef.current = true
         setOthersPresent(n)
         if (call.state === 'Connected') setStatus(n > 0 ? 'live' : 'waiting')
       }
@@ -183,6 +197,7 @@ export function useAgentCall({ tokenUrl, displayName, tokenHeaders, autoJoin = f
   }, [tokenUrl, displayName, tokenHeaders, leave])
 
   const hangUp = useCallback(async () => {
+    leftLocallyRef.current = true
     await leave()
     setStatus('ended')
   }, [leave])
@@ -201,7 +216,18 @@ export function useAgentCall({ tokenUrl, displayName, tokenHeaders, autoJoin = f
   // A no-op in the agent's console: logEvent does nothing without a participant session, and the
   // console has none.
   useEffect(() => {
-    logEvent('CALL_STATUS', { status })
+    if (status !== 'ended') {
+      logEvent('CALL_STATUS', { status })
+      return
+    }
+    logEvent('CALL_STATUS', {
+      status,
+      // Read from refs rather than state: this fires on the transition, and the participant count
+      // has already fallen to zero by the time anyone has disconnected.
+      endedBy: leftLocallyRef.current ? 'local' : 'remote',
+      othersEverPresent: othersEverRef.current,
+      reason: endReasonRef.current,
+    })
   }, [status])
 
   useEffect(() => {

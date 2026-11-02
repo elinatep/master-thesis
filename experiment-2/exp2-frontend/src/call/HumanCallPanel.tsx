@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Badge, Button, Card, Spinner } from 'react-bootstrap'
 import { useAgentCall } from './useAgentCall'
 import { useHandback } from '../study/useHandback'
@@ -33,6 +34,7 @@ export default function HumanCallPanel() {
   })
   // The call ending is the finish; asking them to confirm it reads as the page not knowing.
   const { finishing, finish } = useHandback({ confirm: false })
+  const [confirmingLeave, setConfirmingLeave] = useState(false)
 
   return (
     <Card
@@ -95,19 +97,43 @@ export default function HumanCallPanel() {
         )}
 
         {(status === 'live' || status === 'waiting') && (
-          <div className="d-flex gap-2 mt-3">
-            <Button variant={muted ? 'warning' : 'outline-secondary'} onClick={() => void toggleMute()}>
-              {muted ? 'Unmute' : 'Mute'}
-            </Button>
+          <>
+            <div className="d-flex gap-2 mt-3">
+              <Button variant={muted ? 'warning' : 'outline-secondary'} onClick={() => void toggleMute()}>
+                {muted ? 'Unmute' : 'Mute'}
+              </Button>
+            </div>
             {/*
-              They can always leave. The agent runs the standardised close, so this is not the
-              normal way a call ends - but a participant who wants to stop has to be able to,
-              without closing the tab and losing the session.
+              They can always leave, and nothing here could stop them: the tab close, the back
+              button and the window X are always available, and a participant who uses one of those
+              is lost silently - no event, no handback, a Prolific submission to adjudicate by hand.
+              Keeping a way out is also a consent condition, not a courtesy.
+
+              What it should not be is an invitation. It used to sit beside Mute, styled like an
+              ordinary call control, which is the one thing it must not look like: the agent runs
+              the standardised close, so this is the exception. A quiet link, and a confirm, so
+              leaving is deliberate rather than the obvious thing to click.
             */}
-            <Button variant="outline-danger" className="ms-auto" onClick={() => void hangUp()}>
-              Leave call
-            </Button>
-          </div>
+            <div className="mt-3 text-end">
+              {confirmingLeave ? (
+                <>
+                  <span className="small text-muted me-2">Leave the call?</span>
+                  <Button size="sm" variant="outline-secondary" className="me-2"
+                      onClick={() => setConfirmingLeave(false)}>
+                    Stay
+                  </Button>
+                  <Button size="sm" variant="outline-danger" onClick={() => void hangUp()}>
+                    Yes, leave
+                  </Button>
+                </>
+              ) : (
+                <Button variant="link" size="sm" className="text-muted p-0"
+                    onClick={() => setConfirmingLeave(true)}>
+                  I need to stop the call
+                </Button>
+              )}
+            </div>
+          </>
         )}
       </Card.Body>
     </Card>
