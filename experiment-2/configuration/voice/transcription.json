@@ -1,0 +1,37 @@
+{
+  "_comment": [
+    "Live transcription of the HUMAN leg of the call - the part OpenAI Realtime does not give us",
+    "for free, because on that leg nothing is listening. Each browser transcribes its OWN",
+    "microphone and posts the finished lines; no audio is stored, by either side, exactly as on the",
+    "AI leg.",
+    "",
+    "Everything here is read at request time, so the protocol can be corrected without a rebuild.",
+    "That matters more than usual: this was written to the documentation rather than against a",
+    "live endpoint, and the first real proof is a pilot call.",
+    "",
+    "model: the Azure DEPLOYMENT name, which is whatever it was called when deployed - not",
+    "necessarily the model name. Empty disables transcription entirely and the call runs as before.",
+    "",
+    "participantSide: false transcribes only the agent, which is the agent's own voice and needs no",
+    "further ethics consideration. true also transcribes the participant on the human leg -",
+    "defensible, since their audio already reaches the same Azure resource on the AI leg, but check",
+    "how the ethics application words it before turning it on."
+  ],
+  "model": "gpt-live-transcribe",
+  "participantSide": false,
+  "languages": ["en"],
+  "session": {
+    "type": "transcription",
+    "audio": {
+      "input": {
+        "format": { "type": "audio/pcm", "rate": 24000 },
+        "turn_detection": { "type": "server_vad", "threshold": 0.5, "silence_duration_ms": 600 }
+      }
+    }
+  },
+  "client": {
+    "socketPath": "/realtime?intent=transcription",
+    "subprotocolPrefix": "openai-insecure-api-key.",
+    "sampleRate": 24000
+  }
+}

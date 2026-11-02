@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { Badge, Button, Card, Spinner } from 'react-bootstrap'
 import { useAgentCall } from './useAgentCall'
+import { useLiveTranscribe } from './useLiveTranscribe'
 import { useHandback } from '../study/useHandback'
 import { participantHeaders } from '../study/headers'
+import { logTranscript } from '../study/log'
 import { VOICE_WIDGET_GAP } from '../study/layout'
 
 const WIDTH = `min(420px, calc(100vw - ${2 * VOICE_WIDGET_GAP}px))`
@@ -35,6 +37,15 @@ export default function HumanCallPanel() {
   // The call ending is the finish; asking them to confirm it reads as the page not knowing.
   const { finishing, finish } = useHandback({ confirm: false })
   const [confirmingLeave, setConfirmingLeave] = useState(false)
+
+  // Off unless the configuration turns it on - their audio on this leg is a decision for the
+  // ethics application, not a default. The server decides; the page does not get a vote.
+  useLiveTranscribe({
+    active: status === 'live',
+    tokenUrl: '/api/call/transcribe/token',
+    tokenHeaders: participantHeaders,
+    onLine: (text) => logTranscript('USER', text),
+  })
 
   return (
     <Card

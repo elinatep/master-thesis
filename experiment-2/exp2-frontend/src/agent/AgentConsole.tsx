@@ -2,8 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { Alert, Badge, Button, Card, Container, Spinner, Table } from 'react-bootstrap'
 import CallScript from './CallScript'
 import ConditionCard from './ConditionCard'
-import { callTokenUrl, endCall, fetchBrief, fetchQueue, pickUp, type Brief, type QueueEntry } from './agentApi'
+import { callTokenUrl, endCall, fetchBrief, fetchQueue, pickUp, postAgentTranscript, type Brief, type QueueEntry } from './agentApi'
 import { useAgentCall } from '../call/useAgentCall'
+import { useLiveTranscribe } from '../call/useLiveTranscribe'
 
 /**
  * The human agent's console: who is waiting, and the one call they are on.
@@ -175,6 +176,14 @@ function CallScreen({
     displayName: 'Salvena customer service',
   })
   const [ending, setEnding] = useState(false)
+
+  // What the agent actually said, recorded rather than remembered. The condition lives in how this
+  // call is run, and until now nothing wrote down whether it was run that way.
+  useLiveTranscribe({
+    active: status === 'live',
+    tokenUrl: '/api/agent/transcribe/token',
+    onLine: (text) => void postAgentTranscript(brief.sessionId, text),
+  })
 
   async function finish() {
     setEnding(true)

@@ -34,15 +34,13 @@ public class CallController {
 
     private static final Logger log = LoggerFactory.getLogger(CallController.class);
 
-    private final AgentHandoverRepository handovers;
-    private final StudySessionRepository sessions;
+    private final HandoverGuard guard;
     private final AccountRefProvider participants;
     private final CallTokenService callTokens;
 
-    public CallController(AgentHandoverRepository handovers, StudySessionRepository sessions,
-            AccountRefProvider participants, CallTokenService callTokens) {
-        this.handovers = handovers;
-        this.sessions = sessions;
+    public CallController(HandoverGuard guard, AccountRefProvider participants,
+            CallTokenService callTokens) {
+        this.guard = guard;
         this.participants = participants;
         this.callTokens = callTokens;
     }
@@ -56,13 +54,7 @@ public class CallController {
     @PostMapping("/token")
     public Credentials token() {
         String participantId = participants.currentRef();
-        StudySession session = sessions.findFirstByParticipantIdOrderByStartedAtDesc(participantId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "No open study session for participant " + participantId));
-        AgentHandover handover = handovers
-                .findFirstBySessionIdAndEndedAtIsNullOrderByRequestedAtDesc(session.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT,
-                        "No open handover - there is no call to join yet"));
+        AgentHandover handover = guard.requireOpenHandover();
 
         if (!callTokens.isConfigured()) {
             // 503 rather than 500: configuration is missing, the application is not broken. The

@@ -74,3 +74,30 @@ export function endCall(handoverId: number): Promise<Brief> {
 export function callTokenUrl(handoverId: number): string {
   return `/api/agent/handover/${handoverId}/call-token`
 }
+
+/**
+ * One line the agent said, into the same transcript as the AI leg.
+ *
+ * <p>Not through study/log.ts: that holds the participant's session id and is a no-op in the
+ * console, which has no participant session. Here the session id comes off the brief.
+ *
+ * <p>The sequence number is a millisecond clock rather than a counter from zero, so these lines
+ * sort after the assistant's - which used a per-session counter starting at 1 - and the handover
+ * boundary stays visible in one ordered transcript. Nudged forward when two lines land in the same
+ * millisecond, since the column is the only ordering the export has.
+ */
+let lastSeq = 0
+
+export async function postAgentTranscript(sessionId: number, text: string): Promise<void> {
+  const trimmed = text.trim()
+  if (!trimmed) return
+  lastSeq = Math.max(Date.now(), lastSeq + 1)
+  await fetch('/api/study/transcript', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      sessionId,
+      entries: [{ seq: lastSeq, role: 'HUMAN_AGENT', text: trimmed, clientTs: new Date().toISOString() }],
+    }),
+  })
+}
