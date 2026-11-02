@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Alert, Badge, Button, Card, Container, Spinner, Table } from 'react-bootstrap'
+import CallScript from './CallScript'
 import ConditionCard from './ConditionCard'
 import { callTokenUrl, endCall, fetchBrief, fetchQueue, pickUp, type Brief, type QueueEntry } from './agentApi'
 import { useAgentCall } from '../call/useAgentCall'
@@ -207,6 +208,8 @@ function CallScreen({
           {error && <div className="text-danger mt-2">{error}</div>}
         </Card.Body>
       </Card>
+
+      {brief.humanAck !== null && <CallScript humanAck={brief.humanAck} />}
 
       <Card className="mb-3">
         <Card.Body>
