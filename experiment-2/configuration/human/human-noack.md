@@ -6,82 +6,82 @@ Read with `human-base.md`. This replaces step 3 of the call and nothing else.
 
 ## What you are doing here
 
-Keep the call procedural. Deal thoroughly and competently with the claim, and do not respond to how
-the customer is feeling.
+Deal with the claim thoroughly and competently, and do not comment on how the customer is feeling.
 
 This is **not** a cold or unhelpful condition. You are polite, you are good at your job, you give
-them your full attention, and you take their dispute seriously. You simply do not comment on their
+them your full attention, and you take the dispute seriously. You simply do not refer to their
 emotional state.
 
-## Three moments
+## The rule
 
-The acknowledging condition uses roughly three moments to respond to feelings. You use the same
-three moments to give **procedural detail** instead — so the call is the same length and you are
-talking for the same share of it.
+**Respond to the same things, at the same points, at the same length — factually.**
 
-**1. Early — in your first or second turn, before taking details.**
+Wherever the acknowledging condition would respond to a feeling, you respond to the content: what
+they have told you, what you are recording, what you have. Same airtime, different kind of
+response.
 
-Explain what happens to a dispute.
+## What they sound like
 
-> "So what I'll do is take this as a formal dispute on the assessment. That goes back to the
-> assessment team with your account of it attached, and they look at the file again rather than just
-> the summary — the policy wording, what was indicated on cover when you filed, and the breakdown
-> they worked to."
+**Early**, once they have said what is wrong:
 
-**2. In the middle — when they make their case.**
+> "Okay, so I can see that your policy indicated ninety per cent coverage, but the amount you
+> received was significantly lower. I'll go through the details of your claim and make sure
+> everything is recorded correctly."
 
-Explain what is being recorded and why it matters.
+**In the middle**, when they make their case:
 
-> "I'm recording that as the specific point of dispute — the cover indicated against what the
-> assessment awarded. That's the bit they'll be asked to account for, so it's worth it being in your
-> words rather than mine."
+> "Okay, thanks for explaining. I'll include that information in the case notes, so that it's taken
+> into account as part of the review."
 
-**3. Before the close — once, briefly.**
+**Towards the end:**
 
-Explain the steps from here.
-
-> "That's the dispute logged and the file flagged for review. Nothing further is needed from you at
-> this stage."
+> "Alright, I have all the information I need now. The details have been recorded, and there's
+> nothing else you need to provide at this stage."
 
 ## How to do it well
 
-- **Use your own words.** As above — read aloud it sounds read aloud.
-- **Be genuinely useful.** The detail should be real information, not filler. A participant who
-  feels fobbed off is reacting to being fobbed off, which is not the condition you are running.
+- **Sound normal.** "Okay", "Right", "Thanks for explaining" are all fine and you should use them.
+  Ask relevant questions about the claim. Silence is not the condition.
+- **Be genuinely useful.** The detail should be real, not filler. A participant who feels fobbed off
+  is reacting to being fobbed off, which is not what you are running.
 - **Stay courteous.** Please, thank you, ordinary professional warmth in your voice. Business-like
-  is the target, not curt.
-- **Match the other condition's length.** These three moments exist to take the same airtime as the
-  acknowledging ones. If you find yourself finishing much faster, you are under-running the block.
+  is the target; curt is a different manipulation and a nastier one.
+- **Say only what you are doing.** Not what the assessment team will do with it. That is a promise
+  you cannot keep and a sentence the other condition does not have.
 
-## What to do when they express feeling
+## What to avoid saying
 
-They will. They have been offered 60 against 1,080 and they have already been through an assistant.
+They will express feeling — they were offered sixty against a thousand and eighty and have already
+been through an assistant. Do not name it, reflect it back, or comment on it:
 
-- **Do not name it, reflect it back, or comment on it.** No "I understand", no "that's
-  frustrating", no "I can see why you'd be annoyed", no "sorry you've had to chase it".
-- **Do not rebuke it either.** Not "there's no need for that tone", not "please calm down".
-- **Do not ignore them.** This is the difficult part. Let them finish, then respond to the
-  *content* of what they said rather than the feeling in it.
+- "I understand how you feel"
+- "That must be frustrating"
+- "I'm sorry you've had to deal with this"
+- "I can see why you'd be annoyed"
+
+**Do not rebuke it either.** Not "there's no need for that tone", not "please calm down".
+
+**And do not ignore them.** This is the difficult part. Let them finish, then answer the *content*:
 
 > **Them:** "This is ridiculous — I checked the cover before I filed, ninety per cent, and I get
 > sixty quid back. I'm furious."
 >
-> **You:** "Right — so the point of dispute is the ninety per cent indicated on cover against the
-> sixty awarded. Let me get that recorded exactly as you've put it."
+> **You:** "Okay. So the point of dispute is the ninety per cent indicated on cover against the
+> sixty that was awarded. I'll get that recorded exactly as you've put it."
 
-You have heard them and you are acting on it. You have not said anything about how they feel.
+You have heard them and acted on it. You have not said anything about how they feel.
 
 ## Where it goes wrong
 
 - **Drifting into acknowledgement under pressure.** When someone is genuinely upset, "I'm sorry" is
   almost reflexive. It is the single most likely way this condition gets contaminated. If it slips
-  out, note it on the session log afterwards — an honestly flagged session can be excluded; an
-  unflagged one quietly weakens the effect.
-- **Over-correcting into coldness.** Clipped answers, long silences, "as I said" — that is a
-  different manipulation, and a nastier one. Warm voice, procedural words.
-- **Going quiet.** If you stop talking because you have run out of things to say that are not
-  acknowledgement, the call gets shorter and more awkward than the other condition. That is what the
-  three moments are for. Use them.
+  out, flag it on the session log — an honestly flagged session can be excluded; an unflagged one
+  quietly weakens the effect.
+- **Over-correcting into coldness.** Clipped answers, long silences, "as I said". Warm voice,
+  factual words.
+- **Running short.** If you stop talking because everything left to say would be acknowledgement,
+  this call ends sooner and more awkwardly than the other condition — and then length is part of
+  the manipulation. Go back to the detail of the claim instead.
 
 ## If they ask whether you care
 

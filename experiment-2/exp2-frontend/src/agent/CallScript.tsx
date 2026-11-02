@@ -18,17 +18,17 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
       <Card.Body>
         <div className="text-uppercase small text-muted mb-2">How the call runs</div>
 
-        <Step n={1} title="Open — show you already read it">
-          <p className="mb-1">
-            Name yourself · say you have read the previous conversation · refer to one specific
-            detail they gave. Never ask them to explain the claim again.
-          </p>
+        <Step n={1} title="Open — the same in both conditions">
           <Line>
-            Hello, you're through to Salvena, this is ___. I've got your file in front of me and
-            I've read through what you discussed a moment ago — the water damage from the burst
-            pipe, the twelve hundred claimed, and the sixty that came back. Let me take it from
-            here.
+            Hi, my name is ___. I've just read through your conversation with our AI assistant, so
+            I'm already familiar with your case. I can see that you submitted a claim for twelve
+            hundred pounds following water damage, but the amount you were offered was only sixty.
+            Could you tell me what you'd like us to look into?
           </Line>
+          <p className="mb-0 mt-1 small">
+            Name yourself · say you have read the conversation · refer to a detail they gave. Never
+            ask them to start again.
+          </p>
         </Step>
 
         <Step n={2} title="Let them say what they want to say">
@@ -38,72 +38,73 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
         </Step>
 
         {humanAck ? (
-          <Step n={3} title="ACKNOWLEDGE — three moments, your own words">
-            <p className="mb-1 text-muted small">Early, before taking details:</p>
+          <Step n={3} title="ACKNOWLEDGE — at least twice, where the moment is there">
+            <p className="mb-1 text-muted small">Early, once they have said what is wrong:</p>
             <Line>
-              I can hear this has been really frustrating — and honestly, I'm not surprised. You
-              were told ninety per cent and what came back was sixty.
+              Yeah, I can definitely see why this would be frustrating, especially since you were
+              expecting around ninety per cent of the costs to be covered.
             </Line>
             <p className="mb-1 mt-2 text-muted small">In the middle, when they make their case:</p>
             <Line>
-              That's the bit that would get me too — it's not that you didn't know what was covered,
-              it's that you did, and it came back nothing like it.
+              I understand. I think it's completely reasonable that you'd want an explanation,
+              especially given the difference between what you expected and what you actually
+              received.
             </Line>
-            <p className="mb-1 mt-2 text-muted small">Once, before the close:</p>
+            <p className="mb-1 mt-2 text-muted small">Towards the end:</p>
             <Line>
-              I know this hasn't been straightforward, and I'm sorry you've had to chase it.
+              I'm sorry you've had to deal with this. I can imagine it's been quite stressful,
+              especially on top of the water damage itself.
             </Line>
             <p className="mb-0 mt-2 small">
-              Name the <em>specific</em> thing, not "that's frustrating". Say the reaction is
-              reasonable — "that would annoy anyone", not "I understand". Say these{' '}
-              <strong>instead of</strong> procedural detail, not on top of it. Not agreeing, not
-              apologising for the outcome, not therapy. If they are cheerful, do not manufacture a
-              feeling: acknowledge the nuisance instead, and two moments is fine.
+              Name the feeling and connect it to <em>their</em> situation. Say the reaction is
+              reasonable. One or two sentences, then move on —{' '}
+              <strong>instead of</strong> procedural detail, not on top of it. Not at fixed points:
+              wait until they have said something with feeling in it. Not agreeing, not apologising
+              for the outcome, not therapy. If they are cheerful, do not manufacture a feeling —
+              acknowledge the nuisance instead.
             </p>
           </Step>
         ) : (
-          <Step n={3} title="PROCEDURAL DETAIL — three moments, your own words">
-            <p className="mb-1 text-muted small">Early, before taking details:</p>
+          <Step n={3} title="FACTUAL — the same things, at the same length">
+            <p className="mb-1 text-muted small">Early, once they have said what is wrong:</p>
             <Line>
-              So what I'll do is take this as a formal dispute on the assessment. That goes back to
-              the assessment team with your account attached, and they look at the file again rather
-              than just the summary — the policy wording, what was indicated on cover when you
-              filed, and the breakdown they worked to.
+              Okay, so I can see that your policy indicated ninety per cent coverage, but the amount
+              you received was significantly lower. I'll go through the details of your claim and
+              make sure everything is recorded correctly.
             </Line>
             <p className="mb-1 mt-2 text-muted small">In the middle, when they make their case:</p>
             <Line>
-              I'm recording that as the specific point of dispute — the cover indicated against what
-              the assessment awarded. That's the bit they'll be asked to account for, so it's worth
-              it being in your words rather than mine.
+              Okay, thanks for explaining. I'll include that information in the case notes, so that
+              it's taken into account as part of the review.
             </Line>
-            <p className="mb-1 mt-2 text-muted small">Once, before the close:</p>
+            <p className="mb-1 mt-2 text-muted small">Towards the end:</p>
             <Line>
-              That's the dispute logged and the file flagged for review. Nothing further is needed
-              from you at this stage.
+              Alright, I have all the information I need now. The details have been recorded, and
+              there's nothing else you need to provide at this stage.
             </Line>
             <p className="mb-0 mt-2 small">
-              When they express feeling — and they will — do not name it, reflect it or comment on
-              it. No "I understand", no "that's frustrating". Carry on with the procedural point.
-              This is <strong>business-like, not cold</strong>: polite, genuinely useful detail,
-              real warmth in your voice. Finishing much faster than an acknowledging call means you
-              are under-running it.
+              "Okay", "Right", "Thanks for explaining" are fine — use them, and ask real questions
+              about the claim. <strong>Business-like, not cold.</strong> When they express feeling,
+              answer the content, never the feeling: no "I understand how you feel", no "that must
+              be frustrating", no "I'm sorry you've had to deal with this". Do not rebuke it either,
+              and do not go quiet — if everything left to say would be acknowledgement, go back to
+              the detail of the claim.
             </p>
           </Step>
         )}
 
-        <Step n={4} title="Take the dispute">
+        <Step n={4} title="Confirm what you have — the same in both conditions">
           <Line>
-            So — you're disputing the assessment because the policy indicated ninety per cent cover
-            and the award came back at sixty. And what you're after is for that to be looked at
-            again.
+            So the point you're disputing is the ninety per cent cover against the sixty that came
+            back, and you'd like the assessment looked at again. I've got that recorded.
           </Line>
         </Step>
 
         <Step n={5} title="Close — near enough word for word">
           <Line>
-            Right — I've got everything I need and the review is complete on my side. The final
-            outcome will be shown to you at the end of this session rather than by me on the call.
-            Thanks for taking the time to go through it. Goodbye.
+            Okay, I think that's everything I need from you. The review is now complete on my side,
+            and you'll see the final outcome at the end of this session. Thank you for your time,
+            and have a nice day. Goodbye!
           </Line>
           <p className="mb-0 mt-1 small">End the call. Add nothing after it, however they respond.</p>
         </Step>
@@ -113,22 +114,27 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
             Pushback — use these answers, do not improvise
           </summary>
           <div className="mt-2">
-            <Pushback q="So how much am I actually getting?">
-              I'm not able to give you the figure on the call — the outcome gets confirmed to you at
-              the end of this session. What I can tell you is the review's been done properly.
+            <Pushback q="How much am I getting?">
+              The final amount will be shown to you at the end of the session. Unfortunately, I
+              can't confirm it during the call.
             </Pushback>
-            <Pushback q="Can you change it? / Can you approve more?">
-              The amount isn't something I set on the call. What I've done is make sure the dispute
-              is recorded with the detail you've given me.
+            <Pushback q="Can you change the amount?">
+              I can't change the amount directly, but I can make sure your dispute is properly
+              recorded.
             </Pushback>
-            <Pushback q="Why did the assistant not just deal with this?">
-              It takes the details and passes anything disputed to one of us. That's why you're
-              through to me.
+            <Pushback q="Why couldn't the AI help me?">
+              The AI assistant collects the initial information, but disputed claims are passed on
+              to a human agent.
             </Pushback>
-            <Pushback q="Is this a real company? / Are you a real person?">
-              I'm a real person, yes. This is a research session, so Salvena is a fictional insurer
-              — but let's carry on with the claim as described.
+            <Pushback q="Are you a real person?">
+              Yes, I'm a real person. I'm helping with the customer service part of this research
+              study.
             </Pushback>
+            <p className="small mb-2">
+              <strong>Never promise what happens next.</strong> Say what <em>you</em> are doing, not
+              what the assessment team will do with it — that is a claim about a process you do not
+              control, and the kind of sentence that gets said in one condition and not the other.
+            </p>
             <p className="small mb-0">
               <strong>Abusive, or distressed beyond the scenario</strong> — drop the script and be a
               person. Say they can stop at any point and that nothing depends on finishing. End the

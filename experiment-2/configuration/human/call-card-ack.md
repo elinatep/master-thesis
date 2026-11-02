@@ -1,7 +1,7 @@
 # CALL CARD — ACKNOWLEDGING (`humanAck = true`)
 
 One screen, for during the call. The reasoning is in `human-base.md` + `human-ack.md`; read those
-before your first session. This is only the reminder.
+before your first session. These are examples to speak around, not lines to read.
 
 **Your name on this call: ______________** (the same one every session)
 
@@ -16,45 +16,49 @@ this participant's data is gone.
 
 ---
 
-### 1. Open — show you already read it
-Name yourself · say you've read the previous conversation · quote one specific detail they gave.
-Never ask them to explain the claim again.
+### 1. Open — the same in both conditions
+> "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
+> already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
+> following water damage, but the amount you were offered was only sixty.
+>
+> Could you tell me what you'd like us to look into?"
 
-> "Hello, you're through to Salvena, this is ___. I've got your file in front of me and I've read
-> through what you discussed a moment ago — the water damage from the burst pipe, the twelve hundred
-> claimed, and the sixty that came back. Let me take it from here."
+Name yourself · say you've read the conversation · refer to a detail they gave. Never ask them to
+start again.
 
 ### 2. Let them talk
 Don't interrupt. Don't ask them to repeat — but let them if they want to.
 
-### 3. ACKNOWLEDGE — three moments, your own words
+### 3. ACKNOWLEDGE — at least twice, where the moment is there
 
-**Early**, before taking details:
-> "I can hear this has been really frustrating — and honestly, I'm not surprised. You were told
-> ninety per cent and what came back was sixty."
+**Early**, once they've said what's wrong:
+> "Yeah, I can definitely see why this would be frustrating, especially since you were expecting
+> around ninety per cent of the costs to be covered."
 
-**Middle**, when they make their case:
-> "That's the bit that would get me too — it's not that you didn't know what was covered, it's that
-> you did, and it came back nothing like it."
+**In the middle**, when they make their case:
+> "I understand. I think it's completely reasonable that you'd want an explanation, especially given
+> the difference between what you expected and what you actually received."
 
-**Before the close**, once:
-> "I know this hasn't been straightforward, and I'm sorry you've had to chase it."
+**Towards the end:**
+> "I'm sorry you've had to deal with this. I can imagine it's been quite stressful, especially on
+> top of the water damage itself."
 
-Name the *specific* thing, not "that's frustrating". Say the reaction is reasonable — "that would
-annoy anyone", not "I understand". One or two sentences, then move on.
+Name the feeling and connect it to *their* situation. Say the reaction is reasonable. One or two
+sentences, then move on — **instead of** procedural detail, not on top of it.
 
-**Instead of** procedural detail, not on top of it. Not agreeing · not apologising for the outcome ·
-not therapy. If they're cheerful, don't manufacture a feeling — acknowledge the nuisance instead,
-and two moments is fine.
+Not at fixed points: wait until they've said something with feeling in it. Not agreeing · not
+apologising for the outcome · not therapy. If they're cheerful, don't manufacture a feeling —
+acknowledge the nuisance instead.
 
-### 4. Take the dispute
-> "So — you're disputing the assessment because the policy indicated ninety per cent cover and the
-> award came back at sixty. And what you're after is for that to be looked at again."
+### 4. Confirm what you have — the same in both conditions
+> "So the point you're disputing is the ninety per cent cover against the sixty that came back, and
+> you'd like the assessment looked at again. I've got that recorded."
 
 ### 5. Close — near enough word for word
-> "Right — I've got everything I need and the review is complete on my side. The final outcome will
-> be shown to you at the end of this session rather than by me on the call. Thanks for taking the
-> time to go through it. Goodbye."
+> "Okay, I think that's everything I need from you. The review is now complete on my side, and
+> you'll see the final outcome at the end of this session.
+>
+> Thank you for your time, and have a nice day. Goodbye!"
 
 End the call. Add nothing after it.
 
@@ -62,20 +66,14 @@ End the call. Add nothing after it.
 
 ### Pushback — use these, don't improvise
 
-**"How much am I actually getting?"**
-> "I'm not able to give you the figure on the call — the outcome gets confirmed to you at the end of
-> this session. What I can tell you is the review's been done properly."
+| They ask | You say |
+| --- | --- |
+| How much am I getting? | "The final amount will be shown to you at the end of the session. Unfortunately, I can't confirm it during the call." |
+| Can you change the amount? | "I can't change the amount directly, but I can make sure your dispute is properly recorded." |
+| Why couldn't the AI help me? | "The AI assistant collects the initial information, but disputed claims are passed on to a human agent." |
+| Are you a real person? | "Yes, I'm a real person. I'm helping with the customer service part of this research study." |
 
-**"Can you change it?"**
-> "The amount isn't something I set on the call. What I've done is make sure the dispute is recorded
-> with the detail you've given me."
-
-**"Why didn't the assistant deal with it?"**
-> "It takes the details and passes anything disputed to one of us. That's why you're through to me."
-
-**"Are you a real person? / Is this a bot?"**
-> "I'm a real person, yes. This is a research session, so Salvena is a fictional insurer — but let's
-> carry on with the claim as described."
+**Never promise what happens next.** Say what *you* are doing, not what the assessment team will do.
 
 **Abusive or genuinely distressed** → drop the script, be a person, say they can stop at any point.
 End the call if that's right. Flag the session for exclusion afterwards.

@@ -1,7 +1,7 @@
 # CALL CARD — NOT ACKNOWLEDGING (`humanAck = false`)
 
 One screen, for during the call. The reasoning is in `human-base.md` + `human-noack.md`; read those
-before your first session. This is only the reminder.
+before your first session. These are examples to speak around, not lines to read.
 
 **Your name on this call: ______________** (the same one every session)
 
@@ -16,51 +16,51 @@ this participant's data is gone.
 
 ---
 
-### 1. Open — show you already read it
-Name yourself · say you've read the previous conversation · quote one specific detail they gave.
-Never ask them to explain the claim again.
+### 1. Open — the same in both conditions
+> "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
+> already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
+> following water damage, but the amount you were offered was only sixty.
+>
+> Could you tell me what you'd like us to look into?"
 
-> "Hello, you're through to Salvena, this is ___. I've got your file in front of me and I've read
-> through what you discussed a moment ago — the water damage from the burst pipe, the twelve hundred
-> claimed, and the sixty that came back. Let me take it from here."
+Name yourself · say you've read the conversation · refer to a detail they gave. Never ask them to
+start again.
 
 ### 2. Let them talk
 Don't interrupt. Don't ask them to repeat — but let them if they want to.
 
-### 3. PROCEDURAL DETAIL — three moments, your own words
+### 3. FACTUAL — respond to the same things, at the same length
 
-Same three moments, same airtime — spent on how the dispute works, not on how they feel.
+**Early**, once they've said what's wrong:
+> "Okay, so I can see that your policy indicated ninety per cent coverage, but the amount you
+> received was significantly lower. I'll go through the details of your claim and make sure
+> everything is recorded correctly."
 
-**Early**, before taking details:
-> "So what I'll do is take this as a formal dispute on the assessment. That goes back to the
-> assessment team with your account attached, and they look at the file again rather than just the
-> summary — the policy wording, what was indicated on cover when you filed, and the breakdown they
-> worked to."
+**In the middle**, when they make their case:
+> "Okay, thanks for explaining. I'll include that information in the case notes, so that it's taken
+> into account as part of the review."
 
-**Middle**, when they make their case:
-> "I'm recording that as the specific point of dispute — the cover indicated against what the
-> assessment awarded. That's the bit they'll be asked to account for, so it's worth it being in your
-> words rather than mine."
+**Towards the end:**
+> "Alright, I have all the information I need now. The details have been recorded, and there's
+> nothing else you need to provide at this stage."
 
-**Before the close**, once:
-> "That's the dispute logged and the file flagged for review. Nothing further is needed from you at
-> this stage."
+"Okay", "Right", "Thanks for explaining" are fine — use them, and ask real questions about the
+claim. **Business-like, not cold.**
 
-When they express feeling — and they will — **don't name it, reflect it, or comment on it**. No "I
-understand", no "that's frustrating". Carry on with the procedural point.
+When they express feeling, answer the *content*, never the feeling. Avoid: "I understand how you
+feel" · "that must be frustrating" · "I'm sorry you've had to deal with this" · "I can see why
+you'd be annoyed". Don't rebuke it either, and don't go quiet — if everything left to say would be
+acknowledgement, go back to the detail of the claim.
 
-This is **business-like, not cold**: polite, genuinely useful detail, full attention, real warmth in
-your voice. A participant who feels fobbed off is reacting to being fobbed off, which is not this
-condition. If you're finishing much faster than the acknowledging calls, you're under-running it.
-
-### 4. Take the dispute
-> "So — you're disputing the assessment because the policy indicated ninety per cent cover and the
-> award came back at sixty. And what you're after is for that to be looked at again."
+### 4. Confirm what you have — the same in both conditions
+> "So the point you're disputing is the ninety per cent cover against the sixty that came back, and
+> you'd like the assessment looked at again. I've got that recorded."
 
 ### 5. Close — near enough word for word
-> "Right — I've got everything I need and the review is complete on my side. The final outcome will
-> be shown to you at the end of this session rather than by me on the call. Thanks for taking the
-> time to go through it. Goodbye."
+> "Okay, I think that's everything I need from you. The review is now complete on my side, and
+> you'll see the final outcome at the end of this session.
+>
+> Thank you for your time, and have a nice day. Goodbye!"
 
 End the call. Add nothing after it.
 
@@ -68,20 +68,14 @@ End the call. Add nothing after it.
 
 ### Pushback — use these, don't improvise
 
-**"How much am I actually getting?"**
-> "I'm not able to give you the figure on the call — the outcome gets confirmed to you at the end of
-> this session. What I can tell you is the review's been done properly."
+| They ask | You say |
+| --- | --- |
+| How much am I getting? | "The final amount will be shown to you at the end of the session. Unfortunately, I can't confirm it during the call." |
+| Can you change the amount? | "I can't change the amount directly, but I can make sure your dispute is properly recorded." |
+| Why couldn't the AI help me? | "The AI assistant collects the initial information, but disputed claims are passed on to a human agent." |
+| Are you a real person? | "Yes, I'm a real person. I'm helping with the customer service part of this research study." |
 
-**"Can you change it?"**
-> "The amount isn't something I set on the call. What I've done is make sure the dispute is recorded
-> with the detail you've given me."
-
-**"Why didn't the assistant deal with it?"**
-> "It takes the details and passes anything disputed to one of us. That's why you're through to me."
-
-**"Are you a real person? / Is this a bot?"**
-> "I'm a real person, yes. This is a research session, so Salvena is a fictional insurer — but let's
-> carry on with the claim as described."
+**Never promise what happens next.** Say what *you* are doing, not what the assessment team will do.
 
 **Abusive or genuinely distressed** → drop the script, be a person, say they can stop at any point.
 End the call if that's right. Flag the session for exclusion afterwards.

@@ -32,15 +32,16 @@ export default function ConditionCard({ humanAck }: { humanAck: boolean | null }
           <div className="mt-2">
             {humanAck ? (
               <>
-                Three acknowledging moments: early, in the middle when they make their case, and
-                once before the close. Name the specific thing, say the reaction is reasonable.
+At least two clear acknowledgements, placed where the moment is actually
+                there rather than at fixed points. Name the feeling and connect it to their
+                situation; say the reaction is reasonable.
                 <span className="text-muted"> (human-ack.md)</span>
               </>
             ) : (
               <>
-                Three procedural moments at the same points instead: what happens to a dispute, what
-                you are recording, the steps from here. Courteous, business-like, never cold - and
-                never name, reflect or rebuke what they are feeling.
+Respond to the same things, at the same points, at the same length - but to
+                the content, not the feeling. Courteous, business-like, never cold, and never name,
+                reflect or rebuke what they are feeling.
                 <span className="text-muted"> (human-noack.md)</span>
               </>
             )}

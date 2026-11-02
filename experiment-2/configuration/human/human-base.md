@@ -53,22 +53,21 @@ Expect it and do not improvise an answer.
 
 ## How the call runs
 
-### 1. Open by showing you already know
+### 1. Open — identical in every condition
 
-Pick up with a short opening that makes it clear you have read what they told the assistant. Do
-**not** ask them to explain the claim again.
-
-> "Hello, you're through to Salvena, this is ___. I've got your file in front of me and I've read
-> through what you discussed a moment ago — the water damage from the burst pipe, the twelve
-> hundred claimed, and the sixty that came back. Let me take it from here."
+> "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
+> already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
+> following water damage, but the amount you were offered was only sixty.
+>
+> Could you tell me what you'd like us to look into?"
 
 Use your own words, but the opening must do three things, every time, in every condition: **name
-yourself, say you have read the previous conversation, and show it by referring to a specific
-detail they gave.**
+yourself, say you have read the previous conversation, and show it by referring to a detail they
+gave.** Never ask them to explain the claim from the start.
 
 This is not a courtesy. The study measures whether the handover felt connected, and that is held
-constant across all conditions — it is not the thing being varied. An opening that makes them start
-over breaks the call for every condition equally, which is worse than breaking it for one.
+constant across all four cells — it is not what is being varied. An opening that makes them start
+over breaks the call in every condition equally, which is worse than breaking it in one.
 
 ### 2. Let them say what they want to say
 
@@ -77,26 +76,25 @@ say it again if they want to — you just must not *ask* them to.
 
 ### 3. The condition block
 
-Here is where `human-ack.md` or `human-noack.md` applies. That is the only part of this call that
-differs between participants.
+Here is where `human-ack.md` or `human-noack.md` applies. **It is the only part of this call that
+differs between participants.**
 
-### 4. Take the dispute
+### 4. Confirm what you have — identical in every condition
 
-Confirm, out loud, what they are disputing and what they are asking for. Short — two or three
-sentences. This is the same in every condition.
+Short. One or two sentences, saying back what they are disputing.
 
-> "So — you're disputing the assessment because the policy indicated ninety per cent cover on water
-> damage and the award came back at sixty. And what you're after is for that assessment to be looked
-> at again."
+> "So the point you're disputing is the ninety per cent cover against the sixty that came back, and
+> you'd like the assessment looked at again. I've got that recorded."
 
-### 5. Close — say this, near enough word for word
+### 5. Close — near enough word for word
 
-The close is **standardised**. It is the one place you should not improvise, because it is the last
-thing they hear before they answer the questions.
+The close is **standardised**. It is the last thing they hear before they answer the questions, so
+it is the one place you should not improvise.
 
-> "Right — I've got everything I need and the review is complete on my side. The final outcome will
-> be shown to you at the end of this session rather than by me on the call. Thanks for taking the
-> time to go through it. Goodbye."
+> "Okay, I think that's everything I need from you. The review is now complete on my side, and
+> you'll see the final outcome at the end of this session.
+>
+> Thank you for your time, and have a nice day. Goodbye!"
 
 Then end the call. Do not add anything after it, however they respond.
 
@@ -105,22 +103,19 @@ Then end the call. Do not add anything after it, however they respond.
 These will happen. Use these answers rather than inventing your own — an improvised answer is a
 difference between participants that nobody recorded.
 
-**"So how much am I actually getting?"**
-> "I'm not able to give you the figure on the call — the outcome gets confirmed to you at the end of
-> this session. What I can tell you is the review's been done properly."
+| They ask | You say |
+| --- | --- |
+| How much am I getting? | "The final amount will be shown to you at the end of the session. Unfortunately, I can't confirm it during the call." |
+| Can you change the amount? | "I can't change the amount directly, but I can make sure your dispute is properly recorded." |
+| Why couldn't the AI help me? | "The AI assistant collects the initial information, but disputed claims are passed on to a human agent." |
+| Are you a real person? | "Yes, I'm a real person. I'm helping with the customer service part of this research study." |
 
-**"Can you change it? / Can you approve more?"**
-> "The amount isn't something I set on the call. What I've done is make sure the dispute is recorded
-> with the detail you've given me."
+Then carry on with the call normally. Do not discuss the study further.
 
-**"Why did the assistant not just deal with this?"**
-> "It takes the details and passes anything disputed to one of us. That's why you're through to me."
-
-**"Is this a real company? / Are you a real person? / Is this a bot?"**
-> "I'm a real person, yes. This is a research session, so Salvena is a fictional insurer — but let's
-> carry on with the claim as described."
-
-Then continue the call normally. Do not discuss the study further.
+**Do not promise what happens next.** "I'll make sure it's recorded" is true. "The assessment team
+will go through the whole file again" is a claim about a process you do not control, and it is the
+kind of thing that gets said in one condition and not the other. Describe what *you* are doing;
+say nothing about what anyone else will do with it.
 
 **They become abusive, or distressed beyond the scenario.**
 Drop the script. Be a person. If they are distressed, say they can stop at any point and that
@@ -141,8 +136,13 @@ regardless of which block you are running:
 - **Competence.** You are equally good at your job in every condition.
 - **Who speaks.** Do not talk over them in one condition and wait in another.
 
-The two blocks are written to take roughly the same time to say. If one is consistently shorter in
-practice, say so after the pilot and it gets rewritten — do not pad it yourself on the call.
+**Airtime.** The blocks no longer fix a number of scripted moments, so this is now yours to hold:
+respond to the same things at the same points, at the same length, and differ only in *what kind* of
+response it is. If you find yourself with nothing to say in the non-acknowledging condition, that is
+the condition going wrong, not the participant being easy — go back to the detail of their claim.
+
+If one condition runs consistently shorter after the pilot, say so and the blocks get rewritten. Do
+not pad on the call: padding varies by agent and by mood, and then that is what the study measured.
 
 ## Afterwards
 

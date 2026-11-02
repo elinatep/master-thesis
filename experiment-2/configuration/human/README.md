@@ -21,9 +21,15 @@ A fully scripted call is controlled and sounds like it. A participant who notice
 reading stops treating it as a service call, and what gets measured afterwards is their reaction to
 a performance.
 
-So the blocks fix what must be fixed — **how many moments, where in the call, what each one has to
-achieve, and what is forbidden** — and leave the wording to the agent. The example lines are the
-shape of the thing, not lines to deliver.
+So the blocks fix what must be fixed — **what each condition has to achieve, roughly how often, and
+what is forbidden** — and leave the wording to the agent. The example lines are the shape of the
+thing, not lines to deliver.
+
+They used to fix three acknowledging moments at three named points in the call. That was dropped:
+a participant who opens with "I just want to know why I was offered sixty instead of a thousand and
+eighty" has given you nothing to acknowledge yet, and acknowledging it anyway is exactly what makes
+someone notice they are being handled. The floor is now **at least two acknowledgements, placed
+where the moment is there**.
 
 That puts weight on training. Expect to run the pilot, listen back, and rewrite.
 
@@ -32,13 +38,17 @@ That puts weight on training. Expect to run the pilot, listen back, and rewrite.
 The acknowledging agent will naturally also talk *more* and *warmer*. Left alone, the study
 manipulates three things and measures one.
 
-Both blocks therefore specify **three moments at the same points in the call**. The acknowledging
-one spends them on feelings; the other spends them on procedural detail. The call should come out
-the same length either way, with the agent talking for the same share of it.
+Both blocks therefore respond to **the same things, at the same points, at the same length** — the
+acknowledging one to the feeling, the other to the content. The call should come out the same
+length either way, with the agent talking for the same share of it.
 
-The pilot has to check this rather than assume it. If acknowledging calls run consistently longer,
-the blocks get rewritten — the agent must not pad on the call to fix it, because then the padding
-varies by agent and by mood.
+Dropping the fixed three moments moved that from the script onto the agent, which is the cost of
+sounding real. The non-acknowledging block carries the instruction that matters: if everything left
+to say would be acknowledgement, go back to the detail of the claim rather than going quiet.
+
+**This is now the pilot's first job**, not an assumption. If acknowledging calls run consistently
+longer, the blocks get rewritten — the agent must not pad on the call to fix it, because then the
+padding varies by agent and by mood.
 
 ## What is held constant and is not a factor
 
@@ -80,7 +90,11 @@ most calls and an improvised answer is a difference between participants that no
 - **The agent's name**, on the condition card. Same name every call, or varied? Same is one less
   moving part; varied is more realistic if several agents run sessions. The card currently tells
   them to give "the one on your condition card", which nothing yet fills in.
-- **How long the calls actually run**, and whether the two conditions match. The blocks are written
-  to take the same time; the pilot is where that gets checked, from `duration_min` in the session
-  log. If the acknowledging calls run consistently longer, the blocks get rewritten rather than the
-  agent padding on the call.
+- **How long the calls actually run**, and whether the two conditions match. With the fixed moments
+  gone, nothing in the script enforces this any more — only the instruction to respond to the same
+  things at the same length. Check it from `duration_min` in the session log over the pilot. If the
+  acknowledging calls run consistently longer, the blocks get rewritten rather than the agent
+  padding on the call.
+- **How many acknowledgements actually land**, per call, in the pilot recordings. Two is the stated
+  floor; whether a floor without a fixed structure is reliably met is the thing a semi-structured
+  block trades away, and it is worth knowing before 400 calls rather than after.
