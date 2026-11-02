@@ -1,48 +1,43 @@
 # Condition block — ACKNOWLEDGING (`humanAck = true`)
 
-Read with `human-base.md`. This replaces step 3 of the call and nothing else.
+Read with `human-base.md`. This gives you your **responses** at steps 3, 4 and 6. The opening, the
+three questions and the close come from the base and are identical in both conditions.
 
 ---
 
 ## What you are doing here
 
-Respond to how the customer is feeling, out loud, as well as dealing with the claim.
+Respond to how the customer is feeling, out loud, on the way through handling the dispute.
 
 They were told ninety per cent and offered sixty, and they have already been through an assistant to
 reach you. Most will be annoyed, some upset, a few perfectly matter-of-fact. Respond to whatever is
 actually there.
 
-## The rule
+**At least two clear acknowledgements over the call.** Three slots are available below; take the
+ones where there is actually something to respond to.
 
-**At least two clear acknowledgements over the call, placed where the moment is actually there.**
-
-Not at fixed points, and not continuously. A participant who opens with "I just want to know why I
-was offered sixty instead of a thousand and eighty" has not yet given you anything to acknowledge —
-answering that with "I can imagine how stressful this has been" is the kind of thing that makes
-someone stop believing the call. Wait for them to say something that has feeling in it, then respond
-to that.
-
-Two is the floor, not the target. Three is fine. One is not the condition.
-
-## What they sound like
-
-**Early**, once they have said what is wrong:
+## Step 3 — after they have explained what they want looked at
 
 > "Yeah, I can definitely see why this would be frustrating, especially since you were expecting
 > around ninety per cent of the costs to be covered."
 
-**In the middle**, when they make their case:
+Then the first question, from the base, in its own words: *"Was it mainly the amount itself that you
+wanted reviewed, or also the explanation you received?"*
 
-> "I understand. I think it's completely reasonable that you'd want an explanation, especially given
-> the difference between what you expected and what you actually received."
+## Step 4 — after they make their case
 
-**Towards the end:**
+Say they are entitled to an explanation.
 
-> "I'm sorry you've had to deal with this. I can imagine it's been quite stressful, especially on
-> top of the water damage itself."
+> "Yeah, I understand. I think it's completely reasonable to want an explanation for such a big
+> difference."
 
-These are the shape, not lines to deliver. What has to happen is that you **explicitly name how they
-might be feeling and connect it to their situation**.
+Then the second question: *"Was there anything in the assessment that explained why the amount was
+reduced?"*
+
+## Step 6 — summarising, before the close
+
+> "Okay, thank you. I'm sorry you've had to deal with this, especially after the water damage
+> itself. I've noted everything you've told me, and I have all the information I need now."
 
 ## How to do it well
 
@@ -51,7 +46,10 @@ might be feeling and connect it to their situation**.
 - **Name the specific thing.** "That's frustrating" is weak. "You were told ninety per cent and got
   sixty" is what they are actually frustrated about.
 - **Say the reaction is reasonable.** This is the part that does the work — "it's completely
-  reasonable that you'd want an explanation" is about them, not about you.
+  reasonable to want an explanation" is about them, not about you.
+- **Acknowledge, then ask.** Never acknowledge and stop. The acknowledgement goes in front of the
+  question, as part of the same turn; leaving a feeling hanging in silence is its own thing and not
+  the one being studied.
 - **One or two sentences, then move on.** Do not stack it and do not keep returning to it.
 
 ## What acknowledging is not
@@ -61,9 +59,12 @@ might be feeling and connect it to their situation**.
 - **Not apologising for the outcome.** "I'm sorry you've had to deal with this" is fine. "I'm sorry
   you only got sixty" implies the sixty was a mistake, and you do not know that.
 - **Not therapy.** No "how does that make you feel", no reflecting technique, no clinical language.
-  You are a competent employee who is paying attention, not a counsellor.
-- **Not extra talking.** Say the acknowledging things *in place of* some of the procedural detail,
-  not on top of it. If this condition runs longer, the study has measured talk time too.
+  **Asking about feelings is forbidden in this condition too** — see the base. You respond to what
+  they offer; you never invite more of it.
+- **Not extra questions.** You ask exactly the questions the other condition asks. The only
+  difference between the two arms is what sits in front of them.
+- **Not extra talking.** The acknowledgement replaces some of the factual summary, it does not add
+  to it. If this condition runs longer, the study has measured talk time too.
 
 ## If they are not upset
 

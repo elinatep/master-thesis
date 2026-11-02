@@ -31,6 +31,29 @@ eighty" has given you nothing to acknowledge yet, and acknowledging it anyway is
 someone notice they are being handled. The floor is now **at least two acknowledgements, placed
 where the moment is there**.
 
+## What the base owns, and why
+
+The base holds the opening, **the three questions**, and the close. The condition blocks hold
+nothing but the response that goes in front of each question.
+
+That split is the manipulation. Both agents genuinely handle a dispute: same questions, same
+information gathered, same procedural steps. The only thing that varies is whether the turn before
+each question responds to how they feel.
+
+It also removes the way this design fails quietly. A question worded one way in one arm and another
+way in the other is a second manipulation nobody recorded — and it arrives by a single word. "What
+concerned you about it" and "what you wanted reviewed" are the same question with an emotion word
+in one of them. With one copy of each question there is nothing to drift.
+
+**Asking about feelings is forbidden in both arms.** "How did that make you feel?" in the
+acknowledging condition only would mean manipulating acknowledgement *and* inviting emotional
+disclosure, and no analysis separates them afterwards. Respond to feelings in one arm; ask about
+them in neither.
+
+**Acknowledge, then ask.** An acknowledgement followed by silence is a different thing from an
+acknowledgement inside a turn that carries the call forward. The blocks put it in front of the
+question deliberately.
+
 That puts weight on training. Expect to run the pilot, listen back, and rewrite.
 
 ## The confound these are built against

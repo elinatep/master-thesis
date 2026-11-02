@@ -1,7 +1,7 @@
 # CALL CARD — ACKNOWLEDGING (`humanAck = true`)
 
-One screen, for during the call. The reasoning is in `human-base.md` + `human-ack.md`; read those
-before your first session. These are examples to speak around, not lines to read.
+One screen, for during the call. The reasoning is in `human-base.md` + `human-ack.md`; read those before
+your first session. The examples are to speak around, not lines to read.
 
 **Your name on this call: ______________** (the same one every session)
 
@@ -14,53 +14,62 @@ before your first session. These are examples to speak around, not lines to read
 **Never say the final reimbursement, or hint at it.** The survey shows it afterwards. Reveal it and
 this participant's data is gone.
 
+**The three questions are identical in both conditions.** Only your responses differ. Never add a
+question this condition would not ask — and never ask about feelings, in either arm.
+
 ---
 
-### 1. Open — the same in both conditions
+### 1. Open · SAME IN BOTH
 > "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
 > already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
-> following water damage, but the amount you were offered was only sixty.
+> following water damage, but you were only offered sixty.
 >
 > Could you tell me what you'd like us to look into?"
 
-Name yourself · say you've read the conversation · refer to a detail they gave. Never ask them to
-start again.
+### 2. Let them explain
+Don't interrupt.
 
-### 2. Let them talk
-Don't interrupt. Don't ask them to repeat — but let them if they want to.
-
-### 3. ACKNOWLEDGE — at least twice, where the moment is there
-
-**Early**, once they've said what's wrong:
+### 3. Respond — acknowledge
 > "Yeah, I can definitely see why this would be frustrating, especially since you were expecting
 > around ninety per cent of the costs to be covered."
 
-**In the middle**, when they make their case:
-> "I understand. I think it's completely reasonable that you'd want an explanation, especially given
-> the difference between what you expected and what you actually received."
+**Then ask · SAME IN BOTH**
+> "Was it mainly the amount itself that you wanted reviewed, or also the explanation you received?"
 
-**Towards the end:**
-> "I'm sorry you've had to deal with this. I can imagine it's been quite stressful, especially on
-> top of the water damage itself."
+### 4. Respond — acknowledge
+> "Yeah, I understand. I think it's completely reasonable to want an explanation for such a big
+> difference."
 
-Name the feeling and connect it to *their* situation. Say the reaction is reasonable. One or two
-sentences, then move on — **instead of** procedural detail, not on top of it.
+**Then ask · SAME IN BOTH**
+> "Was there anything in the assessment that explained why the amount was reduced?"
 
-Not at fixed points: wait until they've said something with feeling in it. Not agreeing · not
-apologising for the outcome · not therapy. If they're cheerful, don't manufacture a feeling —
-acknowledge the nuisance instead.
+Then listen. They may say no, or that only part of the damage was covered.
 
-### 4. Confirm what you have — the same in both conditions
-> "So the point you're disputing is the ninety per cent cover against the sixty that came back, and
-> you'd like the assessment looked at again. I've got that recorded."
+### 5. Ask · SAME IN BOTH
+> "Okay, thanks for explaining. Is there anything else about the claim that you'd like me to include
+> in the review?"
 
-### 5. Close — near enough word for word
+### 6. Summarise — acknowledge
+> "Okay, thank you. I'm sorry you've had to deal with this, especially after the water damage
+> itself. I've noted everything you've told me, and I have all the information I need now."
+
+### 7. Close · SAME IN BOTH — near enough word for word
 > "Okay, I think that's everything I need from you. The review is now complete on my side, and
 > you'll see the final outcome at the end of this session.
 >
 > Thank you for your time, and have a nice day. Goodbye!"
 
 End the call. Add nothing after it.
+
+**At least two acknowledgements across the call** — take the slots where there is actually something
+to respond to. Name the specific thing, say the reaction is reasonable, connect it to *their*
+situation.
+
+**Acknowledge, then ask — never acknowledge and stop.** The acknowledgement goes in front of the
+question, in the same turn.
+
+Not agreeing · not apologising for the outcome · not therapy · never asking about feelings. If
+they're cheerful, don't manufacture one — acknowledge the nuisance instead.
 
 ---
 

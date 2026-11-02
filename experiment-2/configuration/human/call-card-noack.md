@@ -1,7 +1,7 @@
 # CALL CARD — NOT ACKNOWLEDGING (`humanAck = false`)
 
-One screen, for during the call. The reasoning is in `human-base.md` + `human-noack.md`; read those
-before your first session. These are examples to speak around, not lines to read.
+One screen, for during the call. The reasoning is in `human-base.md` + `human-noack.md`; read those before
+your first session. The examples are to speak around, not lines to read.
 
 **Your name on this call: ______________** (the same one every session)
 
@@ -14,55 +14,62 @@ before your first session. These are examples to speak around, not lines to read
 **Never say the final reimbursement, or hint at it.** The survey shows it afterwards. Reveal it and
 this participant's data is gone.
 
+**The three questions are identical in both conditions.** Only your responses differ. Never add a
+question this condition would not ask — and never ask about feelings, in either arm.
+
 ---
 
-### 1. Open — the same in both conditions
+### 1. Open · SAME IN BOTH
 > "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
 > already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
-> following water damage, but the amount you were offered was only sixty.
+> following water damage, but you were only offered sixty.
 >
 > Could you tell me what you'd like us to look into?"
 
-Name yourself · say you've read the conversation · refer to a detail they gave. Never ask them to
-start again.
+### 2. Let them explain
+Don't interrupt.
 
-### 2. Let them talk
-Don't interrupt. Don't ask them to repeat — but let them if they want to.
+### 3. Respond — to the content
+> "Okay, so your policy indicated ninety per cent coverage, but the amount offered was
+> significantly lower."
 
-### 3. FACTUAL — respond to the same things, at the same length
+**Then ask · SAME IN BOTH**
+> "Was it mainly the amount itself that you wanted reviewed, or also the explanation you received?"
 
-**Early**, once they've said what's wrong:
-> "Okay, so I can see that your policy indicated ninety per cent coverage, but the amount you
-> received was significantly lower. I'll go through the details of your claim and make sure
-> everything is recorded correctly."
+### 4. Respond — to the content
+> "Okay, I'll make a note that you're disputing the difference between the expected coverage and
+> the amount offered."
 
-**In the middle**, when they make their case:
-> "Okay, thanks for explaining. I'll include that information in the case notes, so that it's taken
-> into account as part of the review."
+**Then ask · SAME IN BOTH**
+> "Was there anything in the assessment that explained why the amount was reduced?"
 
-**Towards the end:**
-> "Alright, I have all the information I need now. The details have been recorded, and there's
-> nothing else you need to provide at this stage."
+Then listen. They may say no, or that only part of the damage was covered.
 
-"Okay", "Right", "Thanks for explaining" are fine — use them, and ask real questions about the
-claim. **Business-like, not cold.**
+### 5. Ask · SAME IN BOTH
+> "Okay, thanks for explaining. Is there anything else about the claim that you'd like me to include
+> in the review?"
 
-When they express feeling, answer the *content*, never the feeling. Avoid: "I understand how you
-feel" · "that must be frustrating" · "I'm sorry you've had to deal with this" · "I can see why
-you'd be annoyed". Don't rebuke it either, and don't go quiet — if everything left to say would be
-acknowledgement, go back to the detail of the claim.
+### 6. Summarise — to the content
+> "Okay, thank you. I've noted everything you've told me, including the difference in coverage and
+> the explanation you received. I have all the information I need now."
 
-### 4. Confirm what you have — the same in both conditions
-> "So the point you're disputing is the ninety per cent cover against the sixty that came back, and
-> you'd like the assessment looked at again. I've got that recorded."
-
-### 5. Close — near enough word for word
+### 7. Close · SAME IN BOTH — near enough word for word
 > "Okay, I think that's everything I need from you. The review is now complete on my side, and
 > you'll see the final outcome at the end of this session.
 >
 > Thank you for your time, and have a nice day. Goodbye!"
 
 End the call. Add nothing after it.
+
+**Business-like, not cold.** "Okay", "Right", "Thanks for explaining" are fine — use them. Ask real
+questions about the claim. Silence is not the condition.
+
+When they express feeling, answer the *content* and carry on to the question. Avoid: "I understand
+how you feel" · "that must be frustrating" · "I'm sorry you've had to deal with this" · "I can see
+why you'd be annoyed". Don't rebuke it either.
+
+Same three questions as the other arm, so the same floor — but give responses of the same *length*,
+or the call ends sooner and length becomes part of the manipulation.
 
 ---
 

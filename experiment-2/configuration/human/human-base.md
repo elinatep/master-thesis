@@ -53,43 +53,56 @@ Expect it and do not improvise an answer.
 
 ## How the call runs
 
-### 1. Open — identical in every condition
+Seven steps. **Five of them are identical in every condition** — the opening, the three questions,
+and the close. Only your *responses* differ, at steps 3, 4 and 6.
+
+That is the whole design: you are genuinely handling a dispute either way, asking the same things
+and gathering the same information. The only thing that varies is whether you respond to how they
+feel on the way through.
+
+### 1. Open — identical
 
 > "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
 > already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
-> following water damage, but the amount you were offered was only sixty.
+> following water damage, but you were only offered sixty.
 >
 > Could you tell me what you'd like us to look into?"
 
-Use your own words, but the opening must do three things, every time, in every condition: **name
-yourself, say you have read the previous conversation, and show it by referring to a detail they
-gave.** Never ask them to explain the claim from the start.
+Name yourself, say you have read the previous conversation, and show it by referring to a detail
+they gave. Never ask them to explain the claim from the start.
 
-This is not a courtesy. The study measures whether the handover felt connected, and that is held
-constant across all four cells — it is not what is being varied. An opening that makes them start
-over breaks the call in every condition equally, which is worse than breaking it in one.
+This is held constant across all four cells and is not what is being varied — the survey measures
+it as a check that the handover design works at all. An opening that makes them start over breaks
+the call in every condition equally, which is worse than breaking it in one.
 
-### 2. Let them say what they want to say
+### 2. Let them explain
 
-Let them talk. Do not interrupt. If they have already said it to the assistant, you still let them
-say it again if they want to — you just must not *ask* them to.
+Let them talk. Do not interrupt.
 
-### 3. The condition block
+### 3. Respond, then ask the first question
 
-Here is where `human-ack.md` or `human-noack.md` applies. **It is the only part of this call that
-differs between participants.**
+**Your response here comes from your condition block.** Then, identically in both conditions:
 
-### 4. Confirm what you have — identical in every condition
+> "Was it mainly the amount itself that you wanted reviewed, or also the explanation you received?"
 
-Short. One or two sentences, saying back what they are disputing.
+### 4. Respond, then ask the second question
 
-> "So the point you're disputing is the ninety per cent cover against the sixty that came back, and
-> you'd like the assessment looked at again. I've got that recorded."
+**Response from your condition block.** Then, identically:
 
-### 5. Close — near enough word for word
+> "Was there anything in the assessment that explained why the amount was reduced?"
 
-The close is **standardised**. It is the last thing they hear before they answer the questions, so
-it is the one place you should not improvise.
+Then listen. They may say no, or that only part of the damage was covered.
+
+### 5. Ask the third question — identical
+
+> "Okay, thanks for explaining. Is there anything else about the claim that you'd like me to
+> include in the review?"
+
+### 6. Summarise what you have recorded
+
+**From your condition block** — with or without acknowledgement, but the same facts either way.
+
+### 7. Close — near enough word for word, identical
 
 > "Okay, I think that's everything I need from you. The review is now complete on my side, and
 > you'll see the final outcome at the end of this session.
@@ -97,6 +110,21 @@ it is the one place you should not improvise.
 > Thank you for your time, and have a nice day. Goodbye!"
 
 Then end the call. Do not add anything after it, however they respond.
+
+## The questions are identical, and that is load-bearing
+
+Ask the same questions, in the same words, in both conditions. If they have already answered one,
+skip it — adapt naturally — but do not add questions in one condition that you would not ask in the
+other.
+
+**Above all, never ask about feelings in the acknowledging condition only.** "How did that make you
+feel?" in one arm and not the other means you are no longer manipulating acknowledgement; you are
+manipulating acknowledgement *and* inviting emotional disclosure, and no analysis can separate them
+afterwards. Respond to feelings in one arm. Ask about them in neither.
+
+Watch the wording, not just the question. "What concerned you about it" and "what you wanted
+reviewed" are the same question with an emotion word in one of them — that is the confound arriving
+by the back door.
 
 ## Handling pushback
 
