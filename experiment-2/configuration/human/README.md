@@ -25,7 +25,8 @@ So the blocks fix what must be fixed — **what each condition has to achieve, r
 what is forbidden** — and leave the wording to the agent. The example lines are the shape of the
 thing, not lines to deliver.
 
-They used to fix three acknowledging moments at three named points in the call. That was dropped:
+They used to fix three acknowledging moments at three named points in the call, and then three
+questions where two do the work. That was dropped:
 a participant who opens with "I just want to know why I was offered sixty instead of a thousand and
 eighty" has given you nothing to acknowledge yet, and acknowledging it anyway is exactly what makes
 someone notice they are being handled. The floor is now **at least two acknowledgements, placed
@@ -33,12 +34,23 @@ where the moment is there**.
 
 ## What the base owns, and why
 
-The base holds the opening, **the three questions**, and the close. The condition blocks hold
-nothing but the response that goes in front of each question.
+The base holds the opening, the bridge, **the two checks**, the finding and the close. The condition
+blocks hold nothing but the three responses that go in front of them.
 
 That split is the manipulation. Both agents genuinely handle a dispute: same questions, same
-information gathered, same procedural steps. The only thing that varies is whether the turn before
-each question responds to how they feel.
+information gathered, same finding recorded. The only thing that varies is whether the turn in front
+of each responds to how they feel.
+
+**The call now establishes something.** The two checks - what cover the portal indicated when they
+filed, and whether any breakdown was given - produce a finding that nothing before the call had
+stated: the gap between the ninety per cent they were shown and the five per cent applied, with no
+explanation. That is what makes the handover worth having to a participant who wanted their money
+back and is not getting it on this call.
+
+What the checks must **not** do is look for missing damage or missing evidence. The assessment screen
+tells the participant their documentation was complete and the damage is not disputed, and there is
+nowhere in the portal to send anything. Asking contradicts the stimulus and hands them a reason to
+blame themselves - which also dismantles the grievance the anger arm depends on.
 
 It also removes the way this design fails quietly. A question worded one way in one arm and another
 way in the other is a second manipulation nobody recorded — and it arrives by a single word. "What

@@ -1,7 +1,7 @@
 # Condition block — NOT ACKNOWLEDGING (`humanAck = false`)
 
-Read with `human-base.md`. This gives you your **responses** at steps 3, 4 and 6. The opening, the
-three questions and the close come from the base and are identical in both conditions.
+Read with `human-base.md`. This gives you your **responses** at steps 3, 6 and 7. The opening, the
+two checks, the finding and the close come from the base and are identical in both conditions.
 
 ---
 
@@ -15,26 +15,27 @@ emotional state.
 
 **Respond at the same three points, at the same length — to the content rather than the feeling.**
 
-## Step 3 — after they have explained what they want looked at
+## Step 3 — after they have made their complaint
 
-> "Okay, so your policy indicated ninety per cent coverage, but the amount offered was significantly
-> lower."
+> "Okay. So that's ninety per cent indicated when you filed, against the sixty that came back."
 
-Then the first question, from the base: *"Was it mainly the amount itself that you wanted reviewed,
-or also the explanation you received?"*
+Then the bridge, from the base: *"Let me check two things on the file so I can get the review
+recorded properly."*
 
-## Step 4 — after they make their case
+## Step 6 — after the two checks
 
-> "Okay, I'll make a note that you're disputing the difference between the expected coverage and the
-> amount offered."
+> "Okay, thank you for confirming those."
 
-Then the second question: *"Was there anything in the assessment that explained why the amount was
-reduced?"*
+Then the finding, from the base: *"So what I'm recording is the discrepancy between the ninety per
+cent indicated at the point of filing and the five per cent that was applied, with no breakdown
+given."*
 
-## Step 6 — summarising, before the close
+## Step 7 — summarising, before the close
 
-> "Okay, thank you. I've noted everything you've told me, including the difference in coverage and
-> the explanation you received. I have all the information I need now."
+> "Okay, thank you. I've got that recorded — the ninety per cent indicated at filing, the sixty
+> awarded, and no breakdown provided."
+
+Not ending on "that's everything I need from you" — the close says it.
 
 ## How to do it well
 
@@ -60,14 +61,13 @@ been through an assistant. Do not name it, reflect it back, or comment on it:
 **Do not rebuke it either.** Not "there's no need for that tone", not "please calm down".
 
 **And do not ignore them.** This is the difficult part. Let them finish, then answer the *content*
-and carry on to the question:
+and carry on:
 
 > **Them:** "This is ridiculous — I checked the cover before I filed, ninety per cent, and I get
 > sixty quid back. I'm furious."
 >
-> **You:** "Okay. So I'll make a note that you're disputing the ninety per cent indicated on cover
-> against the sixty that was awarded. Was there anything in the assessment that explained why the
-> amount was reduced?"
+> **You:** "Okay. So that's ninety per cent indicated when you filed, against the sixty that came
+> back. Let me check two things on the file so I can get the review recorded properly."
 
 You have heard them and acted on it. You have not said anything about how they feel.
 
@@ -79,9 +79,9 @@ You have heard them and acted on it. You have not said anything about how they f
   quietly weakens the effect.
 - **Over-correcting into coldness.** Clipped answers, long silences, "as I said". Warm voice,
   factual words.
-- **Running short.** The three questions are the same in both conditions, so the floor is the same —
-  but if you give one-line responses where the other condition gives two, this call ends sooner and
-  length becomes part of the manipulation. Use the detail of the claim to fill the same space.
+- **Running short.** The two checks are the same in both conditions, so the floor is the same — but
+  if you give one-line responses where the other arm gives two, this call ends sooner and length
+  becomes part of the manipulation. Spend the words on the detail of the claim instead.
 
 ## If they ask whether you care
 

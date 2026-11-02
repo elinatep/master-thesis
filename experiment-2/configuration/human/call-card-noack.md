@@ -14,46 +14,48 @@ your first session. The examples are to speak around, not lines to read.
 **Never say the final reimbursement, or hint at it.** The survey shows it afterwards. Reveal it and
 this participant's data is gone.
 
-**The three questions are identical in both conditions.** Only your responses differ. Never add a
-question this condition would not ask — and never ask about feelings, in either arm.
+**The two checks and the finding are identical in both conditions.** Only your responses differ.
+Never add a question this condition would not ask — and never ask about feelings, in either arm.
 
 ---
 
 ### 1. Open · SAME IN BOTH
-> "Hi, my name is ___. I've just read through your conversation with our AI assistant, so I'm
-> already familiar with your case. I can see that you submitted a claim for twelve hundred pounds
-> following water damage, but you were only offered sixty.
->
-> Could you tell me what you'd like us to look into?"
+> "Hi, this is ___ from Salvena. I've received your case from our AI assistant and I've had a look
+> at your claim. I understand you'd like to dispute the amount you've been offered — is that right?"
 
 ### 2. Let them explain
-Don't interrupt.
+They say yes, then make their complaint. Don't interrupt.
 
 ### 3. Respond — to the content
-> "Okay, so your policy indicated ninety per cent coverage, but the amount offered was
-> significantly lower."
+> "Okay. So that's ninety per cent indicated when you filed, against the sixty that came back."
 
-**Then ask · SAME IN BOTH**
-> "Was it mainly the amount itself that you wanted reviewed, or also the explanation you received?"
+**Then, SAME IN BOTH**
+> "Let me check two things on the file so I can get the review recorded properly."
 
-### 4. Respond — to the content
-> "Okay, I'll make a note that you're disputing the difference between the expected coverage and
-> the amount offered."
+### 4. First check · SAME IN BOTH
+> "When you filed the claim, what did the portal indicate your cover would be?"
 
-**Then ask · SAME IN BOTH**
-> "Was there anything in the assessment that explained why the amount was reduced?"
+They'll say 90% — they saw it on the form.
 
-Then listen. They may say no, or that only part of the damage was covered.
+### 5. Second check · SAME IN BOTH
+> "And did the assessment give you any breakdown of how it arrived at sixty?"
 
-### 5. Ask · SAME IN BOTH
-> "Okay, thanks for explaining. Is there anything else about the claim that you'd like me to include
-> in the review?"
+They'll say no. That's the **correct** answer, and recording it is the point.
 
-### 6. Summarise — to the content
-> "Okay, thank you. I've noted everything you've told me, including the difference in coverage and
-> the explanation you received. I have all the information I need now."
+### 6. Respond — to the content
+> "Okay, thank you for confirming those."
 
-### 7. Close · SAME IN BOTH — near enough word for word
+**Then the finding, SAME IN BOTH**
+> "So what I'm recording is the discrepancy between the ninety per cent indicated at the point of
+> filing and the five per cent that was applied, with no breakdown given."
+
+### 7. Summarise — to the content
+> "Okay, thank you. I've got that recorded — the ninety per cent indicated at filing, the sixty
+> awarded, and no breakdown provided."
+
+Don't end on "that's everything I need from you" — the close says it.
+
+### 8. Close · SAME IN BOTH — near enough word for word
 > "Okay, I think that's everything I need from you. The review is now complete on my side, and
 > you'll see the final outcome at the end of this session.
 >
@@ -61,15 +63,15 @@ Then listen. They may say no, or that only part of the damage was covered.
 
 End the call. Add nothing after it.
 
-**Business-like, not cold.** "Okay", "Right", "Thanks for explaining" are fine — use them. Ask real
-questions about the claim. Silence is not the condition.
+**Business-like, not cold.** "Okay", "Right", "Thanks for explaining" are fine — use them. Silence is
+not the condition.
 
-When they express feeling, answer the *content* and carry on to the question. Avoid: "I understand
-how you feel" · "that must be frustrating" · "I'm sorry you've had to deal with this" · "I can see
-why you'd be annoyed". Don't rebuke it either.
+When they express feeling, answer the *content* and carry on. Avoid: "I understand how you feel" ·
+"that must be frustrating" · "I'm sorry you've had to deal with this" · "I can see why you'd be
+annoyed". Don't rebuke it either.
 
-Same three questions as the other arm, so the same floor — but give responses of the same *length*,
-or the call ends sooner and length becomes part of the manipulation.
+Same two checks as the other arm, so the same floor — but give responses of the same *length*, or
+the call ends sooner and length becomes part of the manipulation.
 
 ---
 
@@ -82,7 +84,15 @@ or the call ends sooner and length becomes part of the manipulation.
 | Why couldn't the AI help me? | "The AI assistant collects the initial information, but disputed claims are passed on to a human agent." |
 | Are you a real person? | "Yes, I'm a real person. I'm helping with the customer service part of this research study." |
 
-**Never promise what happens next.** Say what *you* are doing, not what the assessment team will do.
+### Never
+
+- Say or hint at the final reimbursement.
+- Promise the amount will change, or that the review will find something.
+- **Ask for photos, invoices or repair estimates**, or suggest damage was left out — the assessment
+  told them their documentation was complete and the damage is not disputed. There is nowhere to
+  send evidence anyway.
+- Ask about feelings, in either condition.
+- Say what the assessment team will do. Only what *you* are doing.
 
 **Abusive or genuinely distressed** → drop the script, be a person, say they can stop at any point.
 End the call if that's right. Flag the session for exclusion afterwards.

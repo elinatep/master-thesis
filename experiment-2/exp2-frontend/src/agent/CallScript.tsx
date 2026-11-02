@@ -7,11 +7,11 @@ import { Badge, Card } from 'react-bootstrap'
  * call - and the thing that gets dropped when you are mid-sentence with an upset participant is
  * whichever one is not in front of you.
  *
- * The structure is the design: the opening, the three questions and the close are one source,
- * rendered for both conditions and marked as shared, and only the three responses branch. Keeping
- * the questions in one place is not tidiness - a question worded differently between the arms is a
- * second manipulation nobody recorded, and an emotion word in one of them ("what concerned you"
- * against "what you wanted reviewed") is exactly how that arrives.
+ * The structure is the design: the opening, the bridge, the two checks, the finding and the close
+ * are one source, rendered for both conditions and marked as shared, and only the three responses
+ * branch. Keeping the shared lines in one place is not tidiness - a question worded differently
+ * between the arms is a second manipulation nobody recorded, and an emotion word in one of them
+ * ("what concerned you" against "what you wanted reviewed") is exactly how that arrives.
  */
 export default function CallScript({ humanAck }: { humanAck: boolean }) {
   // The only thing that differs between conditions: what you say before each question.
@@ -19,20 +19,19 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
     ? {
         kind: 'Acknowledge',
         first:
-          "Yeah, I can definitely see why this would be frustrating, especially since you were expecting around ninety per cent of the costs to be covered.",
+          "Yeah, I can definitely see why that's frustrating. It's a big difference, especially when you've already had the water damage to deal with.",
         second:
-          "Yeah, I understand. I think it's completely reasonable to want an explanation for such a big difference.",
+          "I understand. I think it's completely reasonable to want an explanation for a difference that size.",
         summary:
-          "Okay, thank you. I'm sorry you've had to deal with this, especially after the water damage itself. I've noted everything you've told me, and I have all the information I need now.",
+          "Okay, thank you. I'm sorry you've had to chase this, especially after the water damage itself. I've got it all recorded.",
       }
     : {
         kind: 'Respond to the content',
         first:
-          'Okay, so your policy indicated ninety per cent coverage, but the amount offered was significantly lower.',
-        second:
-          "Okay, I'll make a note that you're disputing the difference between the expected coverage and the amount offered.",
+          "Okay. So that's ninety per cent indicated when you filed, against the sixty that came back.",
+        second: 'Okay, thank you for confirming those.',
         summary:
-          "Okay, thank you. I've noted everything you've told me, including the difference in coverage and the explanation you received. I have all the information I need now.",
+          "Okay, thank you. I've got that recorded — the ninety per cent indicated at filing, the sixty awarded, and no breakdown provided.",
       }
 
   return (
@@ -40,53 +39,68 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
       <Card.Body>
         <div className="text-uppercase small text-muted mb-2">How the call runs</div>
         <p className="small">
-          The opening, the three questions and the close are <Same /> — ask them in the same words
-          whichever condition you are running, skip one only if they have already answered it, and
-          never add a question this arm would not ask. <strong>Never ask about feelings</strong>,
-          in either arm: that is a second manipulation, not this one.
+          The opening, the two checks, the finding and the close are <Same /> — say them the same
+          way whichever condition you are running, and never add a question this arm would not ask.{' '}
+          <strong>Never ask about feelings</strong>, in either arm: that is a second manipulation,
+          not this one. <strong>Never ask for photos, invoices or repair estimates</strong>, or
+          suggest damage was left out — the assessment told them their documentation was complete
+          and the damage is not disputed.
         </p>
 
         <Step n={1} title="Open" shared>
           <Line>
-            Hi, my name is ___. I've just read through your conversation with our AI assistant, so
-            I'm already familiar with your case. I can see that you submitted a claim for twelve
-            hundred pounds following water damage, but you were only offered sixty. Could you tell
-            me what you'd like us to look into?
+            Hi, this is ___ from Salvena. I've received your case from our AI assistant and I've had
+            a look at your claim. I understand you'd like to dispute the amount you've been offered
+            — is that right?
           </Line>
         </Step>
 
         <Step n={2} title="Let them explain">
-          <p className="mb-0">Do not interrupt.</p>
+          <p className="mb-0">They say yes, then make their complaint. Do not interrupt.</p>
         </Step>
 
         <Step n={3} title={`Respond — ${responses.kind}`}>
           <Line>{responses.first}</Line>
-          <Ask>
-            Was it mainly the amount itself that you wanted reviewed, or also the explanation you
-            received?
+          <Ask label="Then">
+            Let me check two things on the file so I can get the review recorded properly.
           </Ask>
         </Step>
 
-        <Step n={4} title={`Respond — ${responses.kind}`}>
-          <Line>{responses.second}</Line>
-          <Ask>Was there anything in the assessment that explained why the amount was reduced?</Ask>
+        <Step n={4} title="First check" shared>
+          <Line>When you filed the claim, what did the portal indicate your cover would be?</Line>
           <p className="mb-0 mt-1 small text-muted">
-            Then listen. They may say no, or that only part of the damage was covered.
+            They will say ninety per cent — they saw it on the form.
           </p>
         </Step>
 
-        <Step n={5} title="Ask" shared>
-          <Line>
-            Okay, thanks for explaining. Is there anything else about the claim that you'd like me
-            to include in the review?
-          </Line>
+        <Step n={5} title="Second check" shared>
+          <Line>And did the assessment give you any breakdown of how it arrived at sixty?</Line>
+          <p className="mb-0 mt-1 small text-muted">
+            They will say no. That is the <strong>correct</strong> answer — the assessment screen
+            says no further explanation is provided — and recording it is the point of asking.
+          </p>
         </Step>
 
-        <Step n={6} title={`Summarise — ${responses.kind}`}>
+        <Step n={6} title={`Respond — ${responses.kind}`}>
+          <Line>{responses.second}</Line>
+          <Ask label="Then the finding">
+            So what I'm recording is the discrepancy between the ninety per cent indicated at the
+            point of filing and the five per cent that was applied, with no breakdown given.
+          </Ask>
+          <p className="mb-0 mt-1 small text-muted">
+            This is the one thing the call produces that nothing before it did. The assistant took
+            the claim; you established what is actually wrong with the assessment.
+          </p>
+        </Step>
+
+        <Step n={7} title={`Summarise — ${responses.kind}`}>
           <Line>{responses.summary}</Line>
+          <p className="mb-0 mt-1 small text-muted">
+            Do not end on "that's everything I need from you" — the close says it.
+          </p>
         </Step>
 
-        <Step n={7} title="Close — near enough word for word" shared>
+        <Step n={8} title="Close — near enough word for word" shared>
           <Line>
             Okay, I think that's everything I need from you. The review is now complete on my side,
             and you'll see the final outcome at the end of this session. Thank you for your time,
@@ -97,12 +111,13 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
 
         {humanAck ? (
           <p className="small mb-0">
-            <strong>At least two acknowledgements across the call</strong> — take the slots where
-            there is actually something to respond to. Name the specific thing, say the reaction is
-            reasonable. <strong>Acknowledge, then ask — never acknowledge and stop:</strong> it goes
-            in front of the question, in the same turn. Not agreeing, not apologising for the
-            outcome, not therapy. If they are cheerful, do not manufacture a feeling — acknowledge
-            the nuisance instead.
+            <strong>Three slots — steps 3, 6 and 7 — and the floor is two.</strong> Take the ones
+            where there is actually something to respond to. Name the specific thing, say the
+            reaction is reasonable.{' '}
+            <strong>Acknowledge, then carry on — never acknowledge and stop:</strong> it goes in
+            front of the bridge or the finding, in the same turn. Not agreeing, not apologising for
+            the outcome, not therapy. If they are cheerful, do not manufacture a feeling —
+            acknowledge the nuisance instead.
           </p>
         ) : (
           <p className="small mb-0">
@@ -110,7 +125,7 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
             fine — use them, and ask real questions about the claim. Silence is not the condition.
             When they express feeling, answer the content and carry on to the question: no "I
             understand how you feel", no "that must be frustrating", no "I'm sorry you've had to
-            deal with this". Do not rebuke it either. Same questions as the other arm, so the same
+            chase this". Do not rebuke it either. Same two checks as the other arm, so the same
             floor — but give responses of the same <em>length</em>, or the call ends sooner and
             length becomes part of the manipulation.
           </p>
@@ -192,12 +207,12 @@ function Line({ children }: { children: React.ReactNode }) {
   )
 }
 
-/** A question, which is shared by construction - there is one copy of each. */
-function Ask({ children }: { children: React.ReactNode }) {
+/** A shared line that follows a condition response, in the same turn: the bridge, or the finding. */
+function Ask({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="mt-2">
       <div className="small fw-semibold">
-        Then ask <Same />
+        {label} <Same />
       </div>
       <Line>{children}</Line>
     </div>
