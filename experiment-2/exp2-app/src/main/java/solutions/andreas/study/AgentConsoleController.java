@@ -77,6 +77,7 @@ public class AgentConsoleController {
                             h.getSessionId(),
                             s == null ? null : s.getCondition().humanAck(),
                             h.getSummary(),
+                            transcriptFor(h),
                             h.getRequestedAt(),
                             waitedSeconds(h));
                 })
@@ -161,12 +162,15 @@ public class AgentConsoleController {
         return briefFor(h);
     }
 
-    private Brief briefFor(AgentHandover h) {
-        StudySession session = sessions.findById(h.getSessionId()).orElse(null);
-        List<TranscriptLine> lines = transcripts.findBySessionIdOrderByClientSeqAsc(h.getSessionId())
-                .stream()
+    private List<TranscriptLine> transcriptFor(AgentHandover h) {
+        return transcripts.findBySessionIdOrderByClientSeqAsc(h.getSessionId()).stream()
                 .map(t -> new TranscriptLine(t.getRole(), t.getText(), t.getClientTs()))
                 .toList();
+    }
+
+    private Brief briefFor(AgentHandover h) {
+        StudySession session = sessions.findById(h.getSessionId()).orElse(null);
+        List<TranscriptLine> lines = transcriptFor(h);
         return new Brief(
                 h.getId(),
                 h.getParticipantId(),
@@ -195,8 +199,18 @@ public class AgentConsoleController {
 
     // ---- payloads ------------------------------------------------------------
 
+    /**
+     * Everything needed to read the case, not just to identify it.
+     *
+     * <p>The transcript is here, on the queue, rather than only on the brief, because the agent
+     * reads before they pick up and the participant is already waiting while they do. The call is
+     * promised to them by the assistant and then nothing happens until the agent has read; moving
+     * the reading earlier - to the moment the handover lands, while the assistant is still saying
+     * goodbye - is the only part of that wait the platform can actually remove.
+     */
     public record QueueEntry(Long handoverId, String participantId, Long sessionId, Boolean humanAck,
-            Map<String, Object> summary, OffsetDateTime requestedAt, long waitedSeconds) {
+            Map<String, Object> summary, List<TranscriptLine> transcript, OffsetDateTime requestedAt,
+            long waitedSeconds) {
     }
 
     /**

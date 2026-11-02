@@ -79,7 +79,8 @@ export default function AgentConsole() {
       <h1 className="h4 mb-1">Customer service — waiting calls</h1>
       <p className="text-muted">
         Read <code>configuration/human/human-base.md</code> and your condition block before your
-        first session. The instruction for each call is on the card once you pick it up.
+        first session. Read the case below <em>before</em> you pick up — they are already on hold,
+        hearing nothing, from the moment the assistant transfers them.
       </p>
 
       {error && <Alert variant="danger">{error}</Alert>}
@@ -91,28 +92,63 @@ export default function AgentConsole() {
           Nobody is waiting. This updates on its own.
         </Card>
       ) : (
-        <Table hover>
-          <thead>
-            <tr>
-              <th>Participant</th>
-              <th>Waiting</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {queue.map((entry) => (
-              <tr key={entry.handoverId}>
-                <td className="font-monospace">{entry.participantId}</td>
-                <td>{formatWait(entry.waitedSeconds)}</td>
-                <td className="text-end">
-                  <Button size="sm" disabled={busy} onClick={() => void take(entry.handoverId)}>
-                    Pick up
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+        queue.map((entry) => (
+          <Card key={entry.handoverId} className="mb-3">
+            <Card.Body>
+              <div className="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <div className="font-monospace">{entry.participantId}</div>
+                  <div className="text-muted small">waiting {formatWait(entry.waitedSeconds)}</div>
+                </div>
+                <Button disabled={busy} onClick={() => void take(entry.handoverId)}>
+                  Pick up
+                </Button>
+              </div>
+
+              {/*
+                The instruction and the case, before the call is claimed rather than after.
+                Reading starts the moment the handover lands - while the assistant is still saying
+                goodbye - instead of after Pick up, by which time they have been on hold for it.
+              */}
+              {entry.humanAck !== null && (
+                <div className={`fw-bold ${entry.humanAck ? 'text-success' : 'text-secondary'}`}>
+                  {entry.humanAck ? 'ACKNOWLEDGE how they feel' : 'DO NOT acknowledge how they feel'}
+                </div>
+              )}
+
+              {entry.summary && Object.keys(entry.summary).length > 0 && (
+                <Table size="sm" className="mt-2 mb-0">
+                  <tbody>
+                    {Object.entries(entry.summary).map(([key, value]) => (
+                      <tr key={key}>
+                        <td className="text-muted" style={{ width: '12rem' }}>
+                          {key.replace(/_/g, ' ')}
+                        </td>
+                        <td>{typeof value === 'string' ? value : JSON.stringify(value)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+
+              {entry.transcript.length > 0 && (
+                <details className="mt-2" open>
+                  <summary className="small fw-semibold" style={{ cursor: 'pointer' }}>
+                    What they told the assistant
+                  </summary>
+                  <div className="mt-2 small" style={{ maxHeight: '14rem', overflowY: 'auto' }}>
+                    {entry.transcript.map((line, i) => (
+                      <div key={i} className="mb-1">
+                        <span className="text-muted">{line.role === 'USER' ? 'Them' : 'Assistant'}: </span>
+                        {line.text}
+                      </div>
+                    ))}
+                  </div>
+                </details>
+              )}
+            </Card.Body>
+          </Card>
+        ))
       )}
     </Container>
   )

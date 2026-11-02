@@ -12,6 +12,11 @@ export interface QueueEntry {
   /** The agent's own instruction. There is deliberately no AI factor here - see Brief. */
   humanAck: boolean | null
   summary: Record<string, unknown> | null
+  /**
+   * What they told the assistant. On the queue entry, not only on the brief: the agent reads
+   * before picking up, and the participant is already on hold while they do.
+   */
+  transcript: TranscriptLine[]
   requestedAt: string
   waitedSeconds: number
 }
@@ -31,7 +36,6 @@ export interface TranscriptLine {
  * The server asserts the absence in `AgentConsoleTest`; do not add it here either.
  */
 export interface Brief extends QueueEntry {
-  transcript: TranscriptLine[]
   pickedUpAt: string | null
   agentId: string | null
   endedAt: string | null

@@ -55,10 +55,22 @@ export default function HumanCallPanel() {
         {(status === 'connecting' || status === 'waiting') && (
           <div className="d-flex align-items-center gap-3 mt-3">
             <Spinner animation="border" size="sm" />
+            {/*
+              Says what the pause IS. The assistant has just promised a colleague and then gone
+              quiet, and unexplained silence after a promise reads as having been dropped - in a
+              study about whether people feel heard, that would be a confound the implementation
+              introduced. Naming the wait as a person reading their case makes it legible, and
+              says the thing nothing else on this page says: that it is a person.
+
+              Factual, not reassuring. "Sorry for the wait" would be the service acknowledging
+              them, which is the manipulation, in the one place it must be identical in all four
+              cells.
+            */}
             <span>
               {status === 'connecting'
                 ? 'Connecting you…'
-                : 'Putting you through to a colleague. Please stay on the line.'}
+                : 'A customer service employee is reading your case and will be with you shortly. '
+                  + 'Please stay on the line.'}
             </span>
           </div>
         )}
