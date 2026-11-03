@@ -3,6 +3,7 @@ package solutions.andreas.study.voice;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -58,13 +59,15 @@ class TranscribeConfigTest {
     }
 
     /**
-     * Participant-side transcription is off in the shipped configuration, and asking for a token
-     * anyway is refused by the server - not merely skipped by a well-behaved page.
+     * With both sides transcribed, the participant endpoint is still not open: a caller with no
+     * study session and no handover gets nothing. It sits on a public host, and an open minting
+     * endpoint is somebody else's transcription bill.
      */
     @Test
-    void theParticipantSideIsRefusedWhileItIsSwitchedOff() throws Exception {
+    void theParticipantSideStillNeedsASessionAndAnOpenHandover() throws Exception {
         mvc.perform(post("/api/call/transcribe/token"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().is4xxClientError())
+                .andExpect(status().is(not(403)));
     }
 
     /** The agent's own minting endpoint is behind the agent credential with the rest of console. */

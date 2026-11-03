@@ -67,6 +67,18 @@ Both legs must land in **one** transcript keyed to the same session, tagged by s
   stating explicitly in the analysis plan; the condition card should at least keep the
   agent's own behaviour tied to their assigned cell regardless of what they read.
 
+## Settled since
+
+- **Transcript continuity.** Both legs land in one transcript keyed to the same session, tagged by
+  speaker. The AI leg transcribes itself; the human leg is two browsers on an ACS line with nothing
+  listening, so each side now transcribes its own microphone through `gpt-live-transcribe` and
+  posts the finished text as `USER` / `HUMAN_AGENT`. No audio is stored by anyone - the ethics
+  approval permits transcription and forbids recording, which is exactly the line this draws.
+  Configured in `configuration/voice/transcription.json`, read per request.
+
+  This is also what `acknowledgement_slipped` was asking the agent to remember. It is now
+  checkable against what was actually said.
+
 ## Still open
 
 - Where the emotion check (`Emotion.check`, Qualtrics block 10) sits relative to the

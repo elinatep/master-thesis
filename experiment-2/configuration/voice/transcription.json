@@ -12,13 +12,13 @@
     "model: the Azure DEPLOYMENT name, which is whatever it was called when deployed - not",
     "necessarily the model name. Empty disables transcription entirely and the call runs as before.",
     "",
-    "participantSide: false transcribes only the agent, which is the agent's own voice and needs no",
-    "further ethics consideration. true also transcribes the participant on the human leg -",
-    "defensible, since their audio already reaches the same Azure resource on the AI leg, but check",
-    "how the ethics application words it before turning it on."
+    "participantSide: both sides are transcribed. The ethics approval permits transcription and",
+    "forbids RECORDING, which is the distinction this implements: the samples go to the recogniser",
+    "and the finished text comes back, and no audio is written down anywhere by either side. Set it",
+    "to false to transcribe only the agent."
   ],
   "model": "gpt-live-transcribe",
-  "participantSide": false,
+  "participantSide": true,
   "languages": ["en"],
   "session": {
     "type": "transcription",
