@@ -167,7 +167,24 @@ export function useAgentCall({ tokenUrl, displayName, tokenHeaders, autoJoin = f
         const n = call.remoteParticipants.length
         if (n > 0) othersEverRef.current = true
         setOthersPresent(n)
-        if (call.state === 'Connected') setStatus(n > 0 ? 'live' : 'waiting')
+        if (call.state !== 'Connected') return
+        if (n > 0) {
+          setStatus('live')
+          return
+        }
+        if (othersEverRef.current) {
+          // They were here and now they are not: the agent hung up. Hanging up does not
+          // disconnect the other side of a group call - the participant stays in it, alone - so
+          // without this the count falling to zero reads as 'waiting' and they are shown the hold
+          // screen again, after the call, and have to leave it themselves to reach the questions.
+          //
+          // Leave rather than only relabel, so the microphone is released. Deliberately NOT
+          // through hangUp: this side did not end it, and endedBy has to keep saying so.
+          setStatus('ended')
+          void leave()
+          return
+        }
+        setStatus('waiting')
       }
       const onMuted = () => setMuted(call.isMuted)
 

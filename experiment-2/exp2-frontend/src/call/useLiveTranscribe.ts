@@ -73,7 +73,14 @@ export function useLiveTranscribe({ active, tokenUrl, tokenHeaders, onLine }: Op
           // 503 is "not configured" and 403 is "switched off for this side". Neither is a fault,
           // and neither should fill the log with errors on every call.
           if (res.status !== 503 && res.status !== 403) {
-            logEvent('TRANSCRIBE_ERROR', { stage: 'token', status: res.status })
+            // The body, not just the status. A status alone says something went wrong somewhere
+            // between here and the transcription service, which is the one thing already known.
+            const detail = await res.text().catch(() => '')
+            logEvent('TRANSCRIBE_ERROR', {
+              stage: 'token',
+              status: res.status,
+              detail: detail.slice(0, 600),
+            })
           }
           return
         }

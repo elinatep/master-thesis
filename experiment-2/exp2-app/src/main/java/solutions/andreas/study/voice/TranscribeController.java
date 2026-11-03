@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 import solutions.andreas.study.call.HandoverGuard;
 import tools.jackson.databind.ObjectMapper;
@@ -149,14 +150,28 @@ public class TranscribeController {
         audio.put("input", input);
         session.put("audio", audio);
 
-        String result = openai.post()
-                .uri("/realtime/client_secrets")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of("session", session))
-                .retrieve()
-                .body(String.class);
-        log.debug("Transcription token minted for the {} side (model={})", who, model);
-        return result;
+        try {
+            String result = openai.post()
+                    .uri("/realtime/client_secrets")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Map.of("session", session))
+                    .retrieve()
+                    .body(String.class);
+            log.debug("Transcription token minted for the {} side (model={})", who, model);
+            return result;
+        } catch (RestClientResponseException e) {
+            // Pass the upstream complaint through instead of turning it into a bare 500. The
+            // session shape here was written from documentation rather than against a live
+            // endpoint, so what the service objects to IS the information needed to fix it - and
+            // a 500 with the reason only in a container log nobody is reading costs a round trip
+            // and a redeploy to learn one sentence.
+            String body = e.getResponseBodyAsString();
+            log.warn("Transcription token refused for the {} side: {} {} (model={}) {}",
+                    who, e.getStatusCode().value(), e.getStatusText(), model, body);
+            throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,
+                    "Transcription service refused the session (" + e.getStatusCode().value() + "): "
+                            + (body.length() > 600 ? body.substring(0, 600) : body));
+        }
     }
 
     private static String modelOf(Map<String, Object> config) {
