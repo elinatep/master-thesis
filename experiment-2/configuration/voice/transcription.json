@@ -9,6 +9,11 @@
     "That matters more than usual: this was written to the documentation rather than against a",
     "live endpoint, and the first real proof is a pilot call.",
     "",
+    "Do NOT add turn_detection here. The service refuses it outright - \"Turn detection is not",
+    "supported for this transcription model\", invalid_value on session.audio.input.turn_detection -",
+    "and the refusal is of the whole session, so transcription simply does not happen. This model",
+    "segments speech itself; the assistant's session.json takes VAD settings and this one does not.",
+    "",
     "model: the Azure DEPLOYMENT name, which is whatever it was called when deployed - not",
     "necessarily the model name. Empty disables transcription entirely and the call runs as before.",
     "",
@@ -24,8 +29,7 @@
     "type": "transcription",
     "audio": {
       "input": {
-        "format": { "type": "audio/pcm", "rate": 24000 },
-        "turn_detection": { "type": "server_vad", "threshold": 0.5, "silence_duration_ms": 600 }
+        "format": { "type": "audio/pcm", "rate": 24000 }
       }
     }
   },
