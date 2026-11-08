@@ -14,6 +14,13 @@
     "and the refusal is of the whole session, so transcription simply does not happen. This model",
     "segments speech itself; the assistant's session.json takes VAD settings and this one does not.",
     "",
+    "client.socketPath: {model} is replaced with the deployment name. If the socket will not open",
+    "(a TRANSCRIBE_ERROR at stage 'socket'), this is the thing to vary - the close code in the",
+    "detail says how it failed. Known candidates, in order of likelihood:",
+    "  /realtime?model={model}        - the token already carries the transcription session",
+    "  /realtime?intent=transcription - OpenAI's own documented form; reported to redirect on Azure",
+    "  /realtime                      - everything carried by the ephemeral key",
+    "",
     "model: the Azure DEPLOYMENT name, which is whatever it was called when deployed - not",
     "necessarily the model name. Empty disables transcription entirely and the call runs as before.",
     "",
@@ -34,7 +41,7 @@
     }
   },
   "client": {
-    "socketPath": "/realtime?intent=transcription",
+    "socketPath": "/realtime?model={model}",
     "subprotocolPrefix": "openai-insecure-api-key.",
     "sampleRate": 24000
   }

@@ -97,7 +97,21 @@ export function useLiveTranscribe({ active, tokenUrl, tokenHeaders, onLine }: Op
         ])
         const ws = socket
 
-        ws.onerror = () => logEvent('TRANSCRIBE_ERROR', { stage: 'socket' })
+        // onerror carries nothing by design - the close frame is where the information is, and a
+        // socket that never opened closes too. 1006 is "no close frame", which is what a rejected
+        // upgrade or a redirect looks like from in here; a policy refusal usually names itself.
+        let everOpen = false
+        ws.onopen = () => { everOpen = true }
+        ws.onclose = (e) => {
+          if (e.wasClean && everOpen) return
+          logEvent('TRANSCRIBE_ERROR', {
+            stage: 'socket',
+            everOpen,
+            code: e.code,
+            reason: String(e.reason ?? '').slice(0, 300),
+            url: config.socketUrl,
+          })
+        }
         ws.onmessage = (e) => {
           try {
             const evt = JSON.parse(String(e.data))

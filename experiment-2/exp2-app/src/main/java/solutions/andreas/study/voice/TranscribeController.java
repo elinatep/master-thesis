@@ -113,9 +113,17 @@ public class TranscribeController {
         // the token is minted against openai.base-url and has to be presented to the same resource.
         // A second copy in a config file is a copy that gets left behind when the deployment moves,
         // and the failure is an authentication error about a key that is perfectly valid.
-        Object socketPath = client.get("socketPath");
+        Object configured = client.get("socketPath");
+        String socketPath = configured instanceof String p && !p.isBlank()
+                ? p
+                : "/realtime?model={model}";
+        // {model} is substituted here because the deployment name is a server-side fact and the
+        // browser has no business knowing it. It is in the path at all because which query
+        // parameter this endpoint wants is the open question: the token is minted with the
+        // transcription session already in it, so the socket may want the deployment, or the
+        // intent, or neither. Editing the file is cheaper than another build to find out.
         client.put("socketUrl", baseUrl.replaceFirst("^http", "ws")
-                + (socketPath instanceof String p && !p.isBlank() ? p : "/realtime?intent=transcription"));
+                + socketPath.replace("{model}", modelOf(config)));
         return mapper.writeValueAsString(client);
     }
 

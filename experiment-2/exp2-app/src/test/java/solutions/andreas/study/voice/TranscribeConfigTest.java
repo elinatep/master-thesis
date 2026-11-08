@@ -3,7 +3,9 @@ package solutions.andreas.study.voice;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
@@ -43,7 +45,21 @@ class TranscribeConfigTest {
         mvc.perform(get("/api/call/transcribe/config"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.socketUrl")
-                        .value("wss://exp2-example.openai.azure.com/openai/v1/realtime?intent=transcription"));
+                        .value(startsWith("wss://exp2-example.openai.azure.com/openai/v1/realtime")));
+    }
+
+    /**
+     * The query string is deliberately not pinned: which parameter this endpoint wants is still
+     * being established, and it is editable in the configuration file for that reason. What is
+     * pinned is that {model} is substituted - an unsubstituted placeholder would be a socket URL
+     * naming a deployment called "{model}", which fails in a way that looks like everything else
+     * that can fail here.
+     */
+    @Test
+    void theDeploymentNameIsSubstitutedIntoTheSocketUrl() throws Exception {
+        mvc.perform(get("/api/call/transcribe/config"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.socketUrl").value(not(containsString("{model}"))));
     }
 
     /**
