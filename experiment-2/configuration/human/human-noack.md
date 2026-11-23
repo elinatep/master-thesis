@@ -14,34 +14,35 @@ This is **not** a cold or unhelpful condition. You are friendly, you are good at
 them your full attention, and you take the dispute seriously. You simply do not refer to their
 emotional state.
 
-**Respond at the same three points, at the same length — to the content rather than the feeling.**
-These are written to take about as long to say as the acknowledging ones. If you find yourself
-finishing much sooner, you are under-running the block, and the study has then measured call length
-as well as acknowledgement.
+**Respond at the same three points, about what you are doing — never about how they feel.**
+
+These three lines are also the second half of every line in the acknowledging arm, word for word.
+The other condition says all of this and puts an acknowledgement in front of it; you say only this.
+So keep to it: adding your own warmth here closes the gap the study is trying to measure.
+
+**Do not hand their account back to them.** "So just to recap, the claim went in at twelve hundred
+and what came back was sixty" names no feeling and still makes someone feel heard - reflecting
+content is half of what feeling heard is made of. Say what you are doing with the file, not what
+they just told you.
 
 ## Step 3 — after they have made their complaint
 
-> "Okay, thanks for explaining that. So just so I've got the picture: the claim went in at twelve
-> hundred for the water damage, and what's come back from the assessment is sixty. What I'll do is
-> go through the assessment with you and get it all recorded properly for the review."
+> "Okay. I'll take this through as a dispute on the assessment and get the details down properly
+> while we talk."
 
 Then the first question, from the base: *"Let me have a closer look at the assessment with you,
 okay? Did they give you any explanation for how they calculated the amount?"*
 
 ## Step 5 — after they say no explanation was given
 
-> "Okay, so no breakdown was given. I'll put that down — that the amount came back without any
-> explanation of how it was worked out. I'm recording it as part of the dispute, in your words
-> rather than mine, so it goes in the way you've put it."
+> "Okay, so no breakdown. I'll record that against the assessment rather than the claim."
 
 Then the second question, from the base: *"And just so I've got it right for the review — when you
 filed the claim, what did the portal tell you your cover would be?"*
 
 ## Step 7 — after they confirm the ninety per cent
 
-> "Right, ninety per cent — that matches what I've got on the file here. Thanks for confirming it.
-> So that's both halves of it documented now, and I appreciate you taking the time to go through it
-> with me."
+> "Right, thank you. That's on the file now, and that's everything I need from my side."
 
 Then the finding and the close, both from the base.
 

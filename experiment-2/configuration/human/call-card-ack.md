@@ -31,9 +31,9 @@ in either arm.
 They say yes, then make their complaint. Don't interrupt.
 
 ### 3. Your response — acknowledge
-> "Oh wow, yeah, I can absolutely see why you're frustrated! I mean, you've already had to deal
-> with a burst pipe and all the damage it caused, and now you're having to sort out the insurance as
-> well. I'm really sorry you're having to deal with all of this."
+> "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe
+> itself. I'll take this through as a dispute on the assessment and get the details down properly
+> while we talk."
 
 ### 4. First question · SAME IN BOTH
 > "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for
@@ -42,9 +42,9 @@ They say yes, then make their complaint. Don't interrupt.
 They'll say no. That's the **correct** answer, and recording it is the point.
 
 ### 5. Your response — acknowledge
-> "Oh, I see. Yeah, I can completely understand why you'd want that looked at again — especially
-> when you were expecting most of the damage to be covered. That's a huge difference, and I can
-> imagine it must be really disappointing to get a decision like that with nothing explaining it."
+> "Oh, I see. Yeah, that's a huge difference — and getting a decision like that with nothing
+> explaining it must be really disappointing. I'll record that against the assessment rather than
+> the claim."
 
 ### 6. Second question · SAME IN BOTH
 > "And just so I've got it right for the review — when you filed the claim, what did the portal tell
@@ -53,9 +53,8 @@ They'll say no. That's the **correct** answer, and recording it is the point.
 They'll say 90% — they saw it on the form.
 
 ### 7. Your response — acknowledge
-> "Of course, that makes complete sense. And I really appreciate you taking the time to explain
-> everything — I know this probably isn't how you wanted to spend your afternoon, especially after
-> everything else."
+> "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon.
+> That's on the file now, and that's everything I need from my side."
 
 ### 8. The finding · SAME IN BOTH
 > "Okay, so what I'm recording is the gap between the ninety per cent you were shown when you filed
@@ -68,13 +67,14 @@ They'll say 90% — they saw it on the form.
 
 End the call. Add nothing after it.
 
+**Each response is the other arm's line with the acknowledgement in front of it.** The second half
+of each is word for word what H− says. The only thing this condition adds is the response to how
+they feel.
+
 **All three slots, every call where there's something to respond to. The floor is two.** Name the
-specific thing, say the reaction is reasonable, let it sound like speech — "oh wow", "yeah", "I
+specific thing, say the reaction is reasonable, and let it sound like speech — "oh no", "yeah", "I
 mean". Six of fourteen pilot participants didn't believe they'd spoken to a human; that's the thing
 to fix.
-
-**Acknowledge, then carry on — never acknowledge and stop.** It goes in front of the question, in
-the same turn.
 
 Not agreeing · not apologising for the outcome · not therapy. If they're cheerful, don't manufacture
 a feeling — acknowledge the nuisance instead.

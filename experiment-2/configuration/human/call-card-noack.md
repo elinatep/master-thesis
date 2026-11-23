@@ -31,9 +31,8 @@ in either arm.
 They say yes, then make their complaint. Don't interrupt.
 
 ### 3. Your response — to the content
-> "Okay, thanks for explaining that. So just so I've got the picture: the claim went in at twelve
-> hundred for the water damage, and what's come back from the assessment is sixty. What I'll do is
-> go through the assessment with you and get it all recorded properly for the review."
+> "Okay. I'll take this through as a dispute on the assessment and get the details down properly
+> while we talk."
 
 ### 4. First question · SAME IN BOTH
 > "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for
@@ -42,9 +41,7 @@ They say yes, then make their complaint. Don't interrupt.
 They'll say no. That's the **correct** answer, and recording it is the point.
 
 ### 5. Your response — to the content
-> "Okay, so no breakdown was given. I'll put that down — that the amount came back without any
-> explanation of how it was worked out. I'm recording it as part of the dispute, in your words
-> rather than mine, so it goes in the way you've put it."
+> "Okay, so no breakdown. I'll record that against the assessment rather than the claim."
 
 ### 6. Second question · SAME IN BOTH
 > "And just so I've got it right for the review — when you filed the claim, what did the portal tell
@@ -53,9 +50,7 @@ They'll say no. That's the **correct** answer, and recording it is the point.
 They'll say 90% — they saw it on the form.
 
 ### 7. Your response — to the content
-> "Right, ninety per cent — that matches what I've got on the file here. Thanks for confirming it.
-> So that's both halves of it documented now, and I appreciate you taking the time to go through it
-> with me."
+> "Right, thank you. That's on the file now, and that's everything I need from my side."
 
 ### 8. The finding · SAME IN BOTH
 > "Okay, so what I'm recording is the gap between the ninety per cent you were shown when you filed

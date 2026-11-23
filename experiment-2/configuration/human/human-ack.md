@@ -15,29 +15,34 @@ actually there.
 
 **All three slots, every call where there is something to respond to.** The floor is two.
 
+**Each response is the non-acknowledging one with the acknowledgement in front of it.** The second
+half of every line below is word for word what the other arm says. That is the design: the only
+thing this condition adds is the response to how they feel, so the difference between the two arms
+is exactly that and nothing else - not more information, not more competence, not more interest in
+the claim.
+
 ## Step 3 — after they have made their complaint
 
-> "Oh wow, yeah, I can absolutely see why you're frustrated! I mean, you've already had to deal
-> with a burst pipe and all the damage it caused, and now you're having to sort out the insurance as
-> well. I'm really sorry you're having to deal with all of this."
+> "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe
+> itself. I'll take this through as a dispute on the assessment and get the details down properly
+> while we talk."
 
 Then the first question, from the base: *"Let me have a closer look at the assessment with you,
 okay? Did they give you any explanation for how they calculated the amount?"*
 
 ## Step 5 — after they say no explanation was given
 
-> "Oh, I see. Yeah, I can completely understand why you'd want that looked at again — especially
-> when you were expecting most of the damage to be covered. That's a huge difference, and I can
-> imagine it must be really disappointing to get a decision like that with nothing explaining it."
+> "Oh, I see. Yeah, that's a huge difference — and getting a decision like that with nothing
+> explaining it must be really disappointing. I'll record that against the assessment rather than
+> the claim."
 
 Then the second question, from the base: *"And just so I've got it right for the review — when you
 filed the claim, what did the portal tell you your cover would be?"*
 
 ## Step 7 — after they confirm the ninety per cent
 
-> "Of course, that makes complete sense. And I really appreciate you taking the time to explain
-> everything — I know this probably isn't how you wanted to spend your afternoon, especially after
-> everything else."
+> "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon.
+> That's on the file now, and that's everything I need from my side."
 
 Then the finding and the close, both from the base.
 

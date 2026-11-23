@@ -19,20 +19,19 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
     ? {
         kind: 'Acknowledge',
         first:
-          "Oh wow, yeah, I can absolutely see why you're frustrated! I mean, you've already had to deal with a burst pipe and all the damage it caused, and now you're having to sort out the insurance as well. I'm really sorry you're having to deal with all of this.",
+          "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe itself. I'll take this through as a dispute on the assessment and get the details down properly while we talk.",
         second:
-          "Oh, I see. Yeah, I can completely understand why you'd want that looked at again — especially when you were expecting most of the damage to be covered. That's a huge difference, and I can imagine it must be really disappointing to get a decision like that with nothing explaining it.",
+          "Oh, I see. Yeah, that's a huge difference — and getting a decision like that with nothing explaining it must be really disappointing. I'll record that against the assessment rather than the claim.",
         summary:
-          "Of course, that makes complete sense. And I really appreciate you taking the time to explain everything — I know this probably isn't how you wanted to spend your afternoon, especially after everything else.",
+          "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon. That's on the file now, and that's everything I need from my side.",
       }
     : {
         kind: 'Respond to the content',
         first:
-          "Okay, thanks for explaining that. So just so I've got the picture: the claim went in at twelve hundred for the water damage, and what's come back from the assessment is sixty. What I'll do is go through the assessment with you and get it all recorded properly for the review.",
-        second:
-          "Okay, so no breakdown was given. I'll put that down — that the amount came back without any explanation of how it was worked out. I'm recording it as part of the dispute, in your words rather than mine, so it goes in the way you've put it.",
+          "Okay. I'll take this through as a dispute on the assessment and get the details down properly while we talk.",
+        second: "Okay, so no breakdown. I'll record that against the assessment rather than the claim.",
         summary:
-          "Right, ninety per cent — that matches what I've got on the file here. Thanks for confirming it. So that's both halves of it documented now, and I appreciate you taking the time to go through it with me.",
+          "Right, thank you. That's on the file now, and that's everything I need from my side.",
       }
 
   return (
@@ -113,24 +112,23 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
 
         {humanAck ? (
           <p className="small mb-0">
-            <strong>All three slots, every call where there is something to respond to — the floor
-            is two.</strong> Name the specific thing, say the reaction is reasonable, and let it
-            sound like speech: "oh wow", "yeah", "I mean". Six of fourteen pilot participants did
-            not believe they had spoken to a human, and that is the thing to fix.{' '}
-            <strong>Acknowledge, then carry on — never acknowledge and stop.</strong> Not agreeing,
-            not apologising for the outcome, not therapy. If they are cheerful, do not manufacture a
-            feeling — acknowledge the nuisance instead.
+            <strong>Each line is the other arm's line with the acknowledgement in front of it</strong>
+            — the second half of each is word for word what H− says, so the only thing this
+            condition adds is the response to how they feel. All three slots, every call where
+            there is something to respond to; the floor is two. Name the specific thing, say the
+            reaction is reasonable, and let it sound like speech. Not agreeing, not apologising for
+            the outcome, not therapy. If they are cheerful, do not manufacture a feeling —
+            acknowledge the nuisance instead.
           </p>
         ) : (
           <p className="small mb-0">
-            <strong>Friendly, not flat.</strong> "Okay", "right", "thanks for explaining" — use
-            them, with warmth in your voice. Six of fourteen pilot participants did not believe they
-            had spoken to a human, and that applies here as much as in the other arm; business-like
-            is not the same as cold. When they express feeling, answer the content and carry on: no
-            "I understand how you feel", no "that must be frustrating", no "I'm sorry you're having
-            to deal with this". Do not rebuke it either. These responses are written to take as long
-            to say as the acknowledging ones — finishing much sooner means the study measured call
-            length too.
+            <strong>These are also the second half of every line in H+, word for word.</strong> That
+            arm says all of this and puts an acknowledgement in front of it; you say only this, so
+            adding your own warmth here closes the gap being measured.{' '}
+            <strong>Do not hand their account back to them</strong> — "so just to recap, the claim
+            went in at twelve hundred and sixty came back" names no feeling and still makes someone
+            feel heard. Say what you are doing with the file, not what they just told you. Friendly,
+            not flat: "okay", "right", a warm voice. Name no feeling, and do not rebuke one either.
           </p>
         )}
 
