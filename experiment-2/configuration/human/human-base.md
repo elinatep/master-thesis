@@ -53,8 +53,8 @@ Expect it and do not improvise an answer.
 
 ## How the call runs
 
-Eight steps. **Five of them are identical in every condition** — the opening, the bridge, the two
-checks, and the close. Only your *responses* differ, at steps 3, 6 and 7.
+Nine steps. **Six of them are identical in every condition** — the opening, both questions, the
+finding and the close. Only your responses differ, at steps 3, 5 and 7.
 
 You are genuinely handling a dispute either way: same questions, same information gathered, same
 finding recorded. The only thing that varies is whether you respond to how they feel on the way
@@ -62,11 +62,14 @@ through.
 
 ### 1. Open — identical
 
-> "Hi, this is ___ from Salvena. I've received your case from our AI assistant and I've had a look
-> at your claim. I understand you'd like to dispute the amount you've been offered — is that right?"
+> "Hi! My name is ___, and I'll be helping you today. I've just gone through your conversation with
+> our AI assistant, so I'm already familiar with your claim.
+>
+> I can see you've had some water damage at home, and you're calling about the amount you've been
+> offered. Is that right?"
 
-Name yourself, say you have the case from the assistant, and show you have read it. Never ask them
-to explain the claim from the start.
+Name yourself, say you have read the conversation, and show it by referring to something they told
+the assistant. Never ask them to explain the claim from the start.
 
 This is held constant across all four cells and is not what is being varied — the survey measures it
 as a check that the handover design works at all. An opening that makes them start over breaks the
@@ -76,55 +79,53 @@ call in every condition equally, which is worse than breaking it in one.
 
 They will say yes and then make their complaint. Let them talk. Do not interrupt.
 
-### 3. Respond, then bridge into the check
+### 3. Your first response
 
-**Your response here comes from your condition block.** Then, identically in both conditions:
+**From your condition block.**
 
-> "Let me check two things on the file so I can get the review recorded properly."
+### 4. First question — identical
 
-### 4. First check — identical
-
-> "When you filed the claim, what did the portal indicate your cover would be?"
-
-They will say ninety per cent. They saw it on the form.
-
-### 5. Second check — identical
-
-> "And did the assessment give you any breakdown of how it arrived at sixty?"
+> "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for
+> how they calculated the amount?"
 
 They will say no. **That is the correct answer** — the assessment screen tells them no further
 explanation is provided — and recording it is the point of asking.
 
-### 6. Respond, then state the finding
+### 5. Your second response
 
-**Response from your condition block.** Then, identically:
+**From your condition block.**
 
-> "So what I'm recording is the discrepancy between the ninety per cent indicated at the point of
-> filing and the five per cent that was applied, with no breakdown given."
+### 6. Second question — identical
+
+> "And just so I've got it right for the review — when you filed the claim, what did the portal tell
+> you your cover would be?"
+
+They will say ninety per cent. They saw it on the form.
+
+### 7. Your third response
+
+**From your condition block.**
+
+### 8. The finding — identical
+
+> "Okay, so what I'm recording is the gap between the ninety per cent you were shown when you filed
+> and the five per cent that was actually applied, with no breakdown given. I've made sure your
+> concerns about the assessment are in the review."
 
 This is the one thing the call produces that nothing before it did. The assistant took the claim;
 you established what is actually wrong with the assessment. That is what makes the call worth having
 even though the amount does not move on it.
 
-### 7. Summarise
+### 9. Close — near enough word for word, identical
 
-**From your condition block** — with or without acknowledgement, but the same facts either way.
-
-Do not end it with "that's everything I need from you". The close says that, and saying it twice
-sounds like you have lost your place.
-
-### 8. Close — near enough word for word, identical
-
-> "Okay, I think that's everything I need from you. The review is now complete on my side, and
-> you'll see the final outcome at the end of this session.
->
-> Thank you for your time, and have a nice day. Goodbye!"
+> "Thank you so much for taking the time to speak with me today! The review is complete on my side,
+> and you'll be able to see the final outcome at the end of this session. Take care, and goodbye!"
 
 Then end the call. Do not add anything after it, however they respond.
 
 ## Two questions, identical, and that is load-bearing
 
-Ask the same two checks, in the same words, in both conditions. If they have already answered one,
+Ask the same two questions, in the same words, in both conditions. If they have already answered one,
 skip it — adapt naturally — but do not add questions in one condition that you would not ask in the
 other.
 

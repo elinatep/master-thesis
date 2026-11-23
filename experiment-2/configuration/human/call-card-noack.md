@@ -14,64 +14,70 @@ your first session. The examples are to speak around, not lines to read.
 **Never say the final reimbursement, or hint at it.** The survey shows it afterwards. Reveal it and
 this participant's data is gone.
 
-**The two checks and the finding are identical in both conditions.** Only your responses differ.
-Never add a question this condition would not ask — and never ask about feelings, in either arm.
+**Both questions, the finding and the close are identical in both conditions.** Only your three
+responses differ. Never add a question this condition would not ask — and never ask about feelings,
+in either arm.
 
 ---
 
 ### 1. Open · SAME IN BOTH
-> "Hi, this is ___ from Salvena. I've received your case from our AI assistant and I've had a look
-> at your claim. I understand you'd like to dispute the amount you've been offered — is that right?"
+> "Hi! My name is ___, and I'll be helping you today. I've just gone through your conversation with
+> our AI assistant, so I'm already familiar with your claim.
+>
+> I can see you've had some water damage at home, and you're calling about the amount you've been
+> offered. Is that right?"
 
 ### 2. Let them explain
 They say yes, then make their complaint. Don't interrupt.
 
-### 3. Respond — to the content
-> "Okay. So that's ninety per cent indicated when you filed, against the sixty that came back."
+### 3. Your response — to the content
+> "Okay, thanks for explaining that. So just so I've got the picture: the claim went in at twelve
+> hundred for the water damage, and what's come back from the assessment is sixty. What I'll do is
+> go through the assessment with you and get it all recorded properly for the review."
 
-**Then, SAME IN BOTH**
-> "Let me check two things on the file so I can get the review recorded properly."
-
-### 4. First check · SAME IN BOTH
-> "When you filed the claim, what did the portal indicate your cover would be?"
-
-They'll say 90% — they saw it on the form.
-
-### 5. Second check · SAME IN BOTH
-> "And did the assessment give you any breakdown of how it arrived at sixty?"
+### 4. First question · SAME IN BOTH
+> "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for
+> how they calculated the amount?"
 
 They'll say no. That's the **correct** answer, and recording it is the point.
 
-### 6. Respond — to the content
-> "Okay, thank you for confirming those."
+### 5. Your response — to the content
+> "Okay, so no breakdown was given. I'll put that down — that the amount came back without any
+> explanation of how it was worked out. I'm recording it as part of the dispute, in your words
+> rather than mine, so it goes in the way you've put it."
 
-**Then the finding, SAME IN BOTH**
-> "So what I'm recording is the discrepancy between the ninety per cent indicated at the point of
-> filing and the five per cent that was applied, with no breakdown given."
+### 6. Second question · SAME IN BOTH
+> "And just so I've got it right for the review — when you filed the claim, what did the portal tell
+> you your cover would be?"
 
-### 7. Summarise — to the content
-> "Okay, thank you. I've got that recorded — the ninety per cent indicated at filing, the sixty
-> awarded, and no breakdown provided."
+They'll say 90% — they saw it on the form.
 
-Don't end on "that's everything I need from you" — the close says it.
+### 7. Your response — to the content
+> "Right, ninety per cent — that matches what I've got on the file here. Thanks for confirming it.
+> So that's both halves of it documented now, and I appreciate you taking the time to go through it
+> with me."
 
-### 8. Close · SAME IN BOTH — near enough word for word
-> "Okay, I think that's everything I need from you. The review is now complete on my side, and
-> you'll see the final outcome at the end of this session.
->
-> Thank you for your time, and have a nice day. Goodbye!"
+### 8. The finding · SAME IN BOTH
+> "Okay, so what I'm recording is the gap between the ninety per cent you were shown when you filed
+> and the five per cent that was actually applied, with no breakdown given. I've made sure your
+> concerns about the assessment are in the review."
+
+### 9. Close · SAME IN BOTH — near enough word for word
+> "Thank you so much for taking the time to speak with me today! The review is complete on my side,
+> and you'll be able to see the final outcome at the end of this session. Take care, and goodbye!"
 
 End the call. Add nothing after it.
 
-**Business-like, not cold.** "Okay", "Right", "Thanks for explaining" are fine — use them. Silence is
-not the condition.
+**Friendly, not flat.** "Okay", "right", "thanks for explaining" — use them, with warmth in your
+voice. Six of fourteen pilot participants didn't believe they'd spoken to a human, and that applies
+here as much as in the other arm. Business-like is not the same as cold.
 
 When they express feeling, answer the *content* and carry on. Avoid: "I understand how you feel" ·
-"that must be frustrating" · "I'm sorry you've had to deal with this" · "I can see why you'd be
+"that must be frustrating" · "I'm sorry you're having to deal with this" · "I can see why you'd be
 annoyed". Don't rebuke it either.
 
-Same two checks as the other arm, so the same floor — but give responses of the same *length*, or
-the call ends sooner and length becomes part of the manipulation.
+**These are written to take as long to say as the acknowledging ones.** Finishing much sooner means
+the study measured call length too.
 
 ---
 

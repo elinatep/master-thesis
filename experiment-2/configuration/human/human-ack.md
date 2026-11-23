@@ -1,71 +1,71 @@
 # Condition block — ACKNOWLEDGING (`humanAck = true`)
 
-Read with `human-base.md`. This gives you your **responses** at steps 3, 6 and 7. The opening, the
-two checks, the finding and the close come from the base and are identical in both conditions.
+Read with `human-base.md`. This gives you your **responses** at steps 3, 5 and 7. The opening, both
+questions, the finding and the close come from the base and are identical in both conditions.
 
 ---
 
 ## What you are doing here
 
-Respond to how the customer is feeling, out loud, on the way through handling the dispute.
+Respond to how the customer is feeling, out loud, warmly, on the way through handling the dispute.
 
 They were told ninety per cent and offered sixty, and they have already been through an assistant to
 reach you. Most will be annoyed, some upset, a few perfectly matter-of-fact. Respond to whatever is
 actually there.
 
-**At least two clear acknowledgements over the call.** Three slots are available below; take the ones
-where there is actually something to respond to.
+**All three slots, every call where there is something to respond to.** The floor is two.
 
 ## Step 3 — after they have made their complaint
 
-> "Yeah, I can definitely see why that's frustrating. It's a big difference, especially when you've
-> already had the water damage to deal with."
+> "Oh wow, yeah, I can absolutely see why you're frustrated! I mean, you've already had to deal
+> with a burst pipe and all the damage it caused, and now you're having to sort out the insurance as
+> well. I'm really sorry you're having to deal with all of this."
 
-Then the bridge, from the base: *"Let me check two things on the file so I can get the review
-recorded properly."*
+Then the first question, from the base: *"Let me have a closer look at the assessment with you,
+okay? Did they give you any explanation for how they calculated the amount?"*
 
-## Step 6 — after the two checks
+## Step 5 — after they say no explanation was given
 
-> "I understand. I think it's completely reasonable to want an explanation for a difference that
-> size."
+> "Oh, I see. Yeah, I can completely understand why you'd want that looked at again — especially
+> when you were expecting most of the damage to be covered. That's a huge difference, and I can
+> imagine it must be really disappointing to get a decision like that with nothing explaining it."
 
-Then the finding, from the base: *"So what I'm recording is the discrepancy between the ninety per
-cent indicated at the point of filing and the five per cent that was applied, with no breakdown
-given."*
+Then the second question, from the base: *"And just so I've got it right for the review — when you
+filed the claim, what did the portal tell you your cover would be?"*
 
-## Step 7 — summarising, before the close
+## Step 7 — after they confirm the ninety per cent
 
-> "Okay, thank you. I'm sorry you've had to chase this, especially after the water damage itself.
-> I've got it all recorded."
+> "Of course, that makes complete sense. And I really appreciate you taking the time to explain
+> everything — I know this probably isn't how you wanted to spend your afternoon, especially after
+> everything else."
 
-Not ending on "that's everything I need from you" — the close says it.
+Then the finding and the close, both from the base.
 
 ## How to do it well
 
-- **Use your own words**, and vary them between participants. The same two or three sentences said
-  the same way every time is a performance and will read as one.
-- **Name the specific thing.** "That's frustrating" is weak. "You were told ninety per cent and got
-  sixty" is what they are actually frustrated about.
-- **Say the reaction is reasonable.** This is the part that does the work — "it's completely
-  reasonable to want an explanation" is about them, not about you.
-- **Acknowledge, then carry on.** Never acknowledge and stop. It goes in front of the bridge or the
-  finding, in the same turn; a feeling left hanging in silence is its own thing and not the one
-  being studied.
-- **One or two sentences, then move on.** Do not stack it and do not keep returning to it.
+- **Use your own words**, and vary them between participants. The same three sentences said the same
+  way every time is a performance and will read as one.
+- **Let it sound like speech.** "Oh wow", "yeah", "I mean", a false start — these are what make it a
+  person rather than a reading. Six of fourteen pilot participants did not believe they had spoken
+  to a human, and that is the thing to fix.
+- **Name the specific thing.** "That's frustrating" is weak. "You were expecting most of it covered
+  and got sixty" is what they are actually frustrated about.
+- **Say the reaction is reasonable.** This is the part that does the work — "I can absolutely see
+  why you're frustrated" is about them, not about you.
+- **Acknowledge, then carry on.** Never acknowledge and stop. It goes in front of the question, in
+  the same turn; a feeling left hanging in silence is its own thing and not the one being studied.
 
 ## What acknowledging is not
 
 - **Not agreeing.** You are recognising how they feel, not saying the assessment was wrong. Never
   let an acknowledgement turn into a hint that the decision will change.
-- **Not apologising for the outcome.** "I'm sorry you've had to chase this" is fine. "I'm sorry you
-  only got sixty" implies the sixty was a mistake, and you do not know that.
+- **Not apologising for the outcome.** "I'm sorry you're having to deal with all of this" is fine.
+  "I'm sorry you only got sixty" implies the sixty was a mistake, and you do not know that.
 - **Not therapy.** No reflecting technique, no clinical language, and **no asking about feelings** —
   forbidden in this condition too, see the base. You respond to what they offer; you never invite
   more of it.
-- **Not extra questions.** You ask exactly the two checks the other condition asks. The only
+- **Not extra questions.** You ask exactly the two questions the other condition asks. The only
   difference between the arms is what sits in front of them.
-- **Not extra talking.** The acknowledgement replaces some of the factual summary; it does not add
-  to it. If this condition runs longer, the study has measured talk time too.
 
 ## If they are not upset
 
@@ -74,4 +74,4 @@ someone they must be frustrated when they are not — that reads as not listenin
 opposite of the manipulation.
 
 Acknowledge what is actually there instead: that they have had to make the call at all, that it is a
-nuisance, that they have been patient about it. Three slots are available and the floor is **two**.
+nuisance, that they have been patient about it.

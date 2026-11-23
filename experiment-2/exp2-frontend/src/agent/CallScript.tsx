@@ -19,19 +19,20 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
     ? {
         kind: 'Acknowledge',
         first:
-          "Yeah, I can definitely see why that's frustrating. It's a big difference, especially when you've already had the water damage to deal with.",
+          "Oh wow, yeah, I can absolutely see why you're frustrated! I mean, you've already had to deal with a burst pipe and all the damage it caused, and now you're having to sort out the insurance as well. I'm really sorry you're having to deal with all of this.",
         second:
-          "I understand. I think it's completely reasonable to want an explanation for a difference that size.",
+          "Oh, I see. Yeah, I can completely understand why you'd want that looked at again — especially when you were expecting most of the damage to be covered. That's a huge difference, and I can imagine it must be really disappointing to get a decision like that with nothing explaining it.",
         summary:
-          "Okay, thank you. I'm sorry you've had to chase this, especially after the water damage itself. I've got it all recorded.",
+          "Of course, that makes complete sense. And I really appreciate you taking the time to explain everything — I know this probably isn't how you wanted to spend your afternoon, especially after everything else.",
       }
     : {
         kind: 'Respond to the content',
         first:
-          "Okay. So that's ninety per cent indicated when you filed, against the sixty that came back.",
-        second: 'Okay, thank you for confirming those.',
+          "Okay, thanks for explaining that. So just so I've got the picture: the claim went in at twelve hundred for the water damage, and what's come back from the assessment is sixty. What I'll do is go through the assessment with you and get it all recorded properly for the review.",
+        second:
+          "Okay, so no breakdown was given. I'll put that down — that the amount came back without any explanation of how it was worked out. I'm recording it as part of the dispute, in your words rather than mine, so it goes in the way you've put it.",
         summary:
-          "Okay, thank you. I've got that recorded — the ninety per cent indicated at filing, the sixty awarded, and no breakdown provided.",
+          "Right, ninety per cent — that matches what I've got on the file here. Thanks for confirming it. So that's both halves of it documented now, and I appreciate you taking the time to go through it with me.",
       }
 
   return (
@@ -39,7 +40,7 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
       <Card.Body>
         <div className="text-uppercase small text-muted mb-2">How the call runs</div>
         <p className="small">
-          The opening, the two checks, the finding and the close are <Same /> — say them the same
+          The opening, both questions, the finding and the close are <Same /> — say them the same
           way whichever condition you are running, and never add a question this arm would not ask.{' '}
           <strong>Never ask about feelings</strong>, in either arm: that is a second manipulation,
           not this one. <strong>Never ask for photos, invoices or repair estimates</strong>, or
@@ -49,9 +50,10 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
 
         <Step n={1} title="Open" shared>
           <Line>
-            Hi, this is ___ from Salvena. I've received your case from our AI assistant and I've had
-            a look at your claim. I understand you'd like to dispute the amount you've been offered
-            — is that right?
+            Hi! My name is ___, and I'll be helping you today. I've just gone through your
+            conversation with our AI assistant, so I'm already familiar with your claim. I can see
+            you've had some water damage at home, and you're calling about the amount you've been
+            offered. Is that right?
           </Line>
         </Step>
 
@@ -59,75 +61,76 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
           <p className="mb-0">They say yes, then make their complaint. Do not interrupt.</p>
         </Step>
 
-        <Step n={3} title={`Respond — ${responses.kind}`}>
+        <Step n={3} title={`Your response — ${responses.kind}`}>
           <Line>{responses.first}</Line>
-          <Ask label="Then">
-            Let me check two things on the file so I can get the review recorded properly.
-          </Ask>
         </Step>
 
-        <Step n={4} title="First check" shared>
-          <Line>When you filed the claim, what did the portal indicate your cover would be?</Line>
-          <p className="mb-0 mt-1 small text-muted">
-            They will say ninety per cent — they saw it on the form.
-          </p>
-        </Step>
-
-        <Step n={5} title="Second check" shared>
-          <Line>And did the assessment give you any breakdown of how it arrived at sixty?</Line>
+        <Step n={4} title="First question" shared>
+          <Line>
+            Let me have a closer look at the assessment with you, okay? Did they give you any
+            explanation for how they calculated the amount?
+          </Line>
           <p className="mb-0 mt-1 small text-muted">
             They will say no. That is the <strong>correct</strong> answer — the assessment screen
             says no further explanation is provided — and recording it is the point of asking.
           </p>
         </Step>
 
-        <Step n={6} title={`Respond — ${responses.kind}`}>
+        <Step n={5} title={`Your response — ${responses.kind}`}>
           <Line>{responses.second}</Line>
-          <Ask label="Then the finding">
-            So what I'm recording is the discrepancy between the ninety per cent indicated at the
-            point of filing and the five per cent that was applied, with no breakdown given.
-          </Ask>
-          <p className="mb-0 mt-1 small text-muted">
-            This is the one thing the call produces that nothing before it did. The assistant took
-            the claim; you established what is actually wrong with the assessment.
-          </p>
         </Step>
 
-        <Step n={7} title={`Summarise — ${responses.kind}`}>
-          <Line>{responses.summary}</Line>
-          <p className="mb-0 mt-1 small text-muted">
-            Do not end on "that's everything I need from you" — the close says it.
-          </p>
-        </Step>
-
-        <Step n={8} title="Close — near enough word for word" shared>
+        <Step n={6} title="Second question" shared>
           <Line>
-            Okay, I think that's everything I need from you. The review is now complete on my side,
-            and you'll see the final outcome at the end of this session. Thank you for your time,
-            and have a nice day. Goodbye!
+            And just so I've got it right for the review — when you filed the claim, what did the
+            portal tell you your cover would be?
+          </Line>
+          <p className="mb-0 mt-1 small text-muted">
+            They will say ninety per cent. They saw it on the form.
+          </p>
+        </Step>
+
+        <Step n={7} title={`Your response — ${responses.kind}`}>
+          <Line>{responses.summary}</Line>
+        </Step>
+
+        <Step n={8} title="The finding" shared>
+          <Line>
+            Okay, so what I'm recording is the gap between the ninety per cent you were shown when
+            you filed and the five per cent that was actually applied, with no breakdown given. I've
+            made sure your concerns about the assessment are in the review.
+          </Line>
+        </Step>
+
+        <Step n={9} title="Close — near enough word for word" shared>
+          <Line>
+            Thank you so much for taking the time to speak with me today! The review is complete on
+            my side, and you'll be able to see the final outcome at the end of this session. Take
+            care, and goodbye!
           </Line>
           <p className="mb-0 mt-1 small">End the call. Add nothing after it, however they respond.</p>
         </Step>
 
         {humanAck ? (
           <p className="small mb-0">
-            <strong>Three slots — steps 3, 6 and 7 — and the floor is two.</strong> Take the ones
-            where there is actually something to respond to. Name the specific thing, say the
-            reaction is reasonable.{' '}
-            <strong>Acknowledge, then carry on — never acknowledge and stop:</strong> it goes in
-            front of the bridge or the finding, in the same turn. Not agreeing, not apologising for
-            the outcome, not therapy. If they are cheerful, do not manufacture a feeling —
-            acknowledge the nuisance instead.
+            <strong>All three slots, every call where there is something to respond to — the floor
+            is two.</strong> Name the specific thing, say the reaction is reasonable, and let it
+            sound like speech: "oh wow", "yeah", "I mean". Six of fourteen pilot participants did
+            not believe they had spoken to a human, and that is the thing to fix.{' '}
+            <strong>Acknowledge, then carry on — never acknowledge and stop.</strong> Not agreeing,
+            not apologising for the outcome, not therapy. If they are cheerful, do not manufacture a
+            feeling — acknowledge the nuisance instead.
           </p>
         ) : (
           <p className="small mb-0">
-            <strong>Business-like, not cold.</strong> "Okay", "Right", "Thanks for explaining" are
-            fine — use them, and ask real questions about the claim. Silence is not the condition.
-            When they express feeling, answer the content and carry on to the question: no "I
-            understand how you feel", no "that must be frustrating", no "I'm sorry you've had to
-            chase this". Do not rebuke it either. Same two checks as the other arm, so the same
-            floor — but give responses of the same <em>length</em>, or the call ends sooner and
-            length becomes part of the manipulation.
+            <strong>Friendly, not flat.</strong> "Okay", "right", "thanks for explaining" — use
+            them, with warmth in your voice. Six of fourteen pilot participants did not believe they
+            had spoken to a human, and that applies here as much as in the other arm; business-like
+            is not the same as cold. When they express feeling, answer the content and carry on: no
+            "I understand how you feel", no "that must be frustrating", no "I'm sorry you're having
+            to deal with this". Do not rebuke it either. These responses are written to take as long
+            to say as the acknowledging ones — finishing much sooner means the study measured call
+            length too.
           </p>
         )}
 
@@ -204,18 +207,6 @@ function Step({
 function Line({ children }: { children: React.ReactNode }) {
   return (
     <blockquote className="border-start border-3 ps-3 mb-0 fst-italic">"{children}"</blockquote>
-  )
-}
-
-/** A shared line that follows a condition response, in the same turn: the bridge, or the finding. */
-function Ask({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="mt-2">
-      <div className="small fw-semibold">
-        {label} <Same />
-      </div>
-      <Line>{children}</Line>
-    </div>
   )
 }
 
