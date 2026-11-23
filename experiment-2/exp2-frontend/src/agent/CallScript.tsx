@@ -19,19 +19,19 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
     ? {
         kind: 'Acknowledge',
         first:
-          "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe itself. I'll take this through as a dispute on the assessment and get the details down properly while we talk.",
+          "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe itself. Let me take this down as a dispute and go through the assessment with you.",
         second:
-          "Oh, I see. Yeah, that's a huge difference — and getting a decision like that with nothing explaining it must be really disappointing. I'll record that against the assessment rather than the claim.",
+          "Oh, I see. Yeah, that's a huge difference, and getting a decision like that with nothing explaining it must be really disappointing. I'll make a note of that.",
         summary:
-          "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon. That's on the file now, and that's everything I need from my side.",
+          "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon. I've got everything I need now.",
       }
     : {
         kind: 'Respond to the content',
         first:
-          "Okay. I'll take this through as a dispute on the assessment and get the details down properly while we talk.",
-        second: "Okay, so no breakdown. I'll record that against the assessment rather than the claim.",
+          "Okay. Let me take this down as a dispute and go through the assessment with you.",
+        second: "Okay, so nothing explaining it. I'll make a note of that.",
         summary:
-          "Right, thank you. That's on the file now, and that's everything I need from my side.",
+          "Right, thank you. I've got everything I need now.",
       }
 
   return (

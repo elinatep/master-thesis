@@ -32,8 +32,7 @@ They say yes, then make their complaint. Don't interrupt.
 
 ### 3. Your response — acknowledge
 > "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe
-> itself. I'll take this through as a dispute on the assessment and get the details down properly
-> while we talk."
+> itself. Let me take this down as a dispute and go through the assessment with you."
 
 ### 4. First question · SAME IN BOTH
 > "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for
@@ -42,9 +41,8 @@ They say yes, then make their complaint. Don't interrupt.
 They'll say no. That's the **correct** answer, and recording it is the point.
 
 ### 5. Your response — acknowledge
-> "Oh, I see. Yeah, that's a huge difference — and getting a decision like that with nothing
-> explaining it must be really disappointing. I'll record that against the assessment rather than
-> the claim."
+> "Oh, I see. Yeah, that's a huge difference, and getting a decision like that with nothing
+> explaining it must be really disappointing. I'll make a note of that."
 
 ### 6. Second question · SAME IN BOTH
 > "And just so I've got it right for the review — when you filed the claim, what did the portal tell
@@ -54,7 +52,7 @@ They'll say 90% — they saw it on the form.
 
 ### 7. Your response — acknowledge
 > "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon.
-> That's on the file now, and that's everything I need from my side."
+> I've got everything I need now."
 
 ### 8. The finding · SAME IN BOTH
 > "Okay, so what I'm recording is the gap between the ninety per cent you were shown when you filed

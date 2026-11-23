@@ -24,17 +24,15 @@ the claim.
 ## Step 3 — after they have made their complaint
 
 > "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe
-> itself. I'll take this through as a dispute on the assessment and get the details down properly
-> while we talk."
+> itself. Let me take this down as a dispute and go through the assessment with you."
 
 Then the first question, from the base: *"Let me have a closer look at the assessment with you,
 okay? Did they give you any explanation for how they calculated the amount?"*
 
 ## Step 5 — after they say no explanation was given
 
-> "Oh, I see. Yeah, that's a huge difference — and getting a decision like that with nothing
-> explaining it must be really disappointing. I'll record that against the assessment rather than
-> the claim."
+> "Oh, I see. Yeah, that's a huge difference, and getting a decision like that with nothing
+> explaining it must be really disappointing. I'll make a note of that."
 
 Then the second question, from the base: *"And just so I've got it right for the review — when you
 filed the claim, what did the portal tell you your cover would be?"*
@@ -42,7 +40,7 @@ filed the claim, what did the portal tell you your cover would be?"*
 ## Step 7 — after they confirm the ninety per cent
 
 > "Of course, that makes complete sense. I know this isn't how you wanted to spend your afternoon.
-> That's on the file now, and that's everything I need from my side."
+> I've got everything I need now."
 
 Then the finding and the close, both from the base.
 

@@ -27,22 +27,21 @@ they just told you.
 
 ## Step 3 — after they have made their complaint
 
-> "Okay. I'll take this through as a dispute on the assessment and get the details down properly
-> while we talk."
+> "Okay. Let me take this down as a dispute and go through the assessment with you."
 
 Then the first question, from the base: *"Let me have a closer look at the assessment with you,
 okay? Did they give you any explanation for how they calculated the amount?"*
 
 ## Step 5 — after they say no explanation was given
 
-> "Okay, so no breakdown. I'll record that against the assessment rather than the claim."
+> "Okay, so nothing explaining it. I'll make a note of that."
 
 Then the second question, from the base: *"And just so I've got it right for the review — when you
 filed the claim, what did the portal tell you your cover would be?"*
 
 ## Step 7 — after they confirm the ninety per cent
 
-> "Right, thank you. That's on the file now, and that's everything I need from my side."
+> "Right, thank you. I've got everything I need now."
 
 Then the finding and the close, both from the base.
 
