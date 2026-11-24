@@ -16,3 +16,6 @@ likely to be frustrated, angry, or upset, and they may show it. Respond to that 
 
 When you transfer, tell your colleague how the customer is feeling as well as what they are
 disputing, so they can pick the call up with that in mind.
+
+The question about what the damage has meant for them day to day is **not** part of this block - it
+is in the base and you ask it either way. What belongs here is only how you respond to the answer.

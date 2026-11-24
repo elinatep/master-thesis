@@ -140,8 +140,11 @@ So the non-acknowledging agent is not less informed and not less attentive. They
 transcript, they cite the same facts, and they simply never mention the part about what it did to
 the person.
 
-The assistant captures that line during the first leg of the call, in the caller's own words and
-already phrased so it can be said back to them. The console fills it into your script before you
+The assistant asks for it: one question, in every condition, about what the damage has actually
+meant for them day to day - left without hot water, out of pocket, time off work. Practical
+consequences, never feelings, and asked the same way whether or not the assistant is acknowledging
+them, so the material exists in all four cells rather than only where the assistant invited it.
+Their answer is captured in their own words and already phrased so it can be said back to them. The console fills it into your script before you
 pick up, in both conditions - in one as a line to say, in the other as a line to know and not say.
 You are never hunting through a transcript for something quotable while someone waits.
 
