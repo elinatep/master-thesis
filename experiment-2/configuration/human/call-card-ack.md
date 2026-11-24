@@ -31,8 +31,13 @@ in either arm.
 They say yes, then make their complaint. Don't interrupt.
 
 ### 3. Your response — acknowledge
-> "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe
-> itself. Let me take this down as a dispute and go through the assessment with you."
+> "Oh no, I'm really sorry. You mentioned to my colleague that **[their own words]** — that's
+> horrible, especially with all this on top. Let me take this down as a dispute and go through the
+> assessment with you."
+
+The console fills in the bracketed part. Say it as theirs; if it doesn't match what you heard, drop
+it and acknowledge what you did hear. Empty means they said nothing of the kind — acknowledge having
+to make the call at all instead.
 
 ### 4. First question · SAME IN BOTH
 > "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for

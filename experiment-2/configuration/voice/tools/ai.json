@@ -21,9 +21,19 @@
         "customer_state": {
           "type": "string",
           "description": "How the customer has come across on the call so far, in a short phrase - for example 'calm but firm', 'very frustrated', 'upset and close to tears'. Report what you observed. This is context for the colleague picking up, and is recorded whatever else you were instructed to say on the call."
+        },
+        "impact_in_their_words": {
+          "type": "string",
+          "description": "What the caller said about how this has affected them, ready for the colleague to say back to them - so phrased in the second person, starting with 'you', and completing the sentence 'You mentioned to my colleague that ...'. For example: \"you've been without hot water since Thursday\", \"you were counting on that money before Christmas\", \"you've had to take two days off work for this\". Keep their own words wherever you can; the colleague may read it back, so an invented or smoothed-over version is worse than an empty one. Lower case, no final full stop. Empty string if they said nothing about how it has affected them - do not invent one, and do not stretch a factual detail about the claim into one."
         }
       },
-      "required": ["dispute_summary", "requested_outcome", "grounds_given", "customer_state"],
+      "required": [
+        "dispute_summary",
+        "requested_outcome",
+        "grounds_given",
+        "customer_state",
+        "impact_in_their_words"
+      ],
       "additionalProperties": false
     }
   }

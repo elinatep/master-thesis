@@ -254,7 +254,16 @@ function CallScreen({
         </Card.Body>
       </Card>
 
-      {brief.humanAck !== null && <CallScript humanAck={brief.humanAck} />}
+      {brief.humanAck !== null && (
+        <CallScript
+          humanAck={brief.humanAck}
+          impact={
+            typeof brief.summary?.impact_in_their_words === 'string'
+              ? brief.summary.impact_in_their_words
+              : undefined
+          }
+        />
+      )}
 
       <Card className="mb-3">
         <Card.Body>

@@ -13,13 +13,29 @@ import { Badge, Card } from 'react-bootstrap'
  * between the arms is a second manipulation nobody recorded, and an emotion word in one of them
  * ("what concerned you" against "what you wanted reviewed") is exactly how that arrives.
  */
-export default function CallScript({ humanAck }: { humanAck: boolean }) {
+export default function CallScript({
+  humanAck,
+  impact,
+}: {
+  humanAck: boolean
+  /**
+   * What this caller told the assistant about how the situation affected them, in their own words
+   * and already in the second person, ready to be said back. Empty when they said nothing of the
+   * kind - which is a real outcome, not a failure, and the fallback line covers it.
+   */
+  impact?: string
+}) {
+  // Substituted rather than improvised. The acknowledgement has to land the same way for four
+  // hundred participants, and hunting a transcript for a quotable line while someone waits is how
+  // a manipulation becomes a different manipulation on a tired afternoon.
+  const quoted = (impact ?? '').trim().replace(/[.\s]+$/, '')
   // The only thing that differs between conditions: what you say before each question.
   const responses = humanAck
     ? {
         kind: 'Acknowledge',
-        first:
-          "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe itself. Let me take this down as a dispute and go through the assessment with you.",
+        first: quoted
+          ? `Oh no, I'm really sorry. You mentioned to my colleague that ${quoted} — that's horrible, especially with all this on top. Let me take this down as a dispute and go through the assessment with you.`
+          : "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe itself. Let me take this down as a dispute and go through the assessment with you.",
         second:
           "Oh, I see. Yeah, that's a huge difference, and getting a decision like that with nothing explaining it must be really disappointing. I'll make a note of that.",
         summary:
@@ -62,6 +78,26 @@ export default function CallScript({ humanAck }: { humanAck: boolean }) {
 
         <Step n={3} title={`Your response — ${responses.kind}`}>
           <Line>{responses.first}</Line>
+          {quoted && humanAck && (
+            <p className="mb-0 mt-1 small text-muted">
+              The quoted part is this caller's own words, from what they told the assistant. Say it
+              as theirs — if it does not fit what you heard them say, drop it and acknowledge what
+              you did hear.
+            </p>
+          )}
+          {quoted && !humanAck && (
+            <p className="mb-0 mt-1 small text-muted">
+              They told the assistant: "{quoted}". You know this and you do not mention it. Refer to
+              the claim itself as much as you like — the facts are not what is being withheld.
+            </p>
+          )}
+          {!quoted && humanAck && (
+            <p className="mb-0 mt-1 small text-muted">
+              They said nothing to the assistant about how this has affected them, so there is
+              nothing of theirs to quote back. Acknowledge what is in front of you instead — having
+              to make the call at all.
+            </p>
+          )}
         </Step>
 
         <Step n={4} title="First question" shared>

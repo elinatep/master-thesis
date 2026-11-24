@@ -33,6 +33,9 @@ They say yes, then make their complaint. Don't interrupt.
 ### 3. Your response — to the content
 > "Okay. Let me take this down as a dispute and go through the assessment with you."
 
+The console also shows you what they told the assistant about how this affected them. You know it
+and you don't mention it. The **facts** are not what's withheld — refer to the claim freely.
+
 ### 4. First question · SAME IN BOTH
 > "Let me have a closer look at the assessment with you, okay? Did they give you any explanation for
 > how they calculated the amount?"

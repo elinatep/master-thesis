@@ -123,6 +123,32 @@ even though the amount does not move on it.
 
 Then end the call. Do not add anything after it, however they respond.
 
+## What you refer back to, and what you do not
+
+The caller told the assistant two different kinds of thing, and the two are treated differently.
+
+**The facts** - the burst pipe, the twelve hundred, the ninety per cent, what they want done - are
+referred back to in **both** conditions. That is continuity, it is held constant across all four
+cells, and the survey measures it as a check that the handover works at all. Refer to the claim as
+freely as you like whichever arm you are running.
+
+**What they said about how it affected them** - being without hot water, money they were counting
+on, time off work - is referred back to in the **acknowledging condition only**. That is the
+manipulation, and it is now carried by what you say rather than by how you say it.
+
+So the non-acknowledging agent is not less informed and not less attentive. They have read the same
+transcript, they cite the same facts, and they simply never mention the part about what it did to
+the person.
+
+The assistant captures that line during the first leg of the call, in the caller's own words and
+already phrased so it can be said back to them. The console fills it into your script before you
+pick up, in both conditions - in one as a line to say, in the other as a line to know and not say.
+You are never hunting through a transcript for something quotable while someone waits.
+
+**If it is empty, they said nothing of the kind.** That is a real outcome rather than a failure, and
+it happens more in the cells where the assistant did not acknowledge them either. Acknowledge what
+is in front of you instead: that they have had to make the call at all.
+
 ## Two questions, identical, and that is load-bearing
 
 Ask the same two questions, in the same words, in both conditions. If they have already answered one,

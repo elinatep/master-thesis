@@ -23,8 +23,19 @@ the claim.
 
 ## Step 3 — after they have made their complaint
 
-> "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe
-> itself. Let me take this down as a dispute and go through the assessment with you."
+> "Oh no, I'm really sorry. You mentioned to my colleague that **[their own words]** — that's
+> horrible, especially with all this on top. Let me take this down as a dispute and go through the
+> assessment with you."
+
+The console fills in the bracketed part from what they told the assistant, phrased so you can say it
+straight back. Say it as theirs. If it does not match what you actually heard them say, drop it and
+acknowledge what you did hear - a quote they do not recognise is worse than no quote.
+
+If they told the assistant nothing about how this affected them, the console says so and gives you
+this instead:
+
+> "Oh no, I'm really sorry — that sounds so frustrating, especially on top of the burst pipe itself.
+> Let me take this down as a dispute and go through the assessment with you."
 
 Then the first question, from the base: *"Let me have a closer look at the assessment with you,
 okay? Did they give you any explanation for how they calculated the amount?"*

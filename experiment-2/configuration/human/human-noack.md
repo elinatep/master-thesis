@@ -20,10 +20,17 @@ These three lines are also the second half of every line in the acknowledging ar
 The other condition says all of this and puts an acknowledgement in front of it; you say only this.
 So keep to it: adding your own warmth here closes the gap the study is trying to measure.
 
-**Do not hand their account back to them.** "So just to recap, the claim went in at twelve hundred
-and what came back was sixty" names no feeling and still makes someone feel heard - reflecting
-content is half of what feeling heard is made of. Say what you are doing with the file, not what
-they just told you.
+**You will be shown what they said about how this affected them, and you do not mention it.** The
+console prints it under step 3 in this condition too - deliberately, so that what you know is the
+same in both arms and only what you say differs. Read it, and leave it alone.
+
+**The facts are not what is being withheld.** Refer to the burst pipe, the twelve hundred, the
+ninety per cent as much as you like. You have read the transcript and it should show.
+
+**But do not hand their account back to them.** "So just to recap, the claim went in at twelve
+hundred and what came back was sixty" names no feeling and still makes someone feel heard -
+reflecting content is half of what feeling heard is made of. Say what you are doing, not what they
+just told you.
 
 ## Step 3 — after they have made their complaint
 
