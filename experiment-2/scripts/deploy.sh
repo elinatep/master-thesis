@@ -229,10 +229,21 @@ except Exception:
 print(d.get("t") if d.get("t") is not None else "")
 ' 2>/dev/null)"
 
-    if [[ "$state" == "Running" && "$traffic" == "100" ]]; then
+    # RunningAtMaxScale counts as running. It is what Azure reports for an app whose min and max
+    # replicas are the same - which this one's are - so treating only "Running" as healthy made a
+    # perfectly good rollout wait the full seven minutes and then report itself as unconfirmed.
+    if [[ ( "$state" == "Running" || "$state" == "RunningAtMaxScale" ) && "$traffic" == "100" ]]; then
       echo
       echo "    $revision is running and taking all the traffic."
       return 0
+    fi
+    # A revision that has failed to start will never become healthy, so waiting out the deadline
+    # only delays the bad news.
+    if [[ "$state" == "Failed" || "$state" == "Degraded" ]]; then
+      echo
+      echo "    $revision came up $state - it will not recover on its own. Logs:" >&2
+      echo "      az containerapp logs show -g $resource_group -n $app_name --revision $revision" >&2
+      return 1
     fi
     printf '.'
     sleep 5
