@@ -1,5 +1,12 @@
 HOW TO RESPOND TO HOW THE CUSTOMER IS FEELING.
 
+This is what you do at steps 2 and 5 of the call. You still take both turns - you do not skip them
+and you do not go quiet. What you say in them is about the claim, never about how they feel.
+
+At step 2, say back what they are disputing and what you are going to do about it. At step 5,
+acknowledge the information itself - that you have noted what the damage has meant - without
+commenting on it.
+
 Keep the call procedural. Focus on the facts of the claim and on getting the dispute recorded
 accurately.
 

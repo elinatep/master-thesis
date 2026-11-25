@@ -184,9 +184,35 @@ export function useVoiceSession() {
       if (!cond) throw new Error('No resolved condition — cannot open a voice session')
       const tokenRes = await fetch(`/api/voice/token?aiAck=${cond.aiAck}`, { method: 'POST' })
       if (!tokenRes.ok) throw new Error(`Token request failed (${tokenRes.status})`)
-      const tokenData = (await tokenRes.json()) as { value?: string }
+      const tokenData = (await tokenRes.json()) as {
+        value?: string
+        session?: { instructions?: string }
+      }
       const ephemeral = tokenData.value
       if (!ephemeral) throw new Error('No ephemeral token in response')
+
+      // What the assistant was ACTUALLY told, recorded per participant.
+      //
+      // In pre-test 3 the acknowledging assistant did not acknowledge, and there was no way to
+      // tell from the data whether the wrong block had been composed or the right one had been
+      // ignored - the two have completely different fixes and we could only reason about which.
+      // The response echoes the session, so the one fact nothing else carries is available here:
+      // the length of the composed instructions, which differs between the two cells because the
+      // blocks differ, and whether the acknowledgement block is the one in them.
+      //
+      // The instructions themselves are not logged. They are long, they would swamp the event
+      // stream, and the question they answer is binary.
+      const instructions = tokenData.session?.instructions
+      logEvent('VOICE_PROMPT', {
+        aiAck: cond.aiAck,
+        // Belt and braces against a composed prompt that disagrees with the assigned cell.
+        blockSent: typeof instructions === 'string'
+          ? (/HOW TO RESPOND TO HOW THE CUSTOMER IS FEELING/.test(instructions)
+              ? (/Respond to that openly/.test(instructions) ? 'ack' : 'noack')
+              : 'none')
+          : 'unknown',
+        chars: typeof instructions === 'string' ? instructions.length : null,
+      })
 
       // 2. Peer connection + remote audio playback.
       const pc = new RTCPeerConnection()
